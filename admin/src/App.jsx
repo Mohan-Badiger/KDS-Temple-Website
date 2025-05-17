@@ -5,7 +5,7 @@ import { Routes, Route } from 'react-router-dom'
 import {ToastContainer} from 'react-toastify';
 import Dashboard from './pages/Dashboard'
 import Login from './components/Login'
-import PoojaManage from './pages/poojaManage.jsx'
+import PoojaManage from './pages/PoojaManage.jsx'
 import RequestPooja from './pages/RequestPooja.jsx'
 import PoojaList from './pages/poojaList.jsx'
 import Add from './pages/Add.jsx'
