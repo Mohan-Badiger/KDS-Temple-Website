@@ -40,15 +40,15 @@ const Manage = () => {
       ) : (
         <div className="grid gap-4">
           {poojas.map((pooja) => (
-            <div key={pooja._id} className="px-3 py-2 border flex items-center justify-between">
+            <div key={pooja._id} className="px-3 py-2 border flex flex-col sm:flex-row items-center justify-between">
               <div className="flex items-center">
-                <img src={pooja.image} alt={pooja.name} className="w-20 h-20 mr-4 object-cover" />
+                <img src={pooja.image} alt={pooja.name} className="w-20 sm:w-30 h-20 sm:h-30 mr-4 object-cover" />
                 <div>
                   <h3 className="text-lg font-semibold">{pooja.name}</h3>
                   <p className="text-gray-600">{pooja.description}</p>
                 </div>
               </div>
-              <div>
+              <div className='m-2'>
                 <Link to={`/pooja-manage/update/${pooja._id}`} className="text-gray-600 mr-6 hover:text-orange-600">Update</Link>
                 <Link to={`/pooja-manage/remove/${pooja._id}`} className="text-primary mr-4 hover:text-orange-400">Remove</Link>
               </div>
