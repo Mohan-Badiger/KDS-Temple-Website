@@ -19,8 +19,8 @@ const AnnaprasadManage = () => {
   if (loading) return <p className="text-center mt-10">Loading...</p>;
 
   return (
-    <div className="px-6 max-w-5xl mx-auto mt-6 font-primary">
-      <h2 className="text-2xl font-bold mb-4">Annaprasad Donation Records</h2>
+    <div className=" max-w-5xl mx-auto mt-6 font-primary">
+      <h2 className="text-xl font-semibold mb-4">Annaprasad Donation Records</h2>
       {donations.length === 0
         ? <p className="text-gray-500 text-center">No donations found.</p>
         : (
