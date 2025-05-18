@@ -84,15 +84,15 @@ const BookingConfirmation = () => {
   } = bookingDetails;
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-6 font-primary">
-      <h2 className="text-2xl font-semibold text-center mb-6">Booking Confirmation</h2>
+    <div className="max-w-3xl mx-auto py-6 font-primary">
+      <h2 className="text-2xl sm:text-4xl font-semibold text-center mb-6">Booking Confirmation</h2>
 
-      <div className="border border-gray-200 p-6 mb-6">
-        <h3 className="text-2xl text-gray-800 mb-4">Booking Summary</h3>
+      <div className="border border-gray-200 p-3 sm:p-7 mb-6">
+        <h3 className="text-2xl  text-gray-800 mb-2 sm:mb-4">Booking Summary</h3>
         <hr className="mb-4" />
 
         {/* User Info */}
-        <div className="mb-4 flex flex-col sm:flex-row gap-4">
+        <div className="mb-4 flex flex-col sm:flex-row gap-2">
           <h4 className="text-lg font-medium">User Details:</h4>
           <div className="text-gray-700">
             <p>Name: {user?.name}</p>
@@ -102,7 +102,7 @@ const BookingConfirmation = () => {
 
         {/* Pooja in Name of */}
         {poojaInNameOf && (
-          <div className="mb-4 flex flex-col sm:flex-row gap-4">
+          <div className="mb-4 flex flex-col sm:flex-row gap-2">
             <h4 className="text-lg font-medium">Pooja in the Name of:</h4>
             <p className="text-gray-700 text-lg">{poojaInNameOf}</p>
           </div>
@@ -121,7 +121,7 @@ const BookingConfirmation = () => {
         </div>
 
         {/* Booking Status */}
-        <div className="mb-4 flex flex-col sm:flex-row gap-4">
+        <div className="mb-4 flex sm:flex-row gap-4">
           <h4 className="text-lg font-medium">Booking Status:</h4>
           <p
             className={`text-lg capitalize ${
@@ -164,13 +164,13 @@ const BookingConfirmation = () => {
         )}
 
         {/* Total Amount */}
-        <div className="mb-4 flex flex-col sm:flex-row gap-4">
+        <div className="mb-4 flex sm:flex-row gap-4">
           <h4 className="text-lg font-medium">Total Amount:</h4>
           <p className="text-lg text-gray-800">₹{totalAmount}</p>
         </div>
 
         {/* Booking Created Date */}
-        <div className="mb-4 flex flex-col sm:flex-row gap-4">
+        <div className="mb-4 flex sm:flex-row gap-4">
           <h4 className="text-lg font-medium">Booking Date:</h4>
           <p className="text-gray-700">
             {new Date(createdAt).toLocaleDateString("en-IN")}
