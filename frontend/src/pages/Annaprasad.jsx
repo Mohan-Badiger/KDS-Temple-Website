@@ -220,7 +220,7 @@ const Annaprasad = () => {
                       value={amt}
                       checked={amount === amt}
                       onChange={() => handleCheckboxChange(amt)}
-                      className="mr-2 w-full sm:w-4 h-4 border-gray-300 rounded"
+                      className="sm:mr-2 w-full sm:w-4 h-4 border-gray-300 rounded"
                     />
                     ₹{amt}
                   </label>

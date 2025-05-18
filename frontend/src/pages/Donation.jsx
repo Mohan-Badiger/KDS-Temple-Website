@@ -140,7 +140,7 @@ const Donation = () => {
         </div>
       )}
 
-      <h2 className="text-4xl font-bold text-center mb-4 mt-4">Make a Donation</h2>
+      <h2 className="text-2xl sm:text-4xl font-bold text-center mb-4 mt-4">Make a Donation</h2>
       <div className="w-full flex justify-center">
         <div className="md:w-11/12 flex gap-10 flex-col sm:flex-row border-gray-200 sm:px-8 sm:mt-3">
           <div className="md:w-[460px]">
