@@ -161,17 +161,17 @@ const Annaprasad = () => {
       )}
 
       <div className="font-primary mt-6">
-        <h2 className="text-4xl font-bold text-center mb-4 mt-4">Annaprasad Contribution</h2>
+        <h2 className="text-2xl sm:text-4xl font-bold text-center mb-4 mt-4">Annaprasad Contribution</h2>
         <div className="w-full flex justify-center">
-          <div className="md:w-11/12 flex flex-col sm:flex-row gap-10 border-gray-200 sm:p-8 p-0">
-            <div className="md:w-[440px]">
+          <div className="md:w-11/12 flex gap-10 flex-col sm:flex-row border-gray-200 sm:px-8 sm:mt-3">
+            <div className="md:w-[460px]">
               <img
                 src={annaprasad}
                 alt="Annaprasad"
-                className="w-full h-126 object-cover rounded px-3"
+                className="w-full h-126 object-cover rounded"
               />
             </div>
-            <form onSubmit={onSubmitHandler} className="flex flex-col w-full md:w-1/2 gap-6">
+            <form onSubmit={onSubmitHandler} className="flex flex-col mt-5 w-full md:w-1/2 gap-6">
               <div className="flex flex-col sm:flex-row sm:gap-4 gap-6 w-full">
                 <input
                   type="text"
@@ -208,11 +208,11 @@ const Annaprasad = () => {
                 required
               />
 
-              <div className="flex justify-around gap-6 w-full">
+              <div className="flex justify-around gap-2 sm:gap-6 w-full">
                 {['5001', '10001', '20001'].map((amt) => (
                   <label
                     key={amt}
-                    className="flex items-center border border-gray-300 py-3 px-5 w-1/3"
+                    className="flex items-center border border-gray-300 py-3 px-2 sm:px-5 w-1/3"
                   >
                     <input
                       type="radio"
@@ -220,7 +220,7 @@ const Annaprasad = () => {
                       value={amt}
                       checked={amount === amt}
                       onChange={() => handleCheckboxChange(amt)}
-                      className="mr-2 w-4 h-4 border-gray-300 rounded"
+                      className="mr-2 w-full sm:w-4 h-4 border-gray-300 rounded"
                     />
                     ₹{amt}
                   </label>

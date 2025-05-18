@@ -6,8 +6,9 @@ import { backendUrl } from "../App"; // fixed import
 const RequestPooja = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [approvingId, setApprovingId] = useState(null); // ✅ New state
+  const [approvingId, setApprovingId] = useState(null); 
   const token = localStorage.getItem("token");
+
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -49,7 +50,7 @@ const RequestPooja = () => {
       toast.error("Approval failed.");
       console.error("Approval failed:", err);
     } finally {
-      setApprovingId(null); // ✅ Reset loading state
+      setApprovingId(null);
     }
   };
 
@@ -86,6 +87,10 @@ const RequestPooja = () => {
 const RequestCard = ({ req, onApprove, isApproving }) => {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
+
+  console.log(date);
+  console.log(time);
+  
 
   return (
     <div className="border p-6 font-primary space-y-3">

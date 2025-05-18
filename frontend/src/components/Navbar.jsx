@@ -83,7 +83,11 @@ const Navbar = () => {
                 <NavLink onClick={()=>setVisible(false)} className='py-2 pl-6 border-t' to='/about'>ABOUT</NavLink>
                 <NavLink onClick={()=>setVisible(false)} className='py-2 pl-6 border-t' to='/gallery'>GALLERY</NavLink>
                 <NavLink onClick={()=>setVisible(false)} className='py-2 pl-6 border-t border-b' to='/contact'>CONTACT</NavLink>
-                <NavLink onClick={()=>setVisible(false)} className='py-2 pl-6 border-t mt-3 bg-primary text-white font-lg' to='/login'>LOGIN</NavLink>
+                {
+                  token === localStorage.getItem('token')
+                  ?<NavLink onClick={() => { setVisible(false); logout(); }} className='py-2 pl-6 border-t mt-3 bg-primary text-white font-lg'>LOGOUT</NavLink>
+                  :<NavLink onClick={()=>setVisible(false)} className='py-2 pl-6 border-t mt-3 bg-primary text-white font-lg' to='/login'>LOGIN</NavLink>
+                }
             </div>
         </div>
      
