@@ -4,11 +4,13 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-// Utility to decode JWT token
+// Utility to decode JWT token safely
 const decodeToken = (token) => {
   try {
-    return JSON.parse(atob(token.split('.')[1]));
-  } catch (e) {
+    const payload = token.split(".")[1];
+    return JSON.parse(atob(payload));
+  } catch (error) {
+    console.error("Failed to decode token:", error);
     return null;
   }
 };
@@ -17,6 +19,7 @@ const PaymentGateway = () => {
   const { selectedPoojas, totalAmount, backendUrl } = useContext(TempleContext);
   const [loading, setLoading] = useState(false);
   const [poojaInNameOf, setPoojaInNameOf] = useState("");
+  const [poojaDate, setPoojaDate] = useState("");
   const navigate = useNavigate();
 
   const userToken = localStorage.getItem("token");
@@ -33,11 +36,17 @@ const PaymentGateway = () => {
     });
   };
 
+  const formatDateToDDMMYYYY = (dateString) => {
+    if (!dateString) return "";
+    const [year, month, day] = dateString.split("-");
+    return `${day}-${month}-${year}`;
+  };
+
   const handlePayment = async () => {
     setLoading(true);
 
     if (!userToken || !userId) {
-      toast.error("User not authenticated");
+      toast.error("User not authenticated.");
       setLoading(false);
       return;
     }
@@ -48,8 +57,24 @@ const PaymentGateway = () => {
       return;
     }
 
-    if (!poojaInNameOf) {
+    if (!poojaInNameOf.trim()) {
       toast.error("Please provide a name for the pooja.");
+      setLoading(false);
+      return;
+    }
+
+    if (!poojaDate) {
+      toast.error("Please select a date for the pooja.");
+      setLoading(false);
+      return;
+    }
+
+    const selectedDate = new Date(poojaDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (selectedDate < today) {
+      toast.error("Please select today or a future date.");
       setLoading(false);
       return;
     }
@@ -64,16 +89,17 @@ const PaymentGateway = () => {
     try {
       const { data: order } = await axios.post(
         `${backendUrl}/api/payment/create-order`,
-        { amount: totalAmount * 100 } 
+        { amount: totalAmount * 100 }
       );
 
+      const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_dummyKey";
+
       const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        key: razorpayKey,
         amount: order.amount,
         currency: order.currency,
         name: "Temple Pooja Booking",
         description: "Payment for Pooja Booking",
-        payment_method:"Razorpay",
         order_id: order.id,
         handler: async function (response) {
           try {
@@ -87,12 +113,12 @@ const PaymentGateway = () => {
             );
 
             if (verifyRes.data.message === "Payment verified successfully") {
-              // Proceed with booking after successful payment
               const bookingData = {
                 poojas: selectedPoojas.map((pooja) => pooja._id),
                 user: userId,
                 totalAmount,
                 poojaInNameOf,
+                poojaDate: formatDateToDDMMYYYY(poojaDate),
               };
 
               const bookingRes = await axios.post(
@@ -115,8 +141,8 @@ const PaymentGateway = () => {
               toast.error("Payment verification failed.");
             }
           } catch (error) {
-            toast.error("Error verifying payment.");
-            console.error("Payment verify error:", error);
+            console.error("Error verifying payment:", error);
+            toast.error("Failed to verify payment.");
           }
         },
         theme: {
@@ -141,10 +167,10 @@ const PaymentGateway = () => {
         You are about to pay <span className="font-semibold">₹{totalAmount}</span> for:
       </p>
 
-      <div className="bg-white border p-6 mb-6">
+      <div className="bg-white border p-6 mb-6 shadow">
         {selectedPoojas.map((pooja) => (
           <div key={pooja._id} className="mb-4 border-b pb-4">
-            <h3 className="text-xl">{pooja.name}</h3>
+            <h3 className="text-xl font-semibold">{pooja.name}</h3>
             <p className="text-gray-600">{pooja.description}</p>
             <p className="text-gray-800 font-medium">₹{pooja.price}</p>
           </div>
@@ -162,13 +188,26 @@ const PaymentGateway = () => {
         />
       </div>
 
+      <div className="mb-6">
+        <label className="block text-lg mb-2">Select Pooja Date:</label>
+        <input
+          type="date"
+          value={poojaDate}
+          onChange={(e) => setPoojaDate(e.target.value)}
+          min={new Date().toISOString().split("T")[0]}
+          className="w-full px-4 py-3 border outline-0"
+        />
+      </div>
+
       <div className="flex justify-between items-center">
-        <h3 className="text-2xl">Total: ₹{totalAmount}</h3>
+        <h3 className="text-2xl font-semibold">Total: ₹{totalAmount}</h3>
         <button
           onClick={handlePayment}
           disabled={loading}
           className={`px-8 py-3 text-white text-lg font-medium ${
-            loading ? "bg-gray-600 cursor-not-allowed" : "bg-primary hover:bg-orange-400"
+            loading
+              ? "bg-gray-600 cursor-not-allowed"
+              : "bg-primary hover:bg-orange-500"
           }`}
         >
           {loading ? "Processing..." : "Pay & Book"}

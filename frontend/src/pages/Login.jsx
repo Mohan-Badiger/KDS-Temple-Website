@@ -58,11 +58,22 @@ const Login = () => {
         <p className='prata-regular text-3xl'>{currentState}</p>
         <hr className='border-none h-[3px] mt-2 w-8 bg-gray-800' />
       </div>
-      {currentState === 'Login' ? '' : <input onChange={(e) => setName(e.target.value)} value={name} type="text" className='w-full px-3 py-2 border border-gray-800' placeholder='Name' required />}
+      {currentState === 'Login' ? '' : (
+        <input
+          onChange={(e) => {
+            const value = e.target.value.replace(/[^a-zA-Z\s]/g, '');
+            setName(value);
+          }}
+          value={name}
+          type="text"
+          className='w-full px-3 py-2 border border-gray-800'
+          placeholder='Name'
+          required
+        />
+      )}
       <input onChange={(e) => setEmail(e.target.value)} value={email} type="email" className='w-full px-3 py-2 border border-gray-800' placeholder='Email' required />
       <input onChange={(e) => setPassword(e.target.value)} value={password} type="password" className='w-full px-3 py-2 border border-gray-800' placeholder='Password' required />
       <div className='w-full flex justify-between text-sm mt-[-8px]'>
-        {/* <p className='cursor-pointer'>Forgot your password</p> */}
         {
           currentState === 'Login'
             ? <p onClick={() => setCurrentState('Sign Up')} className='cursor-pointer'>Create account</p>
@@ -70,7 +81,6 @@ const Login = () => {
         }
       </div>
       <button className='bg-primary text-white font-sm px-8 py-2 mt-4'>{currentState === 'Login' ? 'LogIn' : 'Sign Up'}</button>
-
     </form>
   )
 }

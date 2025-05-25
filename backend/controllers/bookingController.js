@@ -4,55 +4,78 @@ import BookingModel from "../models/bookingModel.js";
 import jwt from "jsonwebtoken";
 import nodemailer from 'nodemailer'
 
-// Create a new booking
 export const createBooking = async (req, res) => {
   try {
-    const { poojas, totalAmount, poojaInNameOf } = req.body;
+    const { poojas, totalAmount, poojaInNameOf, poojaDate } = req.body;
 
-    // Extract token from the request header
-    const token = req.headers.authorization?.split(" ")[1]; // Assumes token is passed as "Bearer <token>"
-
+    // Extract and verify token
+    const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
-      return res.status(400).json({ success: false, message: "No token provided" });
+      return res.status(401).json({ success: false, message: "No token provided" });
     }
 
-    if (totalAmount <= 0) { // Check for totalAmount <= 0 instead of just 0
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      return res.status(401).json({ success: false, message: "Invalid token" });
+    }
+
+    const userId = decoded.id || decoded._id;
+    if (!userId) {
+      return res.status(401).json({ success: false, message: "User ID not found in token" });
+    }
+
+    // Validate pooja selection
+    if (!poojas || !Array.isArray(poojas) || poojas.length === 0) {
+      return res.status(400).json({ success: false, message: "No poojas selected" });
+    }
+
+    // Validate total amount
+    if (!totalAmount || totalAmount <= 0) {
       return res.status(400).json({ success: false, message: "Total amount must be greater than zero" });
     }
 
-    // Decode the JWT token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Use your JWT_SECRET here
-    const userId = decoded.id; // Assuming the JWT token contains a user ID as 'id'
-
-    console.log("Decoded user ID:", userId);
-
-    // Validate that pooja IDs are valid
-    const objectIds = poojas.map((id) => new mongoose.Types.ObjectId(id));
-    if (objectIds.some(id => !mongoose.Types.ObjectId.isValid(id))) {
-      return res.status(400).json({ success: false, message: "Invalid pooja ID(s)" });
+    // Validate pooja date format (dd-mm-yyyy)
+    if (!poojaDate || !/^\d{2}-\d{2}-\d{4}$/.test(poojaDate)) {
+      return res.status(400).json({ success: false, message: "Invalid date format. Use dd-mm-yyyy" });
     }
 
-    // Create Razorpay order
-    const razorpayOrder = await RazorpayService.createOrder(totalAmount); // Create Razorpay order
+    const [day, month, year] = poojaDate.split("-");
+    const formattedDate = new Date(`${year}-${month}-${day}`);
+    if (isNaN(formattedDate.getTime())) {
+      return res.status(400).json({ success: false, message: "Invalid pooja date" });
+    }
 
-    // Proceed to save the booking
+    // Validate pooja IDs
+    const objectIds = poojas.map((id) => {
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        throw new Error("Invalid pooja ID");
+      }
+      return new mongoose.Types.ObjectId(id);
+    });
+
+    // Create Razorpay order
+    const razorpayOrder = await RazorpayService.createOrder(totalAmount * 100); // amount in paise
+
+    // Save booking
     const booking = new BookingModel({
       user: userId,
       poojas: objectIds,
       totalAmount,
       poojaInNameOf,
+      poojaDate: formattedDate,
       status: "pending",
       receiptId: razorpayOrder.receipt,
-      paymentId: razorpayOrder.id, // 
+      paymentId: razorpayOrder.id,
       paymentMethod: "Razorpay",
     });
 
     await booking.save();
 
-    // Return response with Razorpay order details to client
     res.status(201).json({
       success: true,
-      message: "Pooja Booked Successfully",
+      message: "Pooja booked successfully",
       booking,
       razorpayOrder,
     });
@@ -63,68 +86,30 @@ export const createBooking = async (req, res) => {
   }
 };
 
-// // Approve a booking
-// export const approveBooking = async (req, res) => {
-//   try {
-//     const { bookingId } = req.params;
-//     const { assignedDate } = req.body;
-
-//     // Validate booking ID format
-//     if (!mongoose.Types.ObjectId.isValid(bookingId)) {
-//       return res.status(400).json({ success: false, message: "Invalid booking ID" });
-//     }
-
-//     // Validate assignedDate (make sure it's not empty and is a valid date)
-//     if (!assignedDate) {
-//       return res.status(400).json({ success: false, message: "Assigned date is required" });
-//     }
-
-//     const parsedDate = new Date(assignedDate);
-
-//     // Ensure the assignedDate is a valid date
-//     if (isNaN(parsedDate.getTime())) {
-//       return res.status(400).json({ success: false, message: "Invalid date format" });
-//     }
-
-//     // Update the booking using findByIdAndUpdate
-//     const updatedBooking = await BookingModel.findByIdAndUpdate(
-//       bookingId,
-//       { status: "approved", assignedDate: parsedDate },
-//       { new: true } // Return the updated booking
-//     );
-
-//     // Check if the booking was found and updated
-//     if (!updatedBooking) {
-//       return res.status(404).json({ success: false, message: "Booking not found" });
-//     }
-
-//     // Respond with the updated booking
-//     res.status(200).json({ success: true, message: "Booking approved", booking: updatedBooking });
-//   } catch (error) {
-//     console.error("Error approving booking:", error);
-//     res.status(500).json({ success: false, message: "Server error", error: error.message });
-//   }
-// };
-
 export const approveBooking = async (req, res) => {
   try {
     const { bookingId } = req.params;
-    const { assignedDate } = req.body;
+    const { assignedTime } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(bookingId)) {
       return res.status(400).json({ success: false, message: "Invalid booking ID" });
     }
 
-    if (!assignedDate) {
-      return res.status(400).json({ success: false, message: "Assigned date is required" });
+    if (!assignedTime) {
+      return res.status(400).json({ success: false, message: "Assigned time is required" });
     }
 
-    const parsedDate = new Date(assignedDate);
-    if (isNaN(parsedDate.getTime())) {
-      return res.status(400).json({ success: false, message: "Invalid date format" });
+    const isValidTime =
+      /^([01]\d|2[0-3]):([0-5]\d)$/.test(assignedTime) ||
+      /^(0?[1-9]|1[0-2]):[0-5]\d ?([APap][Mm])$/.test(assignedTime);
+
+    if (!isValidTime) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid time format. Use HH:mm (24hr) or hh:mm AM/PM (12hr)",
+      });
     }
 
-    // Fetch booking with populated user and pooja details
     const booking = await BookingModel.findById(bookingId)
       .populate("user", "name email")
       .populate("poojas", "name description");
@@ -133,20 +118,35 @@ export const approveBooking = async (req, res) => {
       return res.status(404).json({ success: false, message: "Booking not found" });
     }
 
-    // Update booking status and assignedDate
+    // ✅ Convert to 12-hour format (if it's in 24-hour format)
+    const convertTo12Hour = (timeStr) => {
+      if (/^(0?[1-9]|1[0-2]):[0-5]\d ?([APap][Mm])$/.test(timeStr)) {
+        return timeStr.toUpperCase(); // already in 12-hour format
+      }
+
+      const [hourStr, minute] = timeStr.split(":");
+      const hour = parseInt(hourStr, 10);
+      const ampm = hour >= 12 ? "PM" : "AM";
+      const hour12 = hour % 12 === 0 ? 12 : hour % 12;
+      return `${hour12}:${minute} ${ampm}`;
+    };
+
+    const assignedTime12hr = convertTo12Hour(assignedTime);
+
+    // ✅ Update booking with 12-hour time format
     booking.status = "approved";
-    booking.assignedDate = parsedDate;
+    booking.assignedTime = assignedTime12hr;
     await booking.save();
 
-    // Format pooja list for email
-    const poojaList = booking.poojas.map(p => `<li>${p.name}</li>`).join("");
+    // Pooja list for email
+    const poojaList = booking.poojas.map((p) => `<li>${p.name}</li>`).join("");
 
-    // Configure Nodemailer
+    // Setup nodemailer
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.EMAIL_USER,  
-        pass: process.env.EMAIL_PASS,   
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
     });
 
@@ -156,41 +156,48 @@ export const approveBooking = async (req, res) => {
       subject: "Your Pooja Booking is Approved",
       html: `
         <div style="font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f9f9f9; padding: 20px; color: #333;">
-    <div style="max-width: 600px; margin: auto; background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-    <h2 style="color: #d97706; text-align: center; margin-bottom: 20px;">Pooja Booking Approved</h2>
+          <div style="max-width: 600px; margin: auto; background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+            <h2 style="color: #d97706; text-align: center; margin-bottom: 20px;">Pooja Booking Approved</h2>
 
-    <p>Dear <strong>${booking.user.name}</strong>,</p>
+            <p>Dear <strong>${booking.user.name}</strong>,</p>
 
-    <p>We are pleased to inform you that your pooja booking has been <strong style="color: #fb923c;">approved</strong>.</p>
+            <p>We are pleased to inform you that your pooja booking has been <strong style="color: #fb923c;">approved</strong>.</p>
 
-    <p><strong>Poojas:</strong></p>
-    <ul style="padding-left: 20px; margin-top: 5px;">
-      ${poojaList}
-    </ul>
+            <p><strong>Poojas:</strong></p>
+            <ul style="padding-left: 20px; margin-top: 5px;">
+              ${poojaList}
+            </ul>
 
-    <p><strong>Pooja In Name Of:</strong> ${booking.poojaInNameOf || "N/A"}</p>
-    <p><strong>Assigned Date & Time:</strong> ${new Date(assignedDate).toLocaleString()}</p>
-    <p><strong>Receipt ID:</strong> ${booking.receiptId || "N/A"}</p>
+            <p><strong>Pooja In Name Of:</strong> ${booking.poojaInNameOf || "N/A"}</p>
+            <p><strong>Assigned Time:</strong> ${assignedTime12hr}</p>
+            <p><strong>Receipt ID:</strong> ${booking.receiptId || "N/A"}</p>
 
-    <p style="margin-top: 20px;">Thank you for choosing our service. We look forward to serving you with devotion and sincerity.</p>
+            <p style="margin-top: 20px;">Thank you for choosing our service. We look forward to serving you with devotion and sincerity.</p>
 
-    <p style="margin-top: 30px; font-size: 14px; color: #888;">With warm regards,</p>
-    <p style="font-size: 16px; font-weight: bold; color: #d97706;">KADASHIDDESHWAR TEMPLE, BANAHATTI</p>
-  </div>
-</div>
-
+            <p style="margin-top: 30px; font-size: 14px; color: #888;">With warm regards,</p>
+            <p style="font-size: 16px; font-weight: bold; color: #d97706;">KADASHIDDESHWAR TEMPLE, BANAHATTI</p>
+          </div>
+        </div>
       `,
     };
 
     await transporter.sendMail(mailOptions);
 
-    res.status(200).json({ success: true, message: "Booking approved and email sent", booking });
-
+    res.status(200).json({
+      success: true,
+      message: "Booking approved and email sent",
+      booking,
+    });
   } catch (error) {
     console.error("Error approving booking:", error);
-    res.status(500).json({ success: false, message: "Server error", error: error.message });
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message,
+    });
   }
 };
+
 
 // Get all bookings for a specific user (latest first)
 export const getUserBookings = async (req, res) => {
@@ -237,6 +244,7 @@ export const getAllBookings = async (req, res) => {
   }
 };
 
+
 // Get the latest booking for a specific user
 export const getLatestBooking = async (req, res) => {
   try {
@@ -272,7 +280,7 @@ export const getLatestBooking = async (req, res) => {
       description: pooja.description,
     }));
 
-    // Construct response object
+    // Construct response object without assignedDate, but with poojaDate
     const bookingDetails = {
       user: {
         name: booking.user.name,
@@ -281,13 +289,13 @@ export const getLatestBooking = async (req, res) => {
       poojas: poojaDetails,
       totalAmount: booking.totalAmount,
       status: booking.status,
-      assignedDate: booking.status === "approved" ? booking.assignedDate : null,
+      poojaDate: booking.poojaDate,  // changed here
       assignedTime: booking.status === "approved" ? booking.assignedTime : null,
       createdAt: booking.createdAt,
       poojaInNameOf: booking.poojaInNameOf || null,
       paymentId: booking.paymentId || null,
       receiptId: booking.receiptId || null,
-      paymentMethod: booking.paymentMethod || null,  // Ensure payment method is included
+      paymentMethod: booking.paymentMethod || null,
     };
 
     // Send response

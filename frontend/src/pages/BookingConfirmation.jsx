@@ -11,6 +11,7 @@ const BookingConfirmation = () => {
   const userToken = localStorage.getItem("token");
   const { backendUrl } = useContext(TempleContext);
 
+
   useEffect(() => {
     const fetchBookingDetails = async () => {
       if (!userToken) return navigate("/login");
@@ -28,6 +29,8 @@ const BookingConfirmation = () => {
       } catch (error) {
         if (error.response?.status === 404) {
           setBookingDetails(null);
+        } else {
+          toast.error("Error fetching booking details");
         }
       } finally {
         setLoading(false);
@@ -37,20 +40,22 @@ const BookingConfirmation = () => {
     fetchBookingDetails();
   }, [navigate, userToken, backendUrl]);
 
-  const formatDateTime = (isoDateTimeString) => {
-    const date = new Date(isoDateTimeString);
-    const formattedDate = date.toLocaleDateString("en-IN", {
+  const formatDate = (isoDate) => {
+    if (!isoDate) return "Not Assigned";
+
+    const d = new Date(isoDate);
+    if (isNaN(d.getTime())) return "Invalid Date";
+
+    return d.toLocaleDateString("en-IN", {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
     });
+  };
 
-    const formattedTime = date.toLocaleTimeString("en-IN", {
-      hour: "2-digit",
-      minute: "2-digit",
-    }).replace("am", "AM").replace("pm", "PM");
-
-    return `Date: ${formattedDate} | Time: ${formattedTime}`;
+  const formatTime = (timeString) => {
+    if (!timeString) return "Not Assigned";
+    return timeString;
   };
 
   if (loading) {
@@ -81,6 +86,7 @@ const BookingConfirmation = () => {
     paymentId,
     receiptId,
     paymentMethod,
+    poojaDate,
   } = bookingDetails;
 
   return (
@@ -88,7 +94,7 @@ const BookingConfirmation = () => {
       <h2 className="text-2xl sm:text-4xl font-semibold text-center mb-6">Booking Confirmation</h2>
 
       <div className="border border-gray-200 p-3 sm:p-7 mb-6">
-        <h3 className="text-2xl  text-gray-800 mb-2 sm:mb-4">Booking Summary</h3>
+        <h3 className="text-2xl text-gray-800 mb-2 sm:mb-4">Booking Summary</h3>
         <hr className="mb-4" />
 
         {/* User Info */}
@@ -132,15 +138,19 @@ const BookingConfirmation = () => {
           </p>
         </div>
 
-        {/* Assigned Date/Time */}
-        {status === "approved" && assignedDate && (
-          <div className="mb-4 flex flex-col sm:flex-row gap-4">
-            <h4 className="text-lg font-medium">Assigned Visit:</h4>
-            <p className="text-gray-700">{formatDateTime(assignedDate)}</p>
+        {/* Pooja Date */}
+        <div className="mb-4 flex sm:flex-row gap-4">
+          <h4 className="text-lg font-medium">Pooja Date:</h4>
+          <p className="text-gray-700">{formatDate(poojaDate)}</p>
+        </div>
+
+        {/* Assigned Time */}
+        {assignedTime && (
+          <div className="mb-4 flex sm:flex-row gap-4">
+            <h4 className="text-lg font-medium">Assigned Time:</h4>
+            <p className="text-gray-700">{formatTime(assignedTime)}</p>
           </div>
         )}
-
-        {/* Payment Info */}
         {(paymentId || receiptId || paymentMethod) && (
           <div className="mb-4">
             <div className="text-gray-700 space-y-1">
@@ -171,10 +181,8 @@ const BookingConfirmation = () => {
 
         {/* Booking Created Date */}
         <div className="mb-4 flex sm:flex-row gap-4">
-          <h4 className="text-lg font-medium">Booking Date:</h4>
-          <p className="text-gray-700">
-            {new Date(createdAt).toLocaleDateString("en-IN")}
-          </p>
+          <h4 className="text-lg font-medium">Booking Created On:</h4>
+          <p className="text-gray-700">{formatDate(createdAt)}</p>
         </div>
       </div>
 
