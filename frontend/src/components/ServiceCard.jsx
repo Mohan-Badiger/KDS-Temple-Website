@@ -21,7 +21,7 @@ const ServiceCard = () => {
         if(token === localStorage.getItem('token')){
          navigate('/donation');
         }else{
-            toast.error("Please Login For Contribution");
+            toast.error("Please Login For Donation");
         }
     }
 
@@ -29,7 +29,7 @@ const ServiceCard = () => {
         if(token === localStorage.getItem('token')){
          navigate('/annaprasad');
         }else{
-            toast.error("Please Login For Donation");
+            toast.error("Please Login For Contribution");
         }
     }
 
