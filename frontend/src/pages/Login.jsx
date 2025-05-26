@@ -14,7 +14,6 @@ const Login = () => {
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Handle Enter key press for Forgot Password and Verify OTP flows
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
