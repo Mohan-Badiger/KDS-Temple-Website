@@ -70,7 +70,7 @@ const Annaprasad = () => {
         description: 'Contribute to Annaprasad',
         order_id: order.id,
         handler: async function (response) {
-          setLoading(true); 
+          setLoading(true);
 
           try {
             const verifyRes = await axios.post(
@@ -127,7 +127,7 @@ const Annaprasad = () => {
         },
         modal: {
           ondismiss: () => {
-            setLoading(false); 
+            setLoading(false);
             toast.info("Payment cancelled.");
           },
         },
@@ -147,7 +147,7 @@ const Annaprasad = () => {
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    handlePayment();
+    // handlePayment(); change it for original mode
   };
 
   return (
@@ -247,13 +247,21 @@ const Annaprasad = () => {
                 className="w-full py-3 px-5 border border-gray-300 h-32 resize-none"
               />
 
-              <button
+              {/* <button
                 type="submit"
                 className="bg-primary hover:bg-orange-400 text-lg text-white py-3 w-full"
                 disabled={loading}
               >
                 {loading ? 'Processing Donation...' : 'Contribute Now'}
+              </button> */}
+
+              {/* Change Handlepayment() also */}
+              <button
+                onClick={() => { toast.error("Payment Disabled for Demo Mode") }}
+                className="w-full bg-primary text-lg text-white font-medium py-3 hover:bg-orange-400 transition duration-300"
+              >Contribute Now
               </button>
+
             </form>
           </div>
         </div>

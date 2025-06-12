@@ -129,7 +129,7 @@ const Donation = () => {
       toast.error('Please fill in all required fields correctly.');
       return;
     }
-    handlePayment();
+    // handlePayment(); change it to enable payment mode
   };
 
   return (
@@ -195,12 +195,19 @@ const Donation = () => {
                 onChange={(e) => setMessage(e.target.value)}
                 className="w-full text-gray-700 py-3 px-5 border border-gray-300 h-35 resize-none"
               />
-              <button
+              {/* <button
                 type="submit"
                 className="w-full bg-primary text-lg text-white font-medium py-3 hover:bg-orange-400 transition duration-300"
                 disabled={loading}
               >
                 {loading ? 'Processing Donation...' : 'Donate Now'}
+              </button> */}
+
+              {/* change handlepayment() also for original mode */}
+              <button
+              onClick={()=>{toast.error("Payment Disabled for Demo Mode")}}
+              className="w-full bg-primary text-lg text-white font-medium py-3 hover:bg-orange-400 transition duration-300"
+              >Donate Now
               </button>
             </div>
           </form>

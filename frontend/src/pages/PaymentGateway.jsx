@@ -201,7 +201,7 @@ const PaymentGateway = () => {
 
       <div className="flex justify-between items-center">
         <h3 className="text-2xl font-semibold">Total: ₹{totalAmount}</h3>
-        <button
+        {/* <button
           onClick={handlePayment}
           disabled={loading}
           className={`px-8 py-3 text-white text-lg font-medium ${
@@ -211,7 +211,16 @@ const PaymentGateway = () => {
           }`}
         >
           {loading ? "Processing..." : "Pay & Book"}
-        </button>
+        </button> */}
+
+       { <button
+        onClick={()=>{toast.error("Payment Disabled for Demo Mode")}}
+        className={`px-8 py-3 text-white text-lg font-medium ${
+            loading
+              ? "bg-gray-600 cursor-not-allowed"
+              : "bg-primary hover:bg-orange-500"
+          }`}
+        >Pay & Book</button>}
       </div>
     </div>
   );
