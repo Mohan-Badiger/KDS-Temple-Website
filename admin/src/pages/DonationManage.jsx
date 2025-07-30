@@ -68,38 +68,38 @@ const DonationManage = () => {
       <div className='flex flex-col md:flex-row justify-between'>
         <h2 className="text-xl font-semibold mb-4">Donation Records</h2>
 
-      {/* Filters */}
-      <div className="flex space-x-4 mb-6 items-center">
-        <div className='flex gap-2 items-center'>
-          <label htmlFor="year" className="block text-sm font-medium text-gray-700">Year</label>
-          <select
-            id="year"
-            value={selectedYear}
-            onChange={(e) => setSelectedYear(e.target.value)}
-            className="mt-1 block w-full border"
-          >
-            <option value="">All</option>
-            {years.map(year => (
-              <option key={year} value={year}>{year}</option>
-            ))}
-          </select>
-        </div>
+        {/* Filters */}
+        <div className="flex space-x-4 mb-6 items-center">
+          <div className='flex gap-2 items-center'>
+            <label htmlFor="year" className="block text-sm font-medium text-gray-700">Year</label>
+            <select
+              id="year"
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+              className="mt-1 block w-full border"
+            >
+              <option value="">All</option>
+              {years.map(year => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </select>
+          </div>
 
-        <div className='flex gap-2 items-center'>
-          <label htmlFor="month" className="block text-sm font-medium text-gray-700">Month</label>
-          <select
-            id="month"
-            value={selectedMonth}
-            onChange={(e) => setSelectedMonth(e.target.value)}
-            className="mt-1 block w-full border"
-          >
-            <option value="">All</option>
-            {months.map(month => (
-              <option key={month.value} value={month.value}>{month.label}</option>
-            ))}
-          </select>
+          <div className='flex gap-2 items-center'>
+            <label htmlFor="month" className="block text-sm font-medium text-gray-700">Month</label>
+            <select
+              id="month"
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(e.target.value)}
+              className="mt-1 block w-full border"
+            >
+              <option value="">All</option>
+              {months.map(month => (
+                <option key={month.value} value={month.value}>{month.label}</option>
+              ))}
+            </select>
+          </div>
         </div>
-      </div>
       </div>
 
       {filteredDonations.length === 0
@@ -126,7 +126,11 @@ const DonationManage = () => {
                     <td className="px-4 py-4">{d.phone}</td>
                     <td className="px-4 py-4">₹{d.amount}</td>
                     <td className="px-4 py-4">
-                      {new Date(d.createdAt).toLocaleString('en-IN')}
+                      {/* {new Date(d.createdAt).toLocaleString('en-IN')} */}
+                      {new Date(d.createdAt).toLocaleString('en-IN', {
+                        dateStyle: 'medium',
+                        timeStyle: 'short',
+                      })}
                     </td>
                   </tr>
                 ))}

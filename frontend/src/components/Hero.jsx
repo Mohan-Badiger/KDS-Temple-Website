@@ -31,7 +31,7 @@ const Hero = () => {
           <div className="max-w-xl text-center ltr:sm:text-left rtl:sm:text-right">
             <h1 className="text-3xl font-extrabold sm:text-5xl text-primary">
               BANAHATTI-
-              <strong className="block font-extrabold text-4xl text-white">KADASIDDESHWAR TEMPLE.</strong>
+              <p className="block uppercase text-4xl text-white">Temples Management Trust Committee</p>
             </h1>
 
             <p className="mt-4 max-w-lg sm:text-xl/relaxed text-gray-300">

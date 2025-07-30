@@ -139,7 +139,7 @@ const BookingConfirmation = () => {
         </div>
 
         {/* Pooja Date */}
-        <div className="mb-4 flex sm:flex-row gap-4">
+        <div className="mb-4 flex sm:flex-row gap-4 items-center">
           <h4 className="text-lg font-medium">Pooja Date:</h4>
           <p className="text-gray-700">{formatDate(poojaDate)}</p>
         </div>
@@ -180,7 +180,7 @@ const BookingConfirmation = () => {
         </div>
 
         {/* Booking Created Date */}
-        <div className="mb-4 flex sm:flex-row gap-4">
+        <div className="mb-4 flex sm:flex-row gap-4 items-center">
           <h4 className="text-lg font-medium">Booking Created On:</h4>
           <p className="text-gray-700">{formatDate(createdAt)}</p>
         </div>

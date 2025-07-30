@@ -53,7 +53,7 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="sm:p-6 font-primary">
+    <div className="sm:mt-6 font-primary">
       {loading ? (
         <p className="text-center">Loading data...</p>
       ) : (
@@ -111,6 +111,7 @@ const Dashboard = () => {
                   <th className="py-3 px-4">Pooja in Name Of</th>
                   <th className="py-3 px-4">Status</th>
                   <th className="py-3 px-4">Date</th>
+                  <th className="py-3 px-4">Time</th>
                 </tr>
               </thead>
               <tbody>
@@ -126,8 +127,9 @@ const Dashboard = () => {
                     <td className="py-3 px-4">{booking.poojaInNameOf || "N/A"}</td>
                     <td className="py-3 px-4 capitalize">{booking.status}</td>
                     <td className="py-3 px-4">
-                      {new Date(booking.assignedDate || booking.createdAt).toLocaleDateString()}
+                      {new Date(booking.poojaDate).toLocaleDateString()}
                     </td>
+                    <td className="py-3 px-4 capitalize">{booking.assignedTime}</td>
                   </tr>
                 ))}
               </tbody>

@@ -129,7 +129,7 @@ const Donation = () => {
       toast.error('Please fill in all required fields correctly.');
       return;
     }
-    // handlePayment(); change it to enable payment mode
+    handlePayment(); //change it to enable payment mode
   };
 
   return (
@@ -140,7 +140,7 @@ const Donation = () => {
         </div>
       )}
 
-      <h2 className="text-2xl sm:text-4xl font-bold text-center mb-4 mt-4">Make a Donation</h2>
+      <h2 className="text-2xl sm:text-4xl text-gray-800 text-center mb-4 mt-4">Make a Donation</h2>
       <div className="w-full flex justify-center">
         <div className="md:w-11/12 flex gap-10 flex-col sm:flex-row border-gray-200 sm:px-8 sm:mt-3">
           <div className="md:w-[460px]">
@@ -205,7 +205,7 @@ const Donation = () => {
 
               {/* change handlepayment() also for original mode */}
               <button
-              onClick={()=>{toast.error("Payment Disabled for Demo Mode")}}
+              //onClick={()=>{toast.error("Payment Disabled for Demo Mode")}}
               className="w-full bg-primary text-lg text-white font-medium py-3 hover:bg-orange-400 transition duration-300"
               >Donate Now
               </button>

@@ -66,7 +66,7 @@ const contactMail = async (req, res) => {
         </tr>
         <tr>
           <td align="center" style="background: #E38C00; padding: 15px;">
-            <p style="color: #fff; margin: 0;">Visit us at <a href="http://KSTemple.com" style="color: #ffe7b3; text-decoration: none;">yourtemplewebsite.com</a></p>
+            <p style="color: #fff; margin: 0;">Visit us at <a href="http://KSTemple.com" style="color: #ffe7b3; text-decoration: none;">Banahattitemples.com</a></p>
           </td>
         </tr>
       </table>

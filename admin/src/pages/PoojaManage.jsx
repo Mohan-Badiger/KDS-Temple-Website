@@ -3,7 +3,7 @@ import { NavLink, Outlet } from 'react-router-dom'
 
 const PoojaManage = () => {
     return (
-        <div className='sm:p-6 font-primary'>
+        <div className='sm:mt-6 font-primary'>
             <div className='grid grid-cols-1 sm:grid-cols-4 gap-2'>
                 <NavLink to='request' className='border border-gray-300 px-3 py-2 rounded-l'>
                     <p className='text-md text-center'>Request's</p>

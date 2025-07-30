@@ -126,7 +126,11 @@ const AnnaprasadManage = () => {
                     <td className="px-4 py-4">{d.phone}</td>
                     <td className="px-4 py-4">₹{d.amount}</td>
                     <td className="px-4 py-4">
-                      {new Date(d.createdAt).toLocaleString('en-IN')}
+                      {/* {new Date(d.createdAt).toLocaleString('en-IN')} */}
+                       {new Date(d.createdAt).toLocaleString('en-IN', {
+                        dateStyle: 'medium',
+                        timeStyle: 'short',
+                      })}
                     </td>
                   </tr>
                 ))}

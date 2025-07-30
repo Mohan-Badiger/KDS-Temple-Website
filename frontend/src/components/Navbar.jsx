@@ -54,7 +54,7 @@ const Navbar = () => {
   return (
     <>
       <div className="flex items-center justify-between py-5 font-medium font-primary">
-        <Link to='/'><h1 className='text-3xl'>KDS Temple.</h1></Link>
+        <Link to='/'><h1 className='text-3xl'>BNT Temples</h1></Link>
 
         <ul className='gap-10 hidden sm:flex'>
           <NavLink to='/'><p className='text-md'>Home</p></NavLink>

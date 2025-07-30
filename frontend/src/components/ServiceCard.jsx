@@ -59,7 +59,7 @@ const ServiceCard = () => {
                         The Pooja Module enables devotees to seamlessly book poojas like Abhishek, Kumkum Pooja, Belli Pooja, and Butti Pooja online,
                         ensuring a hassle-free and spiritually fulfilling experience.
                     </p>
-                    <button className="text-indigo-500 flex items-center hover:text-indigo-600 cursor-pointer" onClick={poojaClickHandler} >    
+                    <button className="text-indigo-500 flex items-center hover:text-indigo-600 hover:opacity-70 cursor-pointer" onClick={poojaClickHandler} >    
                         Book Pooja
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -88,7 +88,7 @@ const ServiceCard = () => {
                     <p className="font-light text-sm text-gray-500 mb-3">
                         The Annaprasad Module allows devotees to contribute financially towards food distribution at the temple, ensuring that prasadam is provided to all worshippers, especially during festivals and special occasions.
                     </p>
-                    <a className="text-indigo-500 flex items-center hover:text-indigo-600 cursor-pointer" onClick={annaprasadClickHandler}>
+                    <a className="text-indigo-500 flex items-center hover:text-indigo-600 hover:opacity-70 cursor-pointer" onClick={annaprasadClickHandler}>
                         Contribute to Annaprasad
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -115,7 +115,7 @@ const ServiceCard = () => {
                     <p className="font-light text-sm text-gray-500 mb-3">
                         The Donation Module provides a secure and transparent platform for devotees to contribute towards temple development, renovations, and maintenance, ensuring the preservation of spiritual and cultural heritage.
                     </p>
-                    <a className="text-indigo-500 flex items-center hover:text-indigo-600 cursor-pointer"  onClick={donationClickHandler}>
+                    <a className="text-indigo-500 flex items-center hover:text-indigo-600 hover:opacity-70 cursor-pointer"  onClick={donationClickHandler}>
                         Donate Now
                         <svg
                             xmlns="http://www.w3.org/2000/svg"

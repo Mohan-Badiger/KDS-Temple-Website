@@ -18,7 +18,8 @@ const Footer = () => {
           <div className="mt-16 grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-32">
             <div className="mx-auto max-w-sm lg:max-w-none">
               <p className="mt-4 text-center text-gray-500 lg:text-left lg:text-lg">
-                Kadasiddheshwar Temple Banahatti <br />
+                {/* Kadasiddheshwar Temple Banahatti <br /> */}
+                Banahatti Temples Management Trust Committee <br />
                 SH 53, Rabkavi Banhatti - 587311, Bagalkot Karnataka India 
               </p>
 

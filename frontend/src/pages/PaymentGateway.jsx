@@ -182,7 +182,7 @@ const PaymentGateway = () => {
         <input
           type="text"
           value={poojaInNameOf}
-          onChange={(e) => setPoojaInNameOf(e.target.value)}
+          onChange={(e) => setPoojaInNameOf(e.target.value.replace(/[^a-zA-Z\s]/g, ''))}
           className="w-full px-4 py-3 border outline-0"
           placeholder="Enter name"
         />
@@ -201,7 +201,7 @@ const PaymentGateway = () => {
 
       <div className="flex justify-between items-center">
         <h3 className="text-2xl font-semibold">Total: ₹{totalAmount}</h3>
-        {/* <button
+        <button
           onClick={handlePayment}
           disabled={loading}
           className={`px-8 py-3 text-white text-lg font-medium ${
@@ -211,16 +211,16 @@ const PaymentGateway = () => {
           }`}
         >
           {loading ? "Processing..." : "Pay & Book"}
-        </button> */}
+        </button>
 
-       { <button
+       {/* { <button
         onClick={()=>{toast.error("Payment Disabled for Demo Mode")}}
         className={`px-8 py-3 text-white text-lg font-medium ${
             loading
               ? "bg-gray-600 cursor-not-allowed"
               : "bg-primary hover:bg-orange-500"
           }`}
-        >Pay & Book</button>}
+        >Pay & Book</button>} */}
       </div>
     </div>
   );
