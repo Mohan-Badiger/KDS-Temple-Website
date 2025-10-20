@@ -60,8 +60,8 @@ import Login from './pages/Login';
 import Donation from './pages/Donation';
 import PaymentGateway from './pages/PaymentGateway';
 import BookingConfirmation from './pages/BookingConfirmation';
-import Annaprasad from './pages/Annaprasad';
 import { ToastContainer } from 'react-toastify';
+import MySeva from './pages/MySeva';
 
 const ProtectedRoute = ({ element }) => {
   const { token } = useContext(TempleContext);
@@ -83,10 +83,10 @@ const App = () => {
 
           {/* Protected Routes */}
           <Route path='/pooja' element={<ProtectedRoute element={<Pooja />} />} />
-          <Route path='/annaprasad' element={<ProtectedRoute element={<Annaprasad />} />} />
           <Route path='/donation' element={<ProtectedRoute element={<Donation />} />} />
           <Route path='/payment' element={<ProtectedRoute element={<PaymentGateway />} />} />
           <Route path='/booking-confirmation' element={<ProtectedRoute element={<BookingConfirmation />} />} />
+          <Route path='/myseva' element={<ProtectedRoute element={<MySeva/>} />} />
         </Routes>
         <Footer />
       </div>

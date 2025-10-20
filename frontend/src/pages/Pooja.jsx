@@ -26,8 +26,8 @@ const PoojaCard = () => {
   return (
     <div className='font-primary'>
       <div className="flex justify-between items-center  mb-4 mt-6">
-      <h1 className="text-2xl sm:text-3xl font-semibold text-start">Book Your Pooja</h1>
-      <h2 onClick={()=>navigate('booking-confirmation')} className="sm:text-xl cursor-pointer font-medium border py-2 px-4">Booked Pooja</h2>
+      <h1 className="text-2xl sm:text-3xl text-start">Book Your Pooja</h1>
+    {/* <h2 onClick={()=>navigate('booking-confirmation')} className="sm:text-xl cursor-pointer font-medium border py-2 px-4">Booked Pooja</h2> */}
       </div>
 
       {loading ? (

@@ -4,6 +4,7 @@ import {
   approveBooking,
   getUserBookings,
   getAllBookings,
+  getMyBookings,
   getLatestBooking,
   getPoojaRequests, // import the function to get pending pooja requests
 } from "../controllers/bookingController.js";
@@ -15,6 +16,7 @@ router.put("/approve/:bookingId", approveBooking);
 router.get("/user/:userId", getUserBookings);
 router.get("/all", getAllBookings);
 router.get("/latest", getLatestBooking);
+router.get("/my-bookings", getMyBookings);
 
 // New route for fetching pending pooja requests
 router.get("/pooja-requests", getPoojaRequests);

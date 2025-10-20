@@ -7,7 +7,7 @@ const TotalBooking = ({ total }) => {
 
     return (
         <div className='w-full bg-white p-6 shadow-sm font-primary'>
-            <h2 className='text-lg font-bold mb-4'>Booking Summary</h2>
+            <h2 className='text-lg mb-4'>Booking Summary</h2>
             <div className='flex flex-col gap-2 text-sm'>
                 <div className='flex justify-between'>
                     <p>Subtotal</p>

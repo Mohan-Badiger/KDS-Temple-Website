@@ -49,6 +49,7 @@ import {
   verifyRegisterOtp,
   registerUser,
   loginUser,
+  adminLogin,
   requestResetOtp,
   verifyResetOtp,
 } from '../controllers/userController.js';
@@ -62,6 +63,7 @@ router.post('/register', registerUser);
 
 // ===== Login =====
 router.post('/login', loginUser);
+router.post('/admin', adminLogin);
 
 // ===== Password Reset =====
 router.post('/request-reset-otp', requestResetOtp);

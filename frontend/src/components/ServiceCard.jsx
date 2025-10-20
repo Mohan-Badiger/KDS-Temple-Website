@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import seva from '/seva.svg'
 import donate from '/donate.png'
-import food from '/food.png'
+import myseva from '/myseva.png'
 import { Link } from 'react-router-dom'
 import { TempleContext } from '../context/TempleContext'
 import { toast } from 'react-toastify'
@@ -27,9 +27,9 @@ const ServiceCard = () => {
 
     const annaprasadClickHandler = () => {
         if(token === localStorage.getItem('token')){
-         navigate('/annaprasad');
+         navigate('/myseva');
         }else{
-            toast.error("Please Login For Contribution");
+            toast.error("Please Login To Open MySeva");
         }
     }
 
@@ -78,33 +78,6 @@ const ServiceCard = () => {
 
                 <div className="px-3 py-8">
                     <div
-                        className="bg-green-100 rounded-full w-16 h-16 flex justify-center items-center text-green-500 shadow-2xl"
-                    >
-                        <img src={food} alt="" className='w-10' />
-                    </div>
-                    <h2 className="uppercase mt-6 font-medium mb-3">
-                        Annaprasad
-                    </h2>
-                    <p className="font-light text-sm text-gray-500 mb-3">
-                        The Annaprasad Module allows devotees to contribute financially towards food distribution at the temple, ensuring that prasadam is provided to all worshippers, especially during festivals and special occasions.
-                    </p>
-                    <a className="text-indigo-500 flex items-center hover:text-indigo-600 hover:opacity-70 cursor-pointer" onClick={annaprasadClickHandler}>
-                        Contribute to Annaprasad
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5"
-                            viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path
-                                fillRule="evenodd"
-                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                clipRule="evenodd"
-                            />
-                        </svg>
-                    </a>
-                </div>
-                <div className="px-3 py-8">
-                    <div
                         className="bg-red-100 rounded-full w-16 h-16 flex justify-center items-center text-red-500 shadow-2xl"
                     >
                         <img src={donate} alt="" className='w-9' />
@@ -131,6 +104,35 @@ const ServiceCard = () => {
                         </svg>
                     </a>
                 </div>
+
+                <div className="px-3 py-8">
+                    <div
+                        className="bg-green-100 rounded-full w-16 h-16 flex justify-center items-center text-green-500 shadow-2xl"
+                    >
+                        <img src={myseva} alt="" className='w-10' />
+                    </div>
+                    <h2 className="uppercase mt-6 font-medium mb-3">
+                        My Seva
+                    </h2>
+                    <p className="font-light text-sm text-gray-500 mb-3">
+                        Track your spiritual journey and contributions. This section allows you to view your pooja bookings and manage your donations, providing a complete record of your temple activities in one place.
+                    </p>
+                    <a className="text-indigo-500 flex items-center hover:text-indigo-600 hover:opacity-70 cursor-pointer" onClick={annaprasadClickHandler}>
+                        My Seva's
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5"
+                            viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path
+                                fillRule="evenodd"
+                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                clipRule="evenodd"
+                            />
+                        </svg>
+                    </a>
+                </div>
+
             </div>
         </div>
     )

@@ -66,7 +66,7 @@ const AnnaprasadManage = () => {
     <div className="max-w-5xl mx-auto mt-6 font-primary">
 
       <div className='flex flex-col md:flex-row justify-between'>
-        <h2 className="text-xl font-semibold mb-4">Annaprasad Donation Records</h2>
+        <h2 className="text-xl mb-4">Annaprasad Donation Records</h2>
 
         {/* Filters */}
         <div className="flex space-x-4 mb-6 items-center">

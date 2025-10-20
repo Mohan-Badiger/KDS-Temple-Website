@@ -7,6 +7,7 @@ const donationSchema = new mongoose.Schema({
   phone: { type: String, required: true },
   amount: { type: Number, required: true, min: 1 },
   message: { type: String, default: '' },
+  // razorpay
 }, { timestamps: true });
 
 export default mongoose.model('Donation', donationSchema);

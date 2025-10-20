@@ -198,8 +198,9 @@ export const approveBooking = async (req, res) => {
   }
 };
 
+//=======================================================================================================================================
 
-// Get all bookings for a specific user (latest first)
+//Get all bookings for a specific user (latest first)
 export const getUserBookings = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -224,6 +225,73 @@ export const getUserBookings = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error", error: error.message });
   }
 };
+
+// ✅ Get all bookings for a specific user (latest first, full details)
+export const getMyBookings = async (req, res) => {
+  try {
+    // Extract token from header
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ success: false, message: "No token provided" });
+    }
+
+    // Decode JWT
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+
+    // Validate user ID
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(401).json({ success: false, message: "Invalid User ID" });
+    }
+
+    // Fetch bookings for the user (latest first)
+    const bookings = await BookingModel.find({ user: userId })
+      .populate("poojas", "name description")
+      .populate("user", "name email")
+      .sort({ createdAt: -1 });
+
+    if (!bookings || bookings.length === 0) {
+      return res.status(404).json({ success: false, message: "No bookings found for this user" });
+    }
+
+    // Clean response
+    const bookingDetails = bookings.map((booking) => ({
+      _id: booking._id,
+      user: {
+        name: booking.user?.name,
+        email: booking.user?.email,
+      },
+      poojas: booking.poojas.map((pooja) => ({
+        _id: pooja._id,
+        name: pooja.name,
+        description: pooja.description,
+      })),
+      totalAmount: booking.totalAmount,
+      status: booking.status,
+      poojaDate: booking.poojaDate || null,
+      assignedTime: booking.status === "approved" ? booking.assignedTime : null,
+      createdAt: booking.createdAt,
+      poojaInNameOf: booking.poojaInNameOf || null,
+      paymentId: booking.paymentId || null,
+      receiptId: booking.receiptId || null,
+      paymentMethod: booking.paymentMethod || null,
+    }));
+
+    return res.status(200).json({
+      success: true,
+      bookings: bookingDetails,
+    });
+  } catch (error) {
+    console.error("Error in getMyBookings:", error.message);
+    return res.status(500).json({
+      success: false,
+      message: "Server error, please try again later",
+    });
+  }
+};
+
+
+//=======================================================================================================================================
 
 // Get all bookings for admins (latest first)
 export const getAllBookings = async (req, res) => {
