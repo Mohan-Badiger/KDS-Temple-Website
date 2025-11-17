@@ -50,7 +50,7 @@ const MySeva = () => {
 
   return (
     <div className="overflow-x-auto px-6 py-10 font-primary">
-      <h2 className="text-2xl font-semibold text-center mb-6 text-gray-800">
+      <h2 className="text-2xl text-center mb-6 text-gray-800">
         My Seva Bookings
       </h2>
 

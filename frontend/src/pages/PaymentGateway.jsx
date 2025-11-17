@@ -162,15 +162,15 @@ const PaymentGateway = () => {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-6 font-primary">
-      <h2 className="text-3xl font-bold mb-3">Payment Gateway</h2>
+      <h2 className="text-3xl mb-3">Payment Gateway</h2>
       <p className="mb-4 text-gray-600">
         You are about to pay <span className="font-semibold">₹{totalAmount}</span> for:
       </p>
 
-      <div className="bg-white border p-6 mb-6 shadow">
+      <div className="border p-6 mb-6 shadow">
         {selectedPoojas.map((pooja) => (
           <div key={pooja._id} className="mb-4 border-b pb-4">
-            <h3 className="text-xl font-semibold">{pooja.name}</h3>
+            <h3 className="text-xl">{pooja.name}</h3>
             <p className="text-gray-600">{pooja.description}</p>
             <p className="text-gray-800 font-medium">₹{pooja.price}</p>
           </div>

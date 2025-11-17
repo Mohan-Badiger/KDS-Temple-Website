@@ -72,7 +72,7 @@ const App = () => {
   return (
     <>
       <ToastContainer autoClose={2000} position="top-right" />
-      <div className='px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]'>
+      <div className='px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] bg-gradient-to-br from-yellow-100 via-gray-200 to-yellow-100'>
         <Navbar />
         <Routes>
           <Route path='/' element={<Home />} />
