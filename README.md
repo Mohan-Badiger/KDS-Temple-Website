@@ -168,7 +168,7 @@ node server.js
 
 ## 👨‍💻 Developed By
 
-Mohan S Badiger  
+Mohan Badiger  
 Full Stack Developer  
 
 📍 Karnataka, India  
