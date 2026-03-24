@@ -3,7 +3,6 @@
 A full-stack Temple Management Web Application designed to handle online pooja bookings, donations, annaprasad contributions, and admin operations with a secure approval workflow.
 
 Built with modern technologies to ensure scalability, security, and smooth user experience.
-
 ---
 
 ### Live Features
