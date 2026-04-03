@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { backendUrl } from '../App';
 import { toast } from 'react-toastify';
@@ -17,6 +17,8 @@ const Update = () => {
   const [loading, setLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState(false);
   const [error, setError] = useState(null);
+
+  const navigate = useNavigate();
 
   // Fetch pooja data
   useEffect(() => {
@@ -76,6 +78,7 @@ const Update = () => {
 
       if (response.data.success) {
         toast.success('Pooja updated successfully!');
+        navigate('/pooja-manage/manage');
       } else {
         toast.error('Failed to update pooja.');
       }
