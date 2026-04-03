@@ -4,7 +4,7 @@ import { TempleContext } from '../context/TempleContext'
 
 const Footer = () => {
 
-  const {navigate} = useContext(TempleContext);
+  const { navigate } = useContext(TempleContext);
 
   return (
     <>
@@ -18,57 +18,71 @@ const Footer = () => {
           <div className="mt-16 grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-32">
             <div className="mx-auto max-w-sm lg:max-w-none">
               <p className="mt-4 text-center text-gray-500 lg:text-left lg:text-lg">
-                {/* Kadasiddheshwar Temple Banahatti <br /> */}
                 Banahatti Temples Management Trust Committee <br />
                 SH 53, Rabkavi Banhatti - 587311, Bagalkot Karnataka India 
               </p>
-
             </div>
 
             <div className="grid grid-cols-1 gap-8 text-center lg:grid-cols-3 lg:text-left">
+              
+              {/* Services */}
               <div>
                 <strong className="font-medium text-gray-900"> Services </strong>
 
                 <ul className="mt-6 space-y-1">
                   <li>
-                    <p className="text-gray-700 transition hover:text-gray-700/75"> Pooja </p>
+                    <Link to="/pooja" className="text-gray-700 hover:text-gray-900 transition">
+                      Pooja
+                    </Link>
                   </li>
 
                   <li>
-                    <p className="text-gray-700 transition hover:text-gray-700/75"> Donation </p>
+                    <Link to="/donation" className="text-gray-700 hover:text-gray-900 transition">
+                      Donation
+                    </Link>
                   </li>
                 </ul>
               </div>
 
+              {/* About */}
               <div>
                 <strong className="font-medium text-gray-900"> About </strong>
 
                 <ul className="mt-6 space-y-1">
                   <li>
-                    <p className="text-gray-700 transition hover:text-gray-700/75"> About </p>
+                    <Link to="/about" className="text-gray-700 hover:text-gray-900 transition">
+                      About
+                    </Link>
                   </li>
                 </ul>
               </div>
 
+              {/* Support */}
               <div>
                 <strong className="font-medium text-gray-900"> Support </strong>
 
                 <ul className="mt-6 space-y-1">
                   <li>
-                    <a className="text-gray-700 transition hover:text-gray-700/75"> Contact </a>
+                    <Link to="/contact" className="text-gray-700 hover:text-gray-900 transition">
+                      Contact
+                    </Link>
                   </li>
                 </ul>
               </div>
+
             </div>
           </div>
 
           <div className="mt-16 border-t border-gray-100 pt-8">
-            <p className="text-center text-xs/relaxed text-gray-500">©{new Date().getFullYear()} Banahatti Temples Management Trust Committee. All rights reserved.</p>
+            <p className="text-center text-xs/relaxed text-gray-500">
+              © {new Date().getFullYear()} Banahatti Temples Management Trust Committee. All rights reserved.
+            </p>
           </div>
+
         </div>
       </div>
     </>
   )
-  }
+}
 
 export default Footer
