@@ -63,7 +63,7 @@ const Footer = () => {
           </div>
 
           <div className="mt-16 border-t border-gray-100 pt-8">
-            <p className="text-center text-xs/relaxed text-gray-500">©Banahatti Temples Management Trust Committee 2025. All rights reserved.</p>
+            <p className="text-center text-xs/relaxed text-gray-500">©{new Date().getFullYear()} Banahatti Temples Management Trust Committee. All rights reserved.</p>
           </div>
         </div>
       </div>
