@@ -202,8 +202,8 @@ export const getUserBookings = async (req, res) => {
       .sort({ createdAt: -1 }) // Sorting by latest booking (createdAt field)
       .limit(5); // You can modify this to limit the number of latest bookings shown
 
-    if (bookings.length === 0) {
-      return res.status(404).json({ success: false, message: "No bookings found" });
+    if (!bookings || bookings.length === 0) {
+      return res.status(200).json({ success: true, bookings: [] });
     }
 
     res.status(200).json({ success: true, bookings });
@@ -230,7 +230,7 @@ export const getMyBookings = async (req, res) => {
       .sort({ createdAt: -1 });
 
     if (!bookings || bookings.length === 0) {
-      return res.status(404).json({ success: false, message: "No bookings found for this user" });
+      return res.status(200).json({ success: true, bookings: [] });
     }
 
     // Clean response
@@ -280,8 +280,8 @@ export const getAllBookings = async (req, res) => {
       .populate("poojas", "name description") // Populate pooja name and description
       .sort({ createdAt: -1 });
 
-    if (!bookings.length) {
-      return res.status(404).json({ success: false, message: "No bookings found" });
+    if (!bookings || !bookings.length) {
+      return res.status(200).json({ success: true, bookings: [] });
     }
 
     res.status(200).json({ success: true, bookings });
@@ -309,7 +309,7 @@ export const getLatestBooking = async (req, res) => {
       .populate("user", "name email");
 
     if (!booking) {
-      return res.status(404).json({ success: false, message: "No bookings found for this user" });
+      return res.status(200).json({ success: true, booking: null, message: "No latest booking found for this user" });
     }
 
     // Prepare pooja details
@@ -361,7 +361,7 @@ export const getPoojaRequests = async (req, res) => {
       .sort({ createdAt: -1 });
 
     if (!requests || requests.length === 0) {
-      return res.status(404).json({ success: false, message: "No pending requests found." });
+      return res.status(200).json({ success: true, requests: [] });
     }
 
     res.status(200).json({ success: true, requests });

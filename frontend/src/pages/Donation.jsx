@@ -36,6 +36,7 @@ const Donation = () => {
     'Annadanam',
     'Temple Development',
     'Festival Support',
+    'Seva Donation',
   ];
 
   const PRESET_AMOUNTS = [100, 500, 1000, 5000];

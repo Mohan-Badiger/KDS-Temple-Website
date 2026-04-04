@@ -89,7 +89,7 @@ const PaymentGateway = () => {
     try {
       const { data: order } = await axiosInstance.post(
         `/api/payment/create-order`,
-        { amount: totalAmount * 100 }
+        { amount: Number(totalAmount) }
       );
 
       const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_dummyKey";

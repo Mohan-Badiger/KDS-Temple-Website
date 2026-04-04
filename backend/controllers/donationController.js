@@ -92,3 +92,19 @@ export const getAllDonations = async (_req, res) => {
     res.status(500).json({ success: false, message: 'Failed to fetch donations.' });
   }
 };
+
+// Get current user's donations
+export const getMyDonations = async (req, res) => {
+  try {
+    const userEmail = req.user.email; // From authMiddleware
+    if (!userEmail) {
+      return res.status(400).json({ success: false, message: "User email not found in token." });
+    }
+
+    const donations = await Donation.find({ email: userEmail.toLowerCase().trim() }).sort({ createdAt: -1 });
+    res.json({ success: true, donations });
+  } catch (err) {
+    console.error('Fetch my donations error:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch your donations.' });
+  }
+};
