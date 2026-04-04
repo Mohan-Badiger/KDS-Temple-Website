@@ -3,13 +3,13 @@ import Donation from '../models/donationModel.js';
 
 export const donateController = async (req, res) => {
   try {
-    const { firstName, lastName, phone, amount, message } = req.body;
-    const email = req.user.email; // from authMiddleware
+    const { firstName, lastName, phone, amount, message, email: bodyEmail } = req.body;
+    const email = bodyEmail || (req.user ? req.user.email : null); 
 
-    if (!firstName || !lastName || !phone || amount < 1) {
+    if (!firstName || !lastName || !phone || !email || amount < 1) {
       return res.status(400).json({
         success: false,
-        message: 'All fields are required and amount must be ≥ 1',
+        message: 'All fields are required (including email) and amount must be ≥ 1',
       });
     }
 

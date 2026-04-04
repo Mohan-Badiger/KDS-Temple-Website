@@ -14,6 +14,7 @@ const Donation = () => {
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [amount, setAmount] = useState('');
   const [message, setMessage] = useState('');
@@ -57,6 +58,7 @@ const Donation = () => {
           const nameParts = user.name ? user.name.split(' ') : [];
           setFirstName(nameParts[0] || '');
           setLastName(nameParts.slice(1).join(' ') || '');
+          setEmail(user.email || '');
           setPhone(user.phone || '');
         }
 
@@ -149,10 +151,14 @@ const Donation = () => {
     setLoading(true);
 
     try {
-      const { data: order } = await axiosInstance.post(
+      const { data } = await axiosInstance.post(
         `/api/payment/create-order`,
-        { amount: amount * 100 }
+        { amount: Number(amount) }
       );
+
+      const order = data.order; // ✅ extract actual order
+
+      console.log("ORDER RECEIVED:", order);
 
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
@@ -161,6 +167,13 @@ const Donation = () => {
         name: 'Temple Donation',
         description: `Donation for ${purpose}`,
         order_id: order.id,
+
+        prefill: {
+          name: `${firstName} ${lastName}`,
+          email: email,
+          contact: phone,
+        },
+
         handler: async function (response) {
           try {
             const verifyRes = await axiosInstance.post(
@@ -178,6 +191,7 @@ const Donation = () => {
               const donationData = {
                 firstName: isAnonymous ? 'Anonymous' : firstName,
                 lastName: isAnonymous ? 'Devotee' : lastName,
+                email,
                 phone,
                 amount,
                 message: enrichedMessage,
@@ -226,7 +240,11 @@ const Donation = () => {
       const razorpay = new window.Razorpay(options);
       razorpay.open();
     } catch (err) {
-      toast.error('Payment initiation failed.');
+      if (err.response && err.response.data && err.response.data.errorDetails) {
+        toast.error(`Razorpay Error: ${err.response.data.errorDetails}`);
+      } else {
+        toast.error('Payment initiation failed. Check API keys.');
+      }
       console.error('Payment initiation error:', err);
       setLoading(false);
     }
