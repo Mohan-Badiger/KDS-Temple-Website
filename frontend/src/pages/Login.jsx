@@ -318,17 +318,9 @@ const Login = () => {
         });
 
         if (res.data.success) {
-          toast.success('Account created! You can now login.');
-          setCurrentState('Login');
-          setName('');
-          setEmail('');
-          setPassword('');
-          setConfirmPassword('');
-          setEmailVerified(false);
-          setEmailToVerify('');
-          setEmailOtp('');
-          setEmailVerificationSent(false);
-          setResendTimer(0);
+          setToken(res.data.token);
+          localStorage.setItem('token', res.data.token);
+          toast.success('Account created and logged in successfully');
         } else {
           toast.error(res.data.message);
         }
