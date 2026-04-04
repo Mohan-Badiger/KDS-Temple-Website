@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { TempleContext } from "../context/TempleContext";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -87,8 +87,8 @@ const PaymentGateway = () => {
     }
 
     try {
-      const { data: order } = await axios.post(
-        `${backendUrl}/api/payment/create-order`,
+      const { data: order } = await axiosInstance.post(
+        `/api/payment/create-order`,
         { amount: totalAmount * 100 }
       );
 
@@ -103,8 +103,8 @@ const PaymentGateway = () => {
         order_id: order.id,
         handler: async function (response) {
           try {
-            const verifyRes = await axios.post(
-              `${backendUrl}/api/payment/verify-payment`,
+            const verifyRes = await axiosInstance.post(
+              `/api/payment/verify-payment`,
               {
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,
@@ -121,14 +121,9 @@ const PaymentGateway = () => {
                 poojaDate: formatDateToDDMMYYYY(poojaDate),
               };
 
-              const bookingRes = await axios.post(
-                `${backendUrl}/api/bookings/create`,
-                bookingData,
-                {
-                  headers: {
-                    Authorization: `Bearer ${userToken}`,
-                  },
-                }
+              const bookingRes = await axiosInstance.post(
+                `/api/bookings/create`,
+                bookingData
               );
 
               if (bookingRes.data.success) {

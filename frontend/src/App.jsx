@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { TempleContext } from './context/TempleContext';
 import Navbar from './components/Navbar';
@@ -15,6 +15,11 @@ import BookingConfirmation from './pages/BookingConfirmation';
 import { ToastContainer } from 'react-toastify';
 import MySeva from './pages/MySeva';
 import ScrollToTop from './components/ScrollToTop';
+
+const Profile = lazy(() => import('./pages/Profile'));
+const Settings = lazy(() => import('./pages/Settings'));
+
+const SimpleLoader = () => <div className="text-center py-10 font-primary text-gray-600">Loading page...</div>;
 
 
 const ProtectedRoute = ({ element }) => {
@@ -42,6 +47,8 @@ const App = () => {
           <Route path='/payment' element={<ProtectedRoute element={<PaymentGateway />} />} />
           <Route path='/booking-confirmation' element={<ProtectedRoute element={<BookingConfirmation />} />} />
           <Route path='/myseva' element={<ProtectedRoute element={<MySeva/>} />} />
+          <Route path='/profile' element={<ProtectedRoute element={<Suspense fallback={<SimpleLoader />}><Profile /></Suspense>} />} />
+          <Route path='/settings' element={<ProtectedRoute element={<Suspense fallback={<SimpleLoader />}><Settings /></Suspense>} />} />
         </Routes>
         <Footer />
       </div>

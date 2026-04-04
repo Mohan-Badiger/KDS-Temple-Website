@@ -1,0 +1,71 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+
+const ProfileCard = ({ user }) => {
+  if (!user) return null;
+
+  // Use a fallback avatar if no image provided
+  const avatarUrl = user.profile?.profileImage || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || 'User')}&background=f97316&color=fff&size=256`;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="bg-white rounded-md shadow-md p-6 sm:p-8 w-full max-w-3xl mx-auto border border-gray-100 relative font-primary text-gray-800"
+    >
+      <div className="absolute top-6 right-6">
+        <Link
+          to="/settings"
+          className="bg-orange-50 text-orange-600 hover:bg-orange-400 transition px-4 py-2 rounded-sm text-sm font-medium border border-orange-200"
+        >
+          Edit Profile
+        </Link>
+      </div>
+
+      <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8">
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          className="w-28 h-28 sm:w-36 sm:h-36 shrink-0"
+        >
+          <img
+            src={avatarUrl}
+            alt={user.name}
+            className="w-full h-full rounded-full object-cover border-4 border-orange-100 shadow-sm"
+          />
+        </motion.div>
+
+        <div className="flex-1 w-full text-center sm:text-left mt-2 sm:mt-0">
+          <h2 className="text-2xl sm:text-3xl font-semibold mb-1">Namaste, {user.name}</h2>
+          <p className="text-gray-500 mb-6">{user.email}</p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
+            <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
+              <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Phone Number</p>
+              <p className="font-medium">{user.phone || 'Not provided'}</p>
+            </div>
+            <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
+              <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Gothra</p>
+              <p className="font-medium">{user.profile?.gothra || 'Not provided'}</p>
+            </div>
+            <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
+              <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Nakshatra</p>
+              <p className="font-medium">{user.profile?.nakshatra || 'Not provided'}</p>
+            </div>
+            <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
+              <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Rashi</p>
+              <p className="font-medium">{user.profile?.rashi || 'Not provided'}</p>
+            </div>
+            <div className="bg-gray-50 p-3 rounded-lg border border-gray-100 sm:col-span-2">
+              <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Address</p>
+              <p className="font-medium">{user.profile?.address || 'Not provided'}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+export default ProfileCard;

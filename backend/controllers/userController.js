@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import validator from 'validator';
 import sendOtpEmail from '../services/sendOtpEmail.js';
+import cloudinary from '../config/cloudinary.js';
 
 const createToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
@@ -230,6 +231,82 @@ const verifyResetOtp = async (req, res) => {
 };
 
 // ===============================
+// 8. Get User Profile
+// ===============================
+const getProfile = async (req, res) => {
+  try {
+    const user = await userModel.findById(req.user.id).select('-password -verifyOtp -verifyOtpExpiry -resetOtp -resetOtpExpiry');
+    if (!user) return res.json({ success: false, message: 'User not found' });
+    res.json({ success: true, user });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// ===============================
+// 9. Update User Profile
+// ===============================
+const updateProfile = async (req, res) => {
+  try {
+    const { name, email, phone, gothra, nakshatra, rashi, address } = req.body;
+    
+    // Check if email is being updated and if it's already taken by someone else
+    if (email) {
+      const existingUser = await userModel.findOne({ email });
+      if (existingUser && existingUser._id.toString() !== req.user.id.toString()) {
+        return res.json({ success: false, message: 'Email is already taken by another account' });
+      }
+    }
+
+    const updatedData = { name, phone };
+    if (email) updatedData.email = email;
+    
+    // Fetch user to preserve existing profile elements
+    const user = await userModel.findById(req.user.id);
+    if (!user) return res.json({ success: false, message: 'User not found' });
+
+    let profileImageUrl = user.profile?.profileImage || '';
+
+    // Handle new image upload via stream
+    if (req.file) {
+      const streamUpload = () =>
+        new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            { folder: 'user_profiles' },
+            (error, result) => {
+              if (result) resolve(result);
+              else reject(error);
+            }
+          );
+          stream.end(req.file.buffer);
+        });
+
+      const result = await streamUpload();
+      profileImageUrl = result.secure_url;
+    }
+
+    updatedData.profile = {
+      gothra: gothra !== undefined ? gothra : (user.profile?.gothra || ''),
+      nakshatra: nakshatra !== undefined ? nakshatra : (user.profile?.nakshatra || ''),
+      rashi: rashi !== undefined ? rashi : (user.profile?.rashi || ''),
+      address: address !== undefined ? address : (user.profile?.address || ''),
+      profileImage: profileImageUrl
+    };
+
+    const updatedUser = await userModel.findByIdAndUpdate(
+      req.user.id,
+      updatedData,
+      { new: true, runValidators: true }
+    ).select('-password');
+
+    res.json({ success: true, message: 'Profile updated successfully', user: updatedUser });
+  } catch (error) {
+    console.error('Profile Update Error:', error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// ===============================
 // Export All Controllers
 // ===============================
 export {
@@ -240,4 +317,6 @@ export {
   adminLogin,
   requestResetOtp,
   verifyResetOtp,
+  getProfile,
+  updateProfile,
 };

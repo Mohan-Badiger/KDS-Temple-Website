@@ -8,20 +8,7 @@ export const createBooking = async (req, res) => {
   try {
     const { poojas, totalAmount, poojaInNameOf, poojaDate } = req.body;
 
-    // Extract and verify token
-    const token = req.headers.authorization?.split(" ")[1];
-    if (!token) {
-      return res.status(401).json({ success: false, message: "No token provided" });
-    }
-
-    let decoded;
-    try {
-      decoded = jwt.verify(token, process.env.JWT_SECRET);
-    } catch (err) {
-      return res.status(401).json({ success: false, message: "Invalid token" });
-    }
-
-    const userId = decoded.id || decoded._id;
+    const userId = req.user.id;
     if (!userId) {
       return res.status(401).json({ success: false, message: "User ID not found in token" });
     }
@@ -229,15 +216,7 @@ export const getUserBookings = async (req, res) => {
 // ✅ Get all bookings for a specific user (latest first, full details)
 export const getMyBookings = async (req, res) => {
   try {
-    // Extract token from header
-    const token = req.headers.authorization?.split(" ")[1];
-    if (!token) {
-      return res.status(401).json({ success: false, message: "No token provided" });
-    }
-
-    // Decode JWT
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded.id;
+    const userId = req.user.id;
 
     // Validate user ID
     if (!mongoose.Types.ObjectId.isValid(userId)) {
@@ -316,15 +295,7 @@ export const getAllBookings = async (req, res) => {
 // Get the latest booking for a specific user
 export const getLatestBooking = async (req, res) => {
   try {
-    // Extract token from header
-    const token = req.headers.authorization?.split(" ")[1];
-    if (!token) {
-      return res.status(400).json({ success: false, message: "No token provided" });
-    }
-
-    // Decode JWT
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded.id;
+    const userId = req.user.id;
 
     // Validate user ID
     if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
+import { getBookingDisplayStatus } from "../utils/bookingUtils";
 
 const MySeva = () => {
   const [bookings, setBookings] = useState([]);
@@ -19,10 +20,7 @@ const MySeva = () => {
           return;
         }
 
-        const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/bookings/my-bookings`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        const res = await axiosInstance.get('/api/bookings/my-bookings');
 
         if (res.data.success) {
           setBookings(res.data.bookings || []);
@@ -87,14 +85,14 @@ const MySeva = () => {
                 <td className="py-3 px-4">{booking.poojaInNameOf || "N/A"}</td>
                 <td
                   className={`py-3 px-4 font-medium ${
-                    booking.status === "approved"
+                    getBookingDisplayStatus(booking) === "Completed"
                       ? "text-green-600"
-                      : booking.status === "pending"
+                      : getBookingDisplayStatus(booking) === "Pending"
                       ? "text-yellow-600"
-                      : "text-red-600"
+                      : "text-orange-600"
                   }`}
                 >
-                  {booking.status || "N/A"}
+                  {getBookingDisplayStatus(booking)}
                 </td>
                 <td className="py-3 px-4">
                   {booking.poojaDate

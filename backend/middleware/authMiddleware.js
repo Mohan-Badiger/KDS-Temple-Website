@@ -3,19 +3,19 @@ import User from '../models/userModel.js';
 
 export default async function authMiddleware(req, res, next) {
   try {
-    const header = req.headers.authorization;
-    if (!header?.startsWith('Bearer ')) {
-      return res.status(401).json({ message: 'Missing or malformed token' });
+    const token = req.headers.authorization?.split(" ")[1];
+    
+    if (!token) {
+      return res.status(401).json({ success: false, message: 'Missing or malformed token' });
     }
-    const token = header.split(' ')[1];
-    const { id } = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(id).select('email');
-    if (!user) return res.status(401).json({ message: 'User not found' });
-    req.user = user;
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = { id: decoded.id || decoded._id };
+    
     next();
   } catch (err) {
     console.error('Auth middleware error:', err);
-    res.status(401).json({ message: 'Unauthorized' });
+    res.status(401).json({ success: false, message: 'Unauthorized, token failed' });
   }
 }
 

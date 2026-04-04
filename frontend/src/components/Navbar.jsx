@@ -104,6 +104,7 @@ import { TempleContext } from '../context/TempleContext';
 import { toast } from 'react-toastify';
 import music1 from '../assets/volume.png';
 import music2 from '../assets/silent.png';
+import UserDropdown from './User/UserDropdown';
 
 const Navbar = () => {
   const AUTO_LOGOUT_TIME = 20 * 60 * 1000; // 20 minutes
@@ -229,18 +230,13 @@ const Navbar = () => {
           </div>
 
           {/* Login button visible only on larger screens */}
-          <div className="hidden sm:flex">
-            {token === localStorage.getItem('token')
+          <div className="hidden sm:flex items-center">
+            {token
               ? (
-                <button
-                  onClick={logout}
-                  className="border-1 py-2 px-5 bg-primary hover:bg-amber-600 border-none text-white"
-                >
-                  LogOut
-                </button>
+                <UserDropdown isMobile={false} />
               ) : (
                 <Link
-                  className="border-1 py-2 px-5 bg-primary hover:bg-amber-600 border-none text-white"
+                  className="border-1 py-2 px-5 bg-primary hover:bg-amber-600 border-none text-white transition-colors"
                   to="/login"
                 >
                   LogIn
@@ -264,8 +260,8 @@ const Navbar = () => {
           <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border-t' to='/about'>ABOUT</NavLink>
           <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border-t' to='/gallery'>GALLERY</NavLink>
           <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border-t border-b' to='/contact'>CONTACT</NavLink>
-          {token === localStorage.getItem('token')
-            ? <NavLink onClick={() => { setVisible(false); logout(); }} className='py-2 pl-6 border-t mt-3 bg-primary text-white font-lg'>LOGOUT</NavLink>
+          {token
+            ? <div onClick={() => setVisible(false)}><UserDropdown isMobile={true} /></div>
             : <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border-t mt-3 bg-primary text-white font-lg' to='/login'>LOGIN</NavLink>}
         </div>
       </div>

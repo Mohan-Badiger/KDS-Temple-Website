@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 import { TempleContext } from "../context/TempleContext";
 
 const BookingConfirmation = () => {
@@ -17,9 +17,7 @@ const BookingConfirmation = () => {
       if (!userToken) return navigate("/login");
 
       try {
-        const response = await axios.get(`${backendUrl}/api/bookings/latest`, {
-          headers: { Authorization: `Bearer ${userToken}` },
-        });
+        const response = await axiosInstance.get('/api/bookings/latest');
 
         if (response.data.success) {
           setBookingDetails(response.data.booking);

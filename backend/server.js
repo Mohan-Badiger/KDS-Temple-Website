@@ -20,6 +20,11 @@ cloudinary
 app.use(express.json()) 
 app.use(cors())
 
+app.use((req, res, next) => {
+    console.log(`[DEBUG] Incoming Request: ${req.method} ${req.url}`);
+    next();
+});
+
 //api endpoints
 app.use('/api/user', userRouter);
 app.use('/api/pooja', poojaRouter);
@@ -32,5 +37,10 @@ app.post('/api/contact', contactMail)
 app.get('/', (req, res)=>{
     res.send("API Working");
 })
+
+// Global 404 fallback
+app.use((req, res) => {
+    res.status(404).json({ success: false, message: `Route not found: ${req.method} ${req.url}` });
+});
 
 app.listen(port, ()=> console.log('Server started on PORT : '+port))

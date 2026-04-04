@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { TempleContext } from "../context/TempleContext";
 import TotalBooking from "../components/TotalBooking";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 import { toast } from "react-toastify";
 
 const PoojaCard = () => {
@@ -12,7 +12,7 @@ const PoojaCard = () => {
   useEffect(() => {
     const fetchPoojas = async () => {
       try {
-        const res = await axios.get(`${backendUrl}/api/pooja/all`);
+        const res = await axiosInstance.get('/api/pooja/all');
         setPoojaList(res.data.poojas);
       } catch (error) {
         console.error("Failed to fetch poojas", error);
