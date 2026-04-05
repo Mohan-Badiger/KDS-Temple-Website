@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { getFirstName } from '../../utils/stringUtils';
 import axiosInstance from '../../utils/axiosInstance';
 
-const UserDropdown = ({ isMobile }) => {
+const UserDropdown = ({ isMobile, closeSideBar }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [userName, setUserName] = useState("User");
   const dropdownRef = useRef(null);
@@ -46,6 +46,7 @@ const UserDropdown = ({ isMobile }) => {
     toast.error('Logged Out');
     navigate('/');
     setIsOpen(false);
+    if (closeSideBar) closeSideBar();
   };
 
   const menuVariants = {
@@ -58,14 +59,12 @@ const UserDropdown = ({ isMobile }) => {
     <div className={`relative ${isMobile ? 'mt-4 w-full' : ''}`} ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-2 ${isMobile ? 'w-full px-6 py-2 bg-primary text-white font-lg cursor-pointer' : 'font-primary text-gray-700 hover:text-orange-500 transition-colors'}`}
+        className={`flex items-center justify-between gap-2 ${isMobile ? 'w-full px-6 py-3 border-t bg-white/50 text-gray-700 font-medium cursor-pointer' : 'font-primary text-gray-700 hover:text-orange-500 transition-colors'}`}
       >
         <span className={isMobile ? '' : 'font-medium'}>Namaste, {userName}</span>
-        {!isMobile && (
-          <svg className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-        )}
+        <svg className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
       </button>
 
       <AnimatePresence>
@@ -80,22 +79,22 @@ const UserDropdown = ({ isMobile }) => {
             <div className="py-1">
               <Link
                 to="/myseva"
-                onClick={() => setIsOpen(false)}
-                className={`block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors ${isMobile ? 'pl-8' : ''}`}
+                onClick={() => { setIsOpen(false); if (closeSideBar) closeSideBar(); }}
+                className={`block px-4 py-3 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 border-b border-white/50 transition-colors ${isMobile ? 'pl-10' : ''}`}
               >
                 My Seva History
               </Link>
               <Link
                 to="/profile"
-                onClick={() => setIsOpen(false)}
-                className={`block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors ${isMobile ? 'pl-8' : ''}`}
+                onClick={() => { setIsOpen(false); if (closeSideBar) closeSideBar(); }}
+                className={`block px-4 py-3 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 border-b border-white/50 transition-colors ${isMobile ? 'pl-10' : ''}`}
               >
                 My Profile
               </Link>
               <Link
                 to="/settings"
-                onClick={() => setIsOpen(false)}
-                className={`block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors ${isMobile ? 'pl-8' : ''}`}
+                onClick={() => { setIsOpen(false); if (closeSideBar) closeSideBar(); }}
+                className={`block px-4 py-3 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 border-b border-white/50 transition-colors ${isMobile ? 'pl-10' : ''}`}
               >
                 Account Settings
               </Link>

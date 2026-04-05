@@ -148,6 +148,16 @@ const Navbar = () => {
     };
   }, [token]);
 
+  // 🔒 Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (visible) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    return () => { document.body.style.overflow = 'auto'; };
+  }, [visible]);
+
   // 🔊 Auto play background music when website loads
   useEffect(() => {
     const audio = audioRef.current;
@@ -250,19 +260,41 @@ const Navbar = () => {
       <audio ref={audioRef} src="/music.mp3" loop preload="auto" />
 
       {/* Sidebar for small screens */}
-      <div className={`absolute top-0 right-0 bottom-0 overflow-hidden bg-gradient-to-br from-yellow-100 via-gray-200 to-yellow-100 transition-all z-100 ${visible ? 'w-full' : 'w-0'}`}>
-        <div className='flex flex-col text-gray-600'>
-          <div onClick={() => setVisible(false)} className='flex items-center gap-4 p-3 cursor-pointer'>
-            <img className='h-4 rotate-450' src={cancel_bar} alt="cancel" />
-            <p>Back</p>
+      <div className={`fixed top-0 right-0 h-screen overflow-y-auto bg-gradient-to-br from-yellow-100 via-gray-200 to-yellow-100 transition-all z-[999] ${visible ? 'w-full' : 'w-0'}`}>
+        <div className='flex flex-col text-gray-600 h-full'>
+          <div onClick={() => setVisible(false)} className='flex items-center justify-between p-6 border-b border-stone-200'>
+             <div className="flex items-center gap-4">
+                <img className='h-4 rotate-450' src={cancel_bar} alt="cancel" />
+                <p className="text-xs uppercase tracking-widest">Close Menu</p>
+             </div>
+             <Link to='/' onClick={() => setVisible(false)}><h1 className='text-xl'>BNT<span className='text-orange-400'>.</span></h1></Link>
           </div>
-          <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border-t' to='/'>Home</NavLink>
-          <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border-t' to='/about'>ABOUT</NavLink>
-          <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border-t' to='/gallery'>GALLERY</NavLink>
-          <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border-t border-b' to='/contact'>CONTACT</NavLink>
-          {token
-            ? <div onClick={() => setVisible(false)}><UserDropdown isMobile={true} /></div>
-            : <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border-t mt-3 bg-primary text-white font-lg' to='/login'>LOGIN</NavLink>}
+          
+          <div className="flex flex-col py-4">
+            <NavLink onClick={() => setVisible(false)} className='py-4 pl-10 text-sm uppercase tracking-widest border-b border-stone-100' to='/'>Home</NavLink>
+            <NavLink onClick={() => setVisible(false)} className='py-4 pl-10 text-sm uppercase tracking-widest border-b border-stone-100' to='/about'>About</NavLink>
+            <NavLink onClick={() => setVisible(false)} className='py-4 pl-10 text-sm uppercase tracking-widest border-b border-stone-100' to='/gallery'>Gallery</NavLink>
+            <NavLink onClick={() => setVisible(false)} className='py-4 pl-10 text-sm uppercase tracking-widest border-b border-stone-100' to='/contact'>Contact</NavLink>
+          </div>
+
+          {token ? (
+            <div className="flex flex-col bg-white/30 backdrop-blur-sm mt-auto mb-10">
+              <div className="px-10 py-4 border-b border-stone-200">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-stone-400">User Account</p>
+              </div>
+              <NavLink onClick={() => setVisible(false)} className='py-4 pl-10 text-sm uppercase tracking-widest border-b border-stone-100' to='/myseva'>My Seva History</NavLink>
+              <NavLink onClick={() => setVisible(false)} className='py-4 pl-10 text-sm uppercase tracking-widest border-b border-stone-100' to='/profile'>My Profile</NavLink>
+              <NavLink onClick={() => setVisible(false)} className='py-4 pl-10 text-sm uppercase tracking-widest border-b border-stone-100' to='/settings'>Account Settings</NavLink>
+              <button 
+                onClick={() => { logout(); setVisible(false); }} 
+                className='py-6 pl-10 text-left text-sm uppercase tracking-widest text-red-500 font-bold bg-white/50 border-t border-stone-200'
+              >
+                Logout Account
+              </button>
+            </div>
+          ) : (
+            <NavLink onClick={() => setVisible(false)} className='py-6 pl-10 text-sm uppercase tracking-widest bg-primary text-white mt-auto' to='/login'>Login / Sign Up</NavLink>
+          )}
         </div>
       </div>
     </>
