@@ -4,19 +4,31 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
 const StatusBadge = ({ status }) => {
+  const statusLower = status?.toLowerCase();
+  
+  if (statusLower === "completed") {
+    return (
+      <span className="flex items-center gap-1.5 px-3 py-1 rounded-md text-[10px] border uppercase tracking-widest bg-green-100 text-green-700 border-green-200 font-bold">
+        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
+        </svg>
+        Completed
+      </span>
+    );
+  }
+
   const getStatusStyles = (s) => {
-    const statusLower = s?.toLowerCase();
-    if (statusLower === "confirmed" || statusLower === "completed" || statusLower === "approved") {
+    if (s === "confirmed" || s === "approved") {
       return "bg-green-50 text-green-600 border-green-100";
     }
-    if (statusLower === "pending") {
+    if (s === "pending") {
       return "bg-amber-50 text-amber-600 border-amber-100";
     }
     return "bg-orange-50 text-orange-500 border-orange-100";
   };
 
   return (
-    <span className={`px-3 py-1 rounded-md text-[10px] border uppercase tracking-widest ${getStatusStyles(status)}`}>
+    <span className={`px-3 py-1 rounded-md text-[10px] border uppercase tracking-widest ${getStatusStyles(statusLower)}`}>
       {status || "Confirmed"}
     </span>
   );

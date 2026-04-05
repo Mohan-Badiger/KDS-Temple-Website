@@ -25,7 +25,7 @@ const Dashboard = () => {
         // Process Bookings
         if (bookingsRes.data && bookingsRes.data.bookings) {
           const allBookings = bookingsRes.data.bookings;
-          const approvedBookings = allBookings.filter((b) => b.status === "approved" || b.status === "confirmed");
+          const approvedBookings = allBookings.filter((b) => b.status === "approved" || b.status === "confirmed" || b.status === "completed");
           setBookings(approvedBookings);
 
           const statsMap = {};

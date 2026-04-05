@@ -22,9 +22,6 @@ cloudinary
 app.use(express.json())
 app.use(cors())
 
-console.log("KEY_ID:", process.env.RAZORPAY_KEY_ID);
-console.log("KEY_SECRET:", process.env.RAZORPAY_KEY_SECRET);
-
 //api endpoints
 app.use('/api/user', userRouter);
 app.use('/api/pooja', poojaRouter);
