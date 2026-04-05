@@ -3,197 +3,165 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axiosInstance from "../utils/axiosInstance";
 import { TempleContext } from "../context/TempleContext";
+import { motion } from "framer-motion";
+import { generateBookingReceipt } from "../utils/receiptGenerator";
 
 const BookingConfirmation = () => {
-  const [bookingDetails, setBookingDetails] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
-  const userToken = localStorage.getItem("token");
-  const { backendUrl } = useContext(TempleContext);
+    const [bookingDetails, setBookingDetails] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
+    const userToken = localStorage.getItem("token");
+    const { backendUrl } = useContext(TempleContext);
 
+    useEffect(() => {
+        const fetchBookingDetails = async () => {
+            if (!userToken) return navigate("/login");
 
-  useEffect(() => {
-    const fetchBookingDetails = async () => {
-      if (!userToken) return navigate("/login");
+            try {
+                const response = await axiosInstance.get('/api/bookings/latest');
+                if (response.data.success) {
+                    setBookingDetails(response.data.booking);
+                }
+            } catch (error) {
+                console.error("Error fetching booking details:", error);
+                toast.error("Unable to load confirmation details.");
+            } finally {
+                setLoading(false);
+            }
+        };
 
-      try {
-        const response = await axiosInstance.get('/api/bookings/latest');
+        fetchBookingDetails();
+    }, [navigate, userToken, backendUrl]);
 
-        if (response.data.success) {
-          setBookingDetails(response.data.booking);
-        } else {
-          toast.error(response.data.message || "Failed to fetch booking details");
-        }
-      } catch (error) {
-        if (error.response?.status === 404) {
-          setBookingDetails(null);
-        } else {
-          toast.error("Error fetching booking details");
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBookingDetails();
-  }, [navigate, userToken, backendUrl]);
-
-  const formatDate = (isoDate) => {
-    if (!isoDate) return "Not Assigned";
-
-    const d = new Date(isoDate);
-    if (isNaN(d.getTime())) return "Invalid Date";
-
-    return d.toLocaleDateString("en-IN", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  };
-
-  const formatTime = (timeString) => {
-    if (!timeString) return "Not Assigned";
-    return timeString;
-  };
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-2xl font-semibold">Loading booking details...</p>
-      </div>
-    );
-  }
-
-  if (!bookingDetails) {
-    return (
-      <div className="flex justify-center items-center h-140">
-        <p className="text-2xl font-semibold text-gray-600">No bookings found..</p>
-      </div>
-    );
-  }
-
-  const {
-    user,
-    poojas,
-    status,
-    totalAmount,
-    assignedDate,
-    assignedTime,
-    createdAt,
-    poojaInNameOf,
-    paymentId,
-    receiptId,
-    paymentMethod,
-    poojaDate,
-  } = bookingDetails;
-
-  return (
-    <div className="max-w-3xl mx-auto py-6 font-primary">
-      <h2 className="text-2xl sm:text-4xl font-semibold text-center mb-6">Booking Confirmation</h2>
-
-      <div className="border border-gray-200 p-3 sm:p-7 mb-6">
-        <h3 className="text-2xl text-gray-800 mb-2 sm:mb-4">Booking Summary</h3>
-        <hr className="mb-4" />
-
-        {/* User Info */}
-        <div className="mb-4 flex flex-col sm:flex-row gap-2">
-          <h4 className="text-lg font-medium">User Details:</h4>
-          <div className="text-gray-700">
-            <p>Name: {user?.name}</p>
-            <p>Email: {user?.email}</p>
-          </div>
-        </div>
-
-        {/* Pooja in Name of */}
-        {poojaInNameOf && (
-          <div className="mb-4 flex flex-col sm:flex-row gap-2">
-            <h4 className="text-lg font-medium">Pooja in the Name of:</h4>
-            <p className="text-gray-700 text-lg">{poojaInNameOf}</p>
-          </div>
-        )}
-
-        {/* Pooja Info */}
-        <div className="mb-4 flex gap-4">
-          <h4 className="text-lg font-medium mb-2">Poojas Booked:</h4>
-          <ul className="flex gap-2 flex-wrap">
-            {poojas?.map((pooja) => (
-              <li key={pooja._id} className="border px-3 py-1 text-gray-800">
-                {pooja.name}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Booking Status */}
-        <div className="mb-4 flex sm:flex-row gap-4">
-          <h4 className="text-lg font-medium">Booking Status:</h4>
-          <p
-            className={`text-lg capitalize ${
-              status === "approved" ? "text-green-600" : "text-yellow-600"
-            }`}
-          >
-            {status}
-          </p>
-        </div>
-
-        {/* Pooja Date */}
-        <div className="mb-4 flex sm:flex-row gap-4 items-center">
-          <h4 className="text-lg font-medium">Pooja Date:</h4>
-          <p className="text-gray-700">{formatDate(poojaDate)}</p>
-        </div>
-
-        {/* Assigned Time */}
-        {assignedTime && (
-          <div className="mb-4 flex sm:flex-row gap-4">
-            <h4 className="text-lg font-medium">Assigned Time:</h4>
-            <p className="text-gray-700">{formatTime(assignedTime)}</p>
-          </div>
-        )}
-        {(paymentId || receiptId || paymentMethod) && (
-          <div className="mb-4">
-            <div className="text-gray-700 space-y-1">
-              {paymentId && (
-                <p className="text-lg text-gray-800 mb-4">
-                  Payment ID: <span className="text-gray-700">{paymentId}</span>
-                </p>
-              )}
-              {receiptId && (
-                <p className="text-lg text-gray-800 mb-4">
-                  Receipt ID: <span className="text-gray-700">{receiptId}</span>
-                </p>
-              )}
-              {paymentMethod && (
-                <p className="text-lg text-gray-800">
-                  Payment Method: <span className="font-medium">{paymentMethod}</span>
-                </p>
-              )}
+    if (loading) {
+        return (
+            <div className="flex flex-col items-center justify-center py-40 font-primary">
+                <div className="w-12 h-12 border-4 border-stone-100 border-t-orange-400 rounded-full animate-spin mb-6"></div>
+                <p className="text-xs text-stone-400 uppercase tracking-widest animate-pulse">Confirming your booking...</p>
             </div>
-          </div>
-        )}
+        );
+    }
 
-        {/* Total Amount */}
-        <div className="mb-4 flex sm:flex-row gap-4">
-          <h4 className="text-lg font-medium">Total Amount:</h4>
-          <p className="text-lg text-gray-800">₹{totalAmount}</p>
-        </div>
+    if (!bookingDetails) {
+        return (
+            <div className="flex flex-col items-center justify-center py-40 font-primary text-center">
+                <p className="text-xl text-gray-800 mb-4 tracking-tight">No Recent Booking Found</p>
+                <button onClick={() => navigate("/temples")} className="text-xs text-orange-500 hover:text-orange-600 uppercase tracking-widest border border-orange-200 px-6 py-3 rounded-md transition-colors">Start Booking →</button>
+            </div>
+        );
+    }
 
-        {/* Booking Created Date */}
-        <div className="mb-4 flex sm:flex-row gap-4 items-center">
-          <h4 className="text-lg font-medium">Booking Created On:</h4>
-          <p className="text-gray-700">{formatDate(createdAt)}</p>
-        </div>
-      </div>
+    const {
+        poojas,
+        status,
+        totalAmount,
+        poojaInNameOf,
+        paymentId,
+        poojaDate,
+        temple
+    } = bookingDetails;
 
-      <div className="flex justify-end mt-8">
-        <button
-          onClick={() => navigate("/")}
-          className="bg-black text-white px-6 py-2 text-lg hover:bg-gray-800 transition"
+    return (
+        <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="max-w-4xl mx-auto px-4 py-16 font-primary text-gray-800"
         >
-          Go to Home
-        </button>
-      </div>
-    </div>
-  );
+            <div className="text-center mb-16 relative">
+                <div className="w-20 h-20 bg-green-50 text-green-500 rounded-md flex items-center justify-center mx-auto mb-6 shadow-sm border border-green-100">
+                    <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <h1 className="text-3xl text-gray-900 tracking-tight uppercase mb-2">Booking Confirmed!</h1>
+                <p className="text-xs text-stone-400 uppercase tracking-widest">Your divine reservation is successful</p>
+                <div className="absolute top-1/2 left-0 right-0 h-px bg-stone-100 -z-10"></div>
+            </div>
+
+            <div className="bg-white border border-stone-200 rounded-md overflow-hidden shadow-sm relative">
+                <div className="absolute top-0 right-0 p-4">
+                     <span className="bg-orange-50 text-orange-600 text-[10px] px-3 py-1 rounded-md border border-orange-100 uppercase tracking-widest">
+                        {status}
+                     </span>
+                </div>
+
+                <div className="p-8 sm:p-12">
+                    <div className="mb-12">
+                        <p className="text-[10px] text-stone-400 uppercase tracking-widest mb-2">Temple Destination</p>
+                        <h2 className="text-2xl text-gray-900 tracking-tight uppercase">{temple?.name || "Kadasiddeshwar Temple"}</h2>
+                        <p className="text-xs text-stone-500 uppercase tracking-tight mt-1">{temple?.location}</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 border-t border-stone-100 pt-12">
+                        <div className="space-y-8">
+                            <div>
+                                <p className="text-[10px] text-stone-400 uppercase tracking-widest mb-3">Devotee Details</p>
+                                <p className="text-lg text-gray-900 uppercase tracking-tight">{poojaInNameOf || "Devotee"}</p>
+                                <p className="text-[10px] text-stone-400 uppercase tracking-widest mt-1">Pooja in the name of</p>
+                            </div>
+
+                            <div>
+                                <p className="text-[10px] text-stone-400 uppercase tracking-widest mb-3">Divine Date</p>
+                                <p className="text-lg text-gray-900 uppercase tracking-tight">
+                                    {poojaDate ? new Date(poojaDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }) : "Today"}
+                                </p>
+                                <p className="text-[10px] text-stone-400 uppercase tracking-widest mt-1">Schedule assigned</p>
+                            </div>
+                        </div>
+
+                        <div className="space-y-8">
+                            <div>
+                                <p className="text-[10px] text-stone-400 uppercase tracking-widest mb-3">Selected Poojas</p>
+                                <div className="space-y-2">
+                                    {poojas?.map((pooja) => (
+                                        <div key={pooja._id} className="flex justify-between items-center bg-stone-50 px-4 py-3 rounded-md border border-stone-100">
+                                            <span className="text-xs text-gray-800 uppercase tracking-wide">{pooja.name}</span>
+                                            <span className="text-xs text-gray-900 tabular-nums">₹{pooja.price}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="pt-8 border-t border-dashed border-stone-200 flex justify-between items-center">
+                                <span className="text-[11px] text-stone-900 uppercase tracking-widest">Total Offering</span>
+                                <span className="text-3xl text-orange-500 tabular-nums">₹{totalAmount}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="bg-stone-50 px-8 py-6 border-t border-stone-200 flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <div className="text-[10px] text-stone-500 uppercase tracking-widest">
+                        Payment ID: <span className="text-gray-800">{paymentId || "rzp_test_..."}</span>
+                    </div>
+                    <button 
+                        onClick={() => navigate("/myseva")} 
+                        className="text-[10px] text-orange-500 uppercase tracking-widest hover:text-orange-600 underline underline-offset-4 transition-colors"
+                    >
+                        View My Seva History
+                    </button>
+                </div>
+            </div>
+
+            <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <button
+                    onClick={() => generateBookingReceipt(bookingDetails)}
+                    className="w-full sm:w-auto bg-stone-900 text-white text-[11px] uppercase tracking-widest px-10 py-4 rounded-md hover:bg-black transition-all shadow-md shadow-stone-200 active:scale-95 flex items-center justify-center gap-2"
+                >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Download Receipt
+                </button>
+                <button
+                    onClick={() => navigate("/")}
+                    className="w-full sm:w-auto border border-stone-200 text-stone-600 text-[11px] uppercase tracking-widest px-10 py-4 rounded-md hover:bg-stone-50 transition-all active:scale-95"
+                >
+                    Return to Ashram
+                </button>
+            </div>
+        </motion.div>
+    );
 };
 
 export default BookingConfirmation;

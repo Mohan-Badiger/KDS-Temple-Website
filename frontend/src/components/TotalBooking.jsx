@@ -19,9 +19,9 @@ const TotalBooking = ({ total }) => {
                     <p>₹{extraFee.toFixed(2)}</p>
                 </div>
                 <hr /> */}
-                <div className='flex justify-between text-lg font-bold'>
-                    <b>Total</b>
-                    <b>₹{grandTotal.toFixed(2)}</b>
+                <div className='flex justify-between text-xl font-semibold '>
+                    <p>Total</p>
+                    <p>₹{grandTotal.toFixed(2)}</p>
                 </div>
             </div>
         </div>

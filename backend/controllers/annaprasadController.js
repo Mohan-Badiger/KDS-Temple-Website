@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
-import Donation from '../models/donationModel.js';
+import Annaprasad from '../models/annaprasadModel.js';
 
-export const donateController = async (req, res) => {
+export const donateAnnaprasad = async (req, res) => {
   try {
     const { firstName, lastName, phone, amount, message, email: bodyEmail, templeId } = req.body;
     const email = bodyEmail || (req.user ? req.user.email : null); 
@@ -13,8 +13,8 @@ export const donateController = async (req, res) => {
       });
     }
 
-    // Save the donation
-    const donation = await Donation.create({
+    // Save the annaprasad donation
+    const donation = await Annaprasad.create({
       firstName,
       lastName,
       email,
@@ -40,18 +40,18 @@ export const donateController = async (req, res) => {
 
     // Email content
     await transporter.sendMail({
-      from: `"Temple Donations" <${process.env.EMAIL_USER}>`,
+      from: `"Annaprasad Support" <${process.env.EMAIL_USER}>`,
       to: email,
-      subject: 'Donation Confirmation – Thank You!',
+      subject: 'Annaprasad Donation Confirmation – Thank You!',
       html: `
         <div style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px;">
   <div style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); padding: 30px;">
-    <h2 style="color: #fb923c; text-align: center;">Thank You for Your Donation!</h2>
+    <h2 style="color: #fb923c; text-align: center;">Thank You for Your Annaprasad Donation!</h2>
 
     <p style="font-size: 16px; color: #333;">Dear <strong>${firstName} ${lastName}</strong>,</p>
 
     <p style="font-size: 16px; color: #555;">
-      We are truly grateful for your generous contribution to Kadasiddeshwar Temple. Your donation helps us continue our spiritual services and temple activities.
+      We are deeply grateful for your contribution towards the Annaprasad (food distribution) at Kadasiddeshwar Temple. Your generosity helps provide meals to countless devotees.
     </p>
 
     <p style="font-size: 16px; color: #555;"><strong>Donor Name:</strong> ${firstName} ${lastName}</p>
@@ -62,50 +62,33 @@ export const donateController = async (req, res) => {
     <p style="font-size: 16px; color: #555;"><strong>Date & Time:</strong> ${formattedDate}</p>
 
     <p style="margin-top: 30px; font-size: 16px; color: #555;">
-      May you and your family be blessed with peace, health, and prosperity. We deeply appreciate your support and devotion.
+      May you and your family be blessed with peace, health, and prosperity. We deeply appreciate your support.
     </p>
 
     <p style="font-size: 14px; color: #999; text-align: center; margin-top: 40px;">
        KADASIDDESHWAR TEMPLE, BANAHATTI 
       <br/>
-      Thank you once again for your generosity.
+      Thank you once again for your kindness.
     </p>
   </div>
 </div>
-
       `,
     });
 
-    res.json({ success: true, message: 'Donation recorded & confirmation email sent.' });
+    res.json({ success: true, message: 'Annaprasad recorded & confirmation email sent.' });
   } catch (err) {
-    console.error('Donation error:', err);
+    console.error('Annaprasad error:', err);
     res.status(500).json({ success: false, message: 'Server error. Please try again.' });
   }
 };
 
-// Get all donations (admin view)
-export const getAllDonations = async (_req, res) => {
+// Get all annaprasads (admin view)
+export const getAllAnnaprasads = async (_req, res) => {
   try {
-    const donations = await Donation.find().populate('temple', 'name location').sort({ createdAt: -1 });
-    res.json({ success: true, donations });
+    const annaprasads = await Annaprasad.find().populate('temple', 'name location').sort({ createdAt: -1 });
+    res.json({ success: true, annaprasads });
   } catch (err) {
-    console.error('Fetch donations error:', err);
-    res.status(500).json({ success: false, message: 'Failed to fetch donations.' });
-  }
-};
-
-// Get current user's donations
-export const getMyDonations = async (req, res) => {
-  try {
-    const userEmail = req.user.email; // From authMiddleware
-    if (!userEmail) {
-      return res.status(400).json({ success: false, message: "User email not found in token." });
-    }
-
-    const donations = await Donation.find({ email: userEmail.toLowerCase().trim() }).populate('temple', 'name location').sort({ createdAt: -1 });
-    res.json({ success: true, donations });
-  } catch (err) {
-    console.error('Fetch my donations error:', err);
-    res.status(500).json({ success: false, message: 'Failed to fetch your donations.' });
+    console.error('Fetch annaprasads error:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch annaprasad records.' });
   }
 };

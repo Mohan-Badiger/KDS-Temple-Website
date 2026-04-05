@@ -14,6 +14,8 @@ import Remove from './pages/Remove.jsx'
 import AnnaprasadManage from './pages/AnnaprasadManage.jsx'
 import DonationManage from './pages/DonationManage.jsx'
 import Manage from './pages/Manage.jsx';
+import TempleManage from './pages/TempleManage.jsx';
+import TodaySeva from './pages/TodaySeva.jsx';
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -40,14 +42,16 @@ const App = () => {
               <Routes>
 
                 <Route path='/' element={<Dashboard />} />
+                <Route path='/today-seva' element={<TodaySeva />} />
+                <Route path='/temple-manage' element={<TempleManage />} />
 
                 {/* nested roots for pooja manage */}
                 <Route path='/pooja-manage' element={<PoojaManage />}>
 
                   {/* ✅ Default route */}
-                  <Route index element={<Navigate to="request" replace />} />
+                  <Route index element={<Navigate to="confirmed-booking" replace />} />
 
-                  <Route path='request' element={<RequestPooja />} />
+                  <Route path='confirmed-booking' element={<RequestPooja />} />
                   <Route path='pooja-list' element={<PoojaList />} />
                   <Route path='add' element={<Add />} />
                   <Route path='manage' element={<Manage />} />

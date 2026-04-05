@@ -37,7 +37,10 @@ const Profile = () => {
       className="container mx-auto px-4 py-8 sm:py-12 min-h-[70vh]"
     >
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-primary text-gray-800 mb-8 border-l-4 border-orange-500 pl-4 font-medium">My Profile</h1>
+        <div className="flex items-center gap-4 mb-10 border-b border-stone-200 pb-6">
+          <div className="w-1.5 h-10 bg-orange-400 rounded-md shadow-sm"></div>
+          <h1 className="text-3xl text-gray-900 tracking-tight uppercase">My Profile</h1>
+        </div>
         
         {loading ? (
           <div className="text-center py-10 font-primary text-gray-600">

@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from "../utils/axiosInstance";
 
 export const TempleContext = createContext();
 
@@ -8,14 +9,44 @@ const TempleContextProvider = (props) => {
     const [token, setToken] = useState('');
     const navigate = useNavigate();
 
+    // Multi-Temple State
+    const [temples, setTemples] = useState([]);
+    const [selectedTemple, setSelectedTemple] = useState(() => {
+        const saved = localStorage.getItem('selectedTemple');
+        return saved ? JSON.parse(saved) : null;
+    });
+
     // Booking state
     const [selectedPoojas, setSelectedPoojas] = useState([]);
     const [totalAmount, setTotalAmount] = useState(0);
+    const [selectedDate, setSelectedDate] = useState(""); // Shared date for booking
+
+    // Sync selectedTemple to localStorage
+    useEffect(() => {
+        if (selectedTemple) {
+            localStorage.setItem('selectedTemple', JSON.stringify(selectedTemple));
+        } else {
+            localStorage.removeItem('selectedTemple');
+        }
+    }, [selectedTemple]);
+
+    // Fetch Temples
+    const fetchTemples = async () => {
+        try {
+            const res = await axiosInstance.get('/api/temple/list');
+            if (res.data.success) {
+                setTemples(res.data.temples);
+            }
+        } catch (error) {
+            console.error("Error fetching temples:", error);
+        }
+    };
 
     useEffect(() => {
         if (!token && localStorage.getItem('token')) {
             setToken(localStorage.getItem('token'));
         }
+        fetchTemples();
     }, []);
 
     useEffect(() => {
@@ -33,7 +64,11 @@ const TempleContextProvider = (props) => {
 
     const value = {
         backendUrl, navigate, setToken, token,
-        selectedPoojas, totalAmount, handleCheckboxChange
+        temples, fetchTemples,
+        selectedTemple, setSelectedTemple,
+        selectedPoojas, setSelectedPoojas,
+        totalAmount, handleCheckboxChange,
+        selectedDate, setSelectedDate
     };
 
     return (

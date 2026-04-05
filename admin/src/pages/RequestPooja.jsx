@@ -4,76 +4,55 @@ import { toast } from "react-toastify";
 import { backendUrl } from "../App";
 
 const RequestPooja = () => {
-  const [requests, setRequests] = useState([]);
+  const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [approvingId, setApprovingId] = useState(null);
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    const fetchRequests = async () => {
+    const fetchBookings = async () => {
       try {
-        const res = await axios.get(`${backendUrl}/api/bookings/pooja-requests`, {
+        const res = await axios.get(`${backendUrl}/api/bookings/all`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setRequests(res.data.requests || []);
+        setBookings(res.data.bookings || []);
       } catch (err) {
-        console.error("Error fetching pooja requests:", err);
+        console.error("Error fetching bookings:", err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchRequests();
+    fetchBookings();
   }, [token]);
-
-  const handleApprove = async (bookingId, time) => {
-    if (!time) {
-      toast.error("Please select a time before approving.");
-      return;
-    }
-
-    setApprovingId(bookingId);
-
-    try {
-      await axios.put(
-        `${backendUrl}/api/bookings/approve/${bookingId}`,
-        { assignedTime: time },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      toast.success("Pooja approved successfully!");
-      setRequests((prev) => prev.filter((req) => req._id !== bookingId));
-    } catch (err) {
-      console.error("Approval failed:", err?.response?.data || err);
-      toast.error(err?.response?.data?.message || "Approval failed.");
-    } finally {
-      setApprovingId(null);
-    }
-  };
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-2xl font-semibold">Loading requests...</p>
+      <div className="flex justify-center items-center py-20 font-primary">
+        <div className="w-8 h-8 border-2 border-stone-200 border-t-orange-400 rounded-full animate-spin"></div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-5xl mx-auto py-6 font-primary">
-      <h2 className="sm:text-2xl mb-6">Pooja Booking Requests</h2>
+    <div className="max-w-6xl mx-auto py-6 font-primary text-gray-800">
+      <div className="flex items-center justify-between mb-8 pb-4 border-b border-stone-100">
+        <div>
+          <h2 className="text-2xl tracking-tight uppercase">Confirmed Bookings</h2>
+          <p className="text-[10px] text-stone-400 uppercase tracking-widest mt-1">Live monitoring of divine services</p>
+        </div>
+        <div className="bg-orange-50 px-4 py-1 border border-orange-100 rounded-md">
+           <span className="text-[10px] text-orange-500 uppercase tracking-widest">{bookings.length} Total</span>
+        </div>
+      </div>
 
-      {requests.length === 0 ? (
-        <p className="text-center text-gray-600">No pending requests.</p>
+      {bookings.length === 0 ? (
+        <div className="text-center py-20 bg-stone-50 border border-dashed border-stone-200 rounded-md">
+          <p className="text-stone-400 uppercase tracking-widest text-xs">No confirmed bookings to display.</p>
+        </div>
       ) : (
-        <div className="space-y-6">
-          {requests.map((req) => (
-            <RequestCard
-              key={req._id}
-              req={req}
-              onApprove={handleApprove}
-              isApproving={approvingId === req._id}
-            />
+        <div className="grid grid-cols-1 gap-6">
+          {bookings.map((booking) => (
+            <BookingCard key={booking._id} booking={booking} />
           ))}
         </div>
       )}
@@ -81,205 +60,53 @@ const RequestPooja = () => {
   );
 };
 
-const RequestCard = ({ req, onApprove, isApproving }) => {
-  const [time, setTime] = useState("");
-
-  console.log(time);
-  
-
+const BookingCard = ({ booking }) => {
   return (
-    <div className="border p-6 font-primary space-y-3">
-      <h3 className="sm:text-xl text-gray-600">
-        Name: {req.user?.name} — Email: {req.user?.email}
-      </h3>
+    <div className="bg-white border border-stone-200 rounded-md p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+      <div className="space-y-4 flex-1">
+        <div className="flex items-center gap-3">
+          <span className="w-1.5 h-6 bg-orange-400 rounded-md"></span>
+          <div>
+            <h3 className="text-lg text-gray-900 uppercase tracking-wide leading-none">
+              {booking.poojaInNameOf || booking.user?.name}
+            </h3>
+            <p className="text-[9px] text-stone-400 uppercase tracking-widest mt-1">
+              {booking.user?.email} • ID: #{booking._id?.slice(-8)}
+            </p>
+          </div>
+        </div>
 
-      <div>
-        <h4 className="text-lg font-medium">Poojas:</h4>
-        <ul className="list-disc pl-5">
-          {req.poojas.map((p) => (
-            <li key={p._id}>{p.name}</li>
-          ))}
-        </ul>
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 pt-2">
+          <div>
+            <p className="text-[10px] text-stone-400 uppercase tracking-widest mb-1">Temple Location</p>
+            <p className="text-xs text-orange-500 uppercase tracking-wide truncate">{booking.temple?.name || "Kadasiddeshwar Temple"}</p>
+          </div>
+          <div>
+            <p className="text-[10px] text-stone-400 uppercase tracking-widest mb-1">Booked Poojas</p>
+            <p className="text-xs text-gray-800 tracking-wide">
+               {booking.poojas?.map(p => p.name).join(", ")}
+            </p>
+          </div>
+          <div>
+            <p className="text-[10px] text-stone-400 uppercase tracking-widest mb-1">Ritual Date</p>
+            <p className="text-xs text-gray-800 tracking-wide">
+               {booking.poojaDate ? new Date(booking.poojaDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : "N/A"}
+            </p>
+          </div>
+        </div>
       </div>
 
-      <div className="flex flex-col md:flex-row justify-end md:items-center md:space-x-4">
-        <input
-          type="time"
-          className="border px-3 py-2 mb-2 md:mb-0"
-          value={time}
-          onChange={(e) => setTime(e.target.value)}
-          required
-        />
-        <button
-          onClick={() => onApprove(req._id, time)}
-          className="bg-primary text-white px-6 py-2 hover:bg-orange-400 transition disabled:opacity-60"
-          disabled={isApproving || !time}
-        >
-          {isApproving ? "Approving..." : "Approve"}
-        </button>
+      <div className="flex flex-col items-end gap-2 shrink-0">
+          <div className="text-right mb-2">
+            <p className="text-[10px] text-stone-400 uppercase tracking-widest mb-1">Paid Offering</p>
+            <p className="text-xl text-gray-900 tabular-nums">₹{booking.totalAmount}</p>
+          </div>
+          <span className="bg-green-50 text-green-600 border border-green-100 px-3 py-1 text-[10px] uppercase tracking-widest rounded-md">
+            Confirmed
+          </span>
       </div>
     </div>
   );
 };
 
 export default RequestPooja;
-
-
-// import React, { useEffect, useState } from "react";
-// import axios from "axios";
-// import { toast } from "react-toastify";
-// import { backendUrl } from "../App";
-
-// const RequestPooja = () => {
-//   const [requests, setRequests] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [approvingId, setApprovingId] = useState(null);
-//   const token = localStorage.getItem("token");
-
-//   useEffect(() => {
-//     const fetchRequests = async () => {
-//       try {
-//         const res = await axios.get(`${backendUrl}/api/bookings/pooja-requests`, {
-//           headers: { Authorization: `Bearer ${token}` },
-//         });
-//         setRequests(res.data.requests || []);
-//       } catch (err) {
-//         console.error("Error fetching pooja requests:", err);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchRequests();
-//   }, [token]);
-
-//   const handleApprove = async (bookingId, time) => {
-//     if (!time) {
-//       toast.error("Please select a valid time before approving.");
-//       return;
-//     }
-
-//     setApprovingId(bookingId);
-
-//     try {
-//       await axios.put(
-//         `${backendUrl}/api/bookings/approve/${bookingId}`,
-//         { assignedTime: time },
-//         { headers: { Authorization: `Bearer ${token}` } }
-//       );
-
-//       toast.success("Pooja approved successfully!");
-//       setRequests((prev) => prev.filter((req) => req._id !== bookingId));
-//     } catch (err) {
-//       console.error("Approval failed:", err?.response?.data || err);
-//       toast.error(err?.response?.data?.message || "Approval failed.");
-//     } finally {
-//       setApprovingId(null);
-//     }
-//   };
-
-//   if (loading) {
-//     return (
-//       <div className="flex justify-center items-center h-screen">
-//         <p className="text-2xl font-semibold">Loading requests...</p>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="max-w-5xl mx-auto py-6 font-primary">
-//       <h2 className="sm:text-2xl mb-6">Pooja Booking Requests</h2>
-
-//       {requests.length === 0 ? (
-//         <p className="text-center text-gray-600">No pending requests.</p>
-//       ) : (
-//         <div className="space-y-6">
-//           {requests.map((req) => (
-//             <RequestCard
-//               key={req._id}
-//               req={req}
-//               onApprove={handleApprove}
-//               isApproving={approvingId === req._id}
-//             />
-//           ))}
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// const RequestCard = ({ req, onApprove, isApproving }) => {
-//   const [time, setTime] = useState("");
-//   const [minTime, setMinTime] = useState("");
-//   const maxTime = "22:00"; // 10:00 PM
-
-//   const getCurrentTime = () => {
-//     const now = new Date();
-//     const pad = (n) => (n < 10 ? "0" + n : n);
-//     return `${pad(now.getHours())}:${pad(now.getMinutes())}`;
-//   };
-
-//   useEffect(() => {
-//     const now = getCurrentTime();
-//     setMinTime(now);
-//     setTime(now);
-
-//     const interval = setInterval(() => {
-//       const updated = getCurrentTime();
-//       setMinTime(updated);
-//       if (time < updated) setTime(updated);
-//     }, 60000);
-
-//     return () => clearInterval(interval);
-//   }, []);
-
-//   const handleTimeChange = (e) => {
-//     const value = e.target.value;
-//     if (value >= minTime && value <= maxTime) {
-//       setTime(value);
-//     } else {
-//       toast.warn("Please select a time from now to 10:00 PM only.");
-//       setTime(minTime); 
-//     }
-//   };
-
-//   return (
-//     <div className="border p-6 font-primary space-y-3">
-//       <h3 className="sm:text-xl text-gray-600">
-//         Name: {req.user?.name} — Email: {req.user?.email}
-//       </h3>
-
-//       <div>
-//         <h4 className="text-lg font-medium">Poojas:</h4>
-//         <ul className="list-disc pl-5">
-//           {req.poojas.map((p) => (
-//             <li key={p._id}>{p.name}</li>
-//           ))}
-//         </ul>
-//       </div>
-
-//       <div className="flex flex-col md:flex-row justify-end md:items-center md:space-x-4">
-//         <input
-//           type="time"
-//           className="border px-3 py-2 mb-2 md:mb-0"
-//           value={time}
-//           min={minTime}
-//           max={maxTime}
-//           onChange={handleTimeChange}
-//           onFocus={() => setTime(getCurrentTime())}
-//           required
-//           disabled={!minTime}
-//         />
-//         <button
-//           onClick={() => onApprove(req._id, time)}
-//           className="bg-primary text-white px-6 py-2 hover:bg-orange-400 transition disabled:opacity-60"
-//           disabled={isApproving || !time}
-//         >
-//           {isApproving ? "Approving..." : "Approve"}
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default RequestPooja;

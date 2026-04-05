@@ -9,6 +9,8 @@ import cloudinary from './config/cloudinary.js';
 import bookingRouter from './routes/bookingRoute.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import donationRoutes from './routes/donationRoute.js';
+import templeRouter from './routes/templeRoute.js';
+import annaprasadRouter from './routes/annaprasadRoute.js';
 
 //App config
 const app = express();
@@ -29,6 +31,8 @@ app.use('/api/pooja', poojaRouter);
 app.use("/api/bookings", bookingRouter);
 app.use('/api/donations', donationRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/api/temple', templeRouter);
+app.use('/api/annaprasads', annaprasadRouter);
 
 app.post('/api/contact', contactMail)
 

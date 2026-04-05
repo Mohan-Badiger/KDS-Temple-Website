@@ -10,15 +10,15 @@ const ProfileCard = ({ user }) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="bg-white rounded-md shadow-md p-6 sm:p-8 w-full max-w-3xl mx-auto border border-gray-100 relative font-primary text-gray-800"
+      className="bg-white rounded-md shadow-sm p-6 sm:p-8 w-full max-w-3xl mx-auto border border-stone-100 relative font-primary text-gray-800"
     >
       <div className="absolute top-6 right-6">
         <Link
           to="/settings"
-          className="bg-orange-50 text-orange-600 hover:bg-orange-400 transition px-4 py-2 rounded-sm text-sm font-medium border border-orange-200"
+          className="bg-orange-50 text-orange-500 hover:bg-orange-100 transition px-4 py-2 rounded-md text-xs uppercase tracking-widest border border-orange-100"
         >
           Edit Profile
         </Link>
@@ -26,40 +26,40 @@ const ProfileCard = ({ user }) => {
 
       <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8">
         <motion.div
-          whileHover={{ scale: 1.05 }}
+          whileHover={{ scale: 1.02 }}
           className="w-28 h-28 sm:w-36 sm:h-36 shrink-0"
         >
           <img
             src={avatarUrl}
             alt={user.name}
-            className="w-full h-full rounded-full object-cover border-4 border-orange-100 shadow-sm"
+            className="w-full h-full rounded-full object-cover border-2 border-orange-50 shadow-sm"
           />
         </motion.div>
 
         <div className="flex-1 w-full text-center sm:text-left mt-2 sm:mt-0">
-          <h2 className="text-2xl sm:text-3xl font-semibold mb-1">Namaste, {user.name}</h2>
-          <p className="text-gray-500 mb-6">{user.email}</p>
+          <h2 className="text-2xl sm:text-3xl text-gray-900 tracking-tight uppercase mb-1">Namaste, {user.name}</h2>
+          <p className="text-stone-400 text-sm mb-6">{user.email}</p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
-            <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-              <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Phone Number</p>
-              <p className="font-medium">{user.phone || 'Not provided'}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-xs">
+            <div className="bg-stone-50 p-4 rounded-md border border-stone-100">
+              <p className="text-[10px] text-stone-400 uppercase tracking-widest mb-1">Phone Number</p>
+              <p className="text-gray-800 tracking-wide">{user.phone || 'Not provided'}</p>
             </div>
-            <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-              <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Gothra</p>
-              <p className="font-medium">{user.profile?.gothra || 'Not provided'}</p>
+            <div className="bg-stone-50 p-4 rounded-md border border-stone-100">
+              <p className="text-[10px] text-stone-400 uppercase tracking-widest mb-1">Gothra</p>
+              <p className="text-gray-800 tracking-wide">{user.profile?.gothra || 'Not provided'}</p>
             </div>
-            <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-              <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Nakshatra</p>
-              <p className="font-medium">{user.profile?.nakshatra || 'Not provided'}</p>
+            <div className="bg-stone-50 p-4 rounded-md border border-stone-100">
+              <p className="text-[10px] text-stone-400 uppercase tracking-widest mb-1">Nakshatra</p>
+              <p className="text-gray-800 tracking-wide">{user.profile?.nakshatra || 'Not provided'}</p>
             </div>
-            <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-              <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Rashi</p>
-              <p className="font-medium">{user.profile?.rashi || 'Not provided'}</p>
+            <div className="bg-stone-50 p-4 rounded-md border border-stone-100">
+              <p className="text-[10px] text-stone-400 uppercase tracking-widest mb-1">Rashi</p>
+              <p className="text-gray-800 tracking-wide">{user.profile?.rashi || 'Not provided'}</p>
             </div>
-            <div className="bg-gray-50 p-3 rounded-lg border border-gray-100 sm:col-span-2">
-              <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Address</p>
-              <p className="font-medium">{user.profile?.address || 'Not provided'}</p>
+            <div className="bg-stone-50 p-4 rounded-md border border-stone-100 sm:col-span-2">
+              <p className="text-[10px] text-stone-400 uppercase tracking-widest mb-1">Permanent Address</p>
+              <p className="text-gray-800 tracking-wide">{user.profile?.address || 'Not provided'}</p>
             </div>
           </div>
         </div>

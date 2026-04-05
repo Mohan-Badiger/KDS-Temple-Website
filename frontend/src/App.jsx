@@ -15,6 +15,7 @@ import BookingConfirmation from './pages/BookingConfirmation';
 import { ToastContainer } from 'react-toastify';
 import MySeva from './pages/MySeva';
 import ScrollToTop from './components/ScrollToTop';
+import TempleSelection from './pages/TempleSelection';
 
 const Profile = lazy(() => import('./pages/Profile'));
 const Settings = lazy(() => import('./pages/Settings'));
@@ -25,6 +26,11 @@ const SimpleLoader = () => <div className="text-center py-10 font-primary text-g
 const ProtectedRoute = ({ element }) => {
   const { token } = useContext(TempleContext);
   return token ? element : <Login />;
+};
+
+const PoojaRoute = () => {
+  const { selectedTemple } = useContext(TempleContext);
+  return selectedTemple ? <Pooja /> : <TempleSelection />;
 };
 
 const App = () => {
@@ -42,7 +48,8 @@ const App = () => {
           <Route path='/login' element={<Login />} />
 
           {/* Protected Routes */}
-          <Route path='/pooja' element={<ProtectedRoute element={<Pooja />} />} />
+          <Route path='/temples' element={<ProtectedRoute element={<TempleSelection />} />} />
+          <Route path='/pooja' element={<ProtectedRoute element={<PoojaRoute />} />} />
           <Route path='/donation' element={<ProtectedRoute element={<Donation />} />} />
           <Route path='/payment' element={<ProtectedRoute element={<PaymentGateway />} />} />
           <Route path='/booking-confirmation' element={<ProtectedRoute element={<BookingConfirmation />} />} />

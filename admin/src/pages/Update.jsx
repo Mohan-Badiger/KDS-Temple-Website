@@ -10,8 +10,9 @@ const Update = () => {
     name: '',
     description: '',
     price: '',
-    date: '',
+    templeId: '',
   });
+  const [temples, setTemples] = useState([]);
   const [currentImage, setCurrentImage] = useState('');
   const [newImage, setNewImage] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -20,32 +21,39 @@ const Update = () => {
 
   const navigate = useNavigate();
 
-  // Fetch pooja data
   useEffect(() => {
-    const fetchPooja = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/pooja/${id}`);
-        if (response.data.success) {
-          const { name, description, image, price, date } = response.data.pooja;
+        const [poojaRes, templesRes] = await Promise.all([
+          axios.get(`${backendUrl}/api/pooja/${id}`),
+          axios.get(`${backendUrl}/api/temple/all`)
+        ]);
+
+        if (poojaRes.data.success) {
+          const { name, description, image, price, date, temple } = poojaRes.data.pooja;
           setPooja({
             name: name || '',
             description: description || '',
             price: price || '',
-            date: date ? date.substring(0, 10) : '',
+            templeId: temple || '', // temple is the ID from backend model
           });
           setCurrentImage(image || '');
         } else {
           setError('Pooja not found');
         }
+
+        if (templesRes.data.success) {
+          setTemples(templesRes.data.temples);
+        }
       } catch (err) {
-        console.error('Error fetching pooja:', err);
+        console.error('Error fetching data:', err);
         setError('Pooja not found or server error');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPooja();
+    fetchData();
   }, [id]);
 
   const handleChange = (e) => {
@@ -58,6 +66,10 @@ const Update = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!pooja.templeId) {
+      toast.error("Please select a temple");
+      return;
+    }
     setIsUpdating(true);
 
     try {
@@ -65,7 +77,7 @@ const Update = () => {
       formData.append('name', pooja.name);
       formData.append('description', pooja.description);
       formData.append('price', pooja.price);
-      formData.append('date', pooja.date);
+      formData.append('temple', pooja.templeId);
       if (newImage) {
         formData.append('image', newImage);
       }
@@ -90,78 +102,96 @@ const Update = () => {
     }
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p className="text-red-600">{error}</p>;
+  if (loading) return (
+    <div className="flex items-center justify-center py-20 font-primary">
+       <div className="w-8 h-8 border-2 border-stone-200 border-t-orange-500 rounded-full animate-spin"></div>
+    </div>
+  );
+  if (error) return <p className="text-red-600 font-primary p-6">{error}</p>;
 
   return (
     <div className="max-w-lg p-6 bg-white font-primary font-medium">
-      <h2 className="text-2xl mb-3">Update Pooja</h2>
+      <h2 className="text-2xl mb-6">Update Pooja</h2>
 
-      <form onSubmit={handleSubmit} className="max-w-md mx-auto bg-white">
+      <form onSubmit={handleSubmit} className="space-y-4">
         {currentImage && (
           <div className="mb-4">
-            <p className="mb-1 font-medium">Current Image:</p>
+            <p className="text-xs text-gray-400 mb-2 font-bold uppercase tracking-widest">Current Image</p>
             <img
               src={currentImage}
               alt="Current Pooja"
-              className="w-full h-60 object-cover"
+              className="w-full h-48 object-cover border border-stone-100 rounded-sm"
             />
           </div>
         )}
 
-        <label className="block mb-2">Pooja Name:</label>
-        <input
-          type="text"
-          name="name"
-          value={pooja.name}
-          onChange={handleChange}
-          className="w-full p-2 border outline-0"
-          required
-        />
+        <div className="space-y-1">
+          <label className="text-xs text-gray-400 font-bold uppercase tracking-widest">Select Temple</label>
+          <select
+            name="templeId"
+            value={pooja.templeId}
+            onChange={handleChange}
+            className="w-full p-2 border outline-0 bg-white"
+            required
+          >
+            <option value="" disabled>Select Temple</option>
+            {temples.map((temple) => (
+              <option key={temple._id} value={temple._id}>{temple.name}</option>
+            ))}
+          </select>
+        </div>
 
-        <label className="block mt-2 mb-2">Description:</label>
-        <textarea
-          name="description"
-          value={pooja.description}
-          onChange={handleChange}
-          className="w-full h-30 resize-none p-2 border outline-0"
-          required
-        />
+        <div className="space-y-1">
+          <label className="text-xs text-gray-400 font-bold uppercase tracking-widest">Pooja Name</label>
+          <input
+            type="text"
+            name="name"
+            value={pooja.name}
+            onChange={handleChange}
+            className="w-full p-2 border outline-0"
+            required
+          />
+        </div>
 
-        <label className="block mt-2 mb-2">New Image:</label>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          className="w-full p-2 border outline-0"
-        />
+        <div className="space-y-1">
+          <label className="text-xs text-gray-400 font-bold uppercase tracking-widest">Description</label>
+          <textarea
+            name="description"
+            value={pooja.description}
+            onChange={handleChange}
+            className="w-full h-32 resize-none p-2 border outline-0"
+            required
+          />
+        </div>
 
-        <label className="block mt-2 mb-2">Price (₹):</label>
-        <input
-          type="number"
-          name="price"
-          value={pooja.price}
-          onChange={handleChange}
-          className="w-full p-2 border outline-0"
-          required
-        />
+        <div className="space-y-1">
+          <label className="text-xs text-gray-400 font-bold uppercase tracking-widest">Update Image (Optional)</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="w-full p-2 border outline-0 text-xs text-gray-500"
+          />
+        </div>
 
-        <label className="block mt-2 mb-2">Date:</label>
-        <input
-          type="date"
-          name="date"
-          value={pooja.date}
-          onChange={handleChange}
-          className="border p-2 w-full mb-4"
-          required
-        />
+        <div className="space-y-1">
+          <label className="text-xs text-gray-400 font-bold uppercase tracking-widest">Price (₹)</label>
+          <input
+            type="number"
+            name="price"
+            value={pooja.price}
+            onChange={handleChange}
+            className="w-full p-2 border outline-0"
+            required
+          />
+        </div>
 
         <button
           type="submit"
-          className="w-full bg-primary text-white p-3 outline-0 hover:bg-amber-500 disabled:opacity-70"
+          className="w-full bg-primary text-white p-3 outline-0 hover:bg-amber-500 disabled:opacity-70 transition-colors mt-6"
           disabled={isUpdating}
         >
-          {isUpdating ? 'Updating...' : 'Update Pooja'}
+          {isUpdating ? 'Updating...' : 'Update Pooja Details'}
         </button>
       </form>
     </div>

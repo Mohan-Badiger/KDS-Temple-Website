@@ -79,6 +79,13 @@ const UserDropdown = ({ isMobile }) => {
           >
             <div className="py-1">
               <Link
+                to="/myseva"
+                onClick={() => setIsOpen(false)}
+                className={`block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors ${isMobile ? 'pl-8' : ''}`}
+              >
+                My Seva History
+              </Link>
+              <Link
                 to="/profile"
                 onClick={() => setIsOpen(false)}
                 className={`block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors ${isMobile ? 'pl-8' : ''}`}

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const donationSchema = new mongoose.Schema({
+const annaprasadSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   email: { type: String, required: true, lowercase: true, trim: true },
@@ -10,4 +10,6 @@ const donationSchema = new mongoose.Schema({
   temple: { type: mongoose.Schema.Types.ObjectId, ref: 'Temple', required: true },
 }, { timestamps: true });
 
-export default mongoose.model('Donation', donationSchema);
+const Annaprasad = mongoose.models.Annaprasad || mongoose.model('Annaprasad', annaprasadSchema);
+
+export default Annaprasad;

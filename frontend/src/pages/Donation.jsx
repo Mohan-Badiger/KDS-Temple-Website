@@ -8,9 +8,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import jsPDF from 'jspdf';
 
 const Donation = () => {
-  const { token } = useContext(TempleContext);
+  const { token, temples } = useContext(TempleContext);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
+
+  const [templeId, setTempleId] = useState('');
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -197,10 +199,13 @@ const Donation = () => {
                 amount,
                 message: enrichedMessage,
                 date: new Date().toISOString(),
+                templeId,
               };
 
+              const donationEndpoint = purpose === 'Annadanam' ? '/api/annaprasads/donate' : '/api/donations/donate';
+
               const donationRes = await axiosInstance.post(
-                `/api/donations/donate`,
+                donationEndpoint,
                 donationData
               );
 
@@ -257,8 +262,8 @@ const Donation = () => {
       toast.error('Please provide a name or select Anonymous.');
       return;
     }
-    if (!phone || !amount || amount < 1) {
-      toast.error('Please fill in required fields correctly.');
+    if (!phone || !amount || amount < 1 || !templeId) {
+      toast.error('Please fill in required fields correctly (including temple).');
       return;
     }
     handlePayment();
@@ -391,9 +396,34 @@ const Donation = () => {
           <div className="w-full lg:w-7/12">
             <form onSubmit={onSubmitHandler} className="flex flex-col gap-8">
 
+              {/* 0. Temple Selection */}
+              <div>
+                <h3 className="text-lg font-medium text-gray-900 mb-4">1. Select Temple</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {temples.map(t => (
+                    <button
+                      key={t._id}
+                      type="button"
+                      onClick={() => setTempleId(t._id)}
+                      className={`text-left px-4 py-3 border rounded-sm transition-colors text-base
+                        ${templeId === t._id
+                          ? 'border-primary bg-orange-50 text-primary font-medium'
+                          : 'border-gray-200 bg-transparent border-gray-300 text-gray-700'
+                        }`}
+                    >
+                      <div className="text-md font uppercase">{t.name}</div>
+                      <div className="text-[14px] opacity-70">{t.location}</div>
+                    </button>
+                  ))}
+                </div>
+                {temples.length === 0 && <p className="text-xs text-stone-400 mt-2 italic">Loading temples...</p>}
+              </div>
+
+              <div className="border-t border-gray-200"></div>
+
               {/* 1. Purpose Cards */}
               <div>
-                <h3 className="text-lg font-medium text-gray-900 mb-4">1. Select Purpose</h3>
+                <h3 className="text-lg font-medium text-gray-900 mb-4">2. Select Purpose</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {DONATION_PURPOSES.map(cat => (
                     <button
