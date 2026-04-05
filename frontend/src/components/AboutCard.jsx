@@ -1,96 +1,159 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { ShieldCheck, Settings, Users, Calendar, Landmark, MapPin, ChevronRight, Globe } from 'lucide-react';
 
 const AboutCard = () => {
+    const handleClick = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
-  const handleClick = () => {
-    window.scrollTo(0, 0);
-  };
+    const objectives = [
+        {
+            icon: <Settings className="text-orange-600" size={20} />,
+            title: "Administration",
+            desc: "Daily rituals, puja coordination, and overall temple operations management."
+        },
+        {
+            icon: <ShieldCheck className="text-orange-600" size={20} />,
+            title: "Preservation",
+            desc: "Historical restoration and architectural upkeep of ancient temple structures."
+        },
+        {
+            icon: <Calendar className="text-orange-600" size={20} />,
+            title: "Festivals",
+            desc: "Organizing grand Rathotsava, Shivaratri, and local cultural fairs with logistics."
+        },
+        {
+            icon: <Users className="text-orange-600" size={20} />,
+            title: "Community",
+            desc: "Engaging with devotees for charitable activities and social welfare programs."
+        }
+    ];
 
-  return (
-    <div className='w-full mb-10'>
-      <div className='flex align-middle gap-3'>
-        <h2 className='text-3xl font-medium text-gray-700 text-center mt-6'>About Committe</h2>
-        <p className='w-8 md:w-17 h-[3px] bg-[#414141] mt-11'></p>
-      </div>
+    const temples = [
+        { name: "Kadasiddheshwar", type: "Main Shiva Temple", icon: <Landmark size={18} /> },
+        { name: "Veerabhadra Swamy", type: "Spiritual Hub", icon: <Landmark size={18} /> },
+        { name: "Hanuman Temple", type: "Devotion & Strength", icon: <Landmark size={18} /> },
+        { name: "Mallayya Temple", type: "Cultural Gathering", icon: <Landmark size={18} /> }
+    ];
 
-      {/* <p className='mt-5 leading-7 sm:text-lg font-light text-sm text-gray-500'>The Shri Kadasiddeshwar Temple in Banahatti is dedicated to Shri Kadasiddeshwar Swamy. Every year, a grand festival (Jatre) is held in September, with the Rathotsava (chariot festival) being the main attraction.</p>
+    return (
+        <section className="w-full py-16 font-primary text-gray-900 border-t border-stone-100/50">
+            <div className="container mx-auto px-4 max-w-6xl">
+                {/* Header Section */}
+                <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="flex flex-col md:flex-row items-center justify-between mb-12 gap-6"
+                >
+                    <div className="text-left max-w-2xl">
+                        <span className="text-[10px] uppercase tracking-[0.3em] text-orange-600 font-bold mb-3 block">Governance & Heritage</span>
+                        <h2 className="text-3xl md:text-5xl font-light tracking-tight text-gray-900 mb-6 font-primary">Banahatti Temple <br className="hidden md:block" /> Management Trust</h2>
+                        <p className="text-stone-500 text-sm md:text-base leading-relaxed">
+                            A non-profit body dedicated to the spiritual, cultural, and architectural preservation of Banahatti's sacred landmarks. The Kadasiddheshwar Trust ensures the 150+ year legacy of our rituals continues to thrive for future generations.
+                        </p>
+                    </div>
+                </motion.div>
 
-      <p className='mt-4 sm:leading-7 sm:text-lg font-light text-sm text-gray-500'>The temple's chariot has a history of around 153 years and was donated by Parashuram Bhau Shankar Rao Patwardhan, the Maharaja of Jamkhandi, to the Mangalwar Peth Daiva Mandali of Banahatti. It is one of the oldest chariots in North Karnataka and is used only during the Rathotsava. The chariot's design reflects royal architecture, resembling the temple structure. Every year, during the festival, it is beautifully decorated with colors and lights, attracting thousands of devotees.</p> */}
+                {/* Main Content Grid */}
+                <div className="grid lg:grid-cols-3 gap-12">
+                    {/* Objectives: 2/3 Width */}
+                    <div className="lg:col-span-2">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            {objectives.map((obj, idx) => (
+                                <motion.div 
+                                    key={idx}
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: idx * 0.1 }}
+                                    className="p-6 bg-white border border-stone-100 rounded-sm hover:shadow-xl hover:shadow-stone-200/40 transition-all group"
+                                >
+                                    <div className="mb-4 p-3 bg-stone-50 w-fit rounded-sm group-hover:bg-orange-50 transition-colors">
+                                        {obj.icon}
+                                    </div>
+                                    <h3 className="text-lg font-medium text-gray-800 mb-2">{obj.title}</h3>
+                                    <p className="text-sm text-stone-500 leading-relaxed font-light">{obj.desc}</p>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
 
-      <div className="w-full flex justify-center mt-3 rounded font-primary">
-        <div className="w-full">
-          <h2 className="sm:text-2xl text-2xl font-medium text-gray-700 py-6">
-            Banahatti Temples Management Trust Committee
-          </h2>
+                    {/* Temples List: 1/3 Width */}
+                    <div className="space-y-6">
+                        <div className="bg-stone-50 p-8 rounded-sm border border-stone-100">
+                            <h3 className="text-xs uppercase tracking-[0.2em] font-bold text-gray-400 mb-6">Administrated Temples</h3>
+                            <div className="space-y-5">
+                                {temples.map((temple, idx) => (
+                                    <motion.div 
+                                        key={idx}
+                                        initial={{ opacity: 0, x: 20 }}
+                                        whileInView={{ opacity: 1, x: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ delay: idx * 0.1 }}
+                                        className="flex items-center gap-4 group"
+                                    >
+                                        <div className="p-2 text-stone-400 group-hover:text-orange-500 transition-colors">
+                                            {temple.icon}
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-medium text-gray-800 group-hover:text-orange-600 transition-all">{temple.name}</p>
+                                            <p className="text-[10px] uppercase tracking-widest text-stone-400">{temple.type}</p>
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </div>
+                            
+                            <div className="mt-8 pt-6 border-t border-stone-200">
+                                <div className="flex items-start gap-3">
+                                    <ShieldCheck className="text-green-600 mt-1" size={14} />
+                                    <p className="text-[11px] text-stone-500 leading-tight">Officially registered under the Hindu Religious Institutions and Charitable Endowments (Muzrai) Department.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-          <p className="mt-3 leading-7 sm:text-lg font-light text-sm text-gray-500">
-            The <strong>Banahatti Temples Management Trust Committee</strong> is a dedicated body responsible for the administration, preservation, and development of the major temples in Banahatti, Karnataka. The committee plays a crucial role in maintaining the religious, cultural, and social heritage of the town.
-          </p>
+                {/* Governance Summary (Readability focused) */}
+                <motion.div 
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
+                >
+                    <div className="bg-white border-b-2 border-orange-200 p-4">
+                        <p className="text-[9px] uppercase tracking-widest text-stone-400 mb-1">Governance</p>
+                        <p className="text-sm font-medium text-gray-900 uppercase">Trust Board</p>
+                    </div>
+                    <div className="bg-white border-b-2 border-stone-100 p-4">
+                        <p className="text-[9px] uppercase tracking-widest text-stone-400 mb-1">Founded</p>
+                        <p className="text-sm font-medium text-gray-900 uppercase">Late 19th Century</p>
+                    </div>
+                    <div className="bg-white border-b-2 border-stone-100 p-4">
+                        <p className="text-[9px] uppercase tracking-widest text-stone-400 mb-1">Status</p>
+                        <p className="text-sm font-medium text-gray-900 uppercase">Public Charitable</p>
+                    </div>
+                    <div className="bg-white border-b-2 border-stone-100 p-4">
+                        <p className="text-[9px] uppercase tracking-widest text-stone-400 mb-1">Location</p>
+                        <p className="text-sm font-medium text-gray-900 uppercase">Rabkavi-Banahatti</p>
+                    </div>
+                </motion.div>
 
-          <section className="mt-4">
-            <h3 className="sm:text-2xl text-xl font-medium text-gray-700">
-              Objectives and Responsibilities
-            </h3>
-            <ul className="mt-2 list-disc list-inside leading-7 sm:text-lg font-light text-sm text-gray-500">
-              <li><strong>Temple Administration:</strong> Ensures smooth functioning of all temple activities, daily rituals, and worship services. Coordinates with priests and staff for proper conduct of pujas and Aartis.</li>
-              <li><strong>Maintenance and Renovation:</strong> Oversees upkeep and restoration of temple structures, preserving historical architecture and managing funds for repair and beautification projects.</li>
-              <li><strong>Festival Management:</strong> Organizes and supervises major festivals, fairs, and special events, handling logistics, decorations, and rituals during celebrations such as Rathotsava and Maha Shivaratri.</li>
-              <li><strong>Cultural and Spiritual Promotion:</strong> Encourages local traditions, spiritual teachings, and cultural programs, acting as a custodian of Banahatti’s religious and cultural identity.</li>
-              <li><strong>Community Engagement:</strong> Engages with devotees and the local community to gather support and contributions for temple development, facilitating charitable activities and social welfare initiatives.</li>
-            </ul>
-          </section>
+                {/* Call To Action */}
+                <div className="mt-12 flex justify-center">
+                    <Link 
+                        to='/about' 
+                        onClick={handleClick}
+                        className="group flex items-center gap-3 px-8 py-4 bg-gray-900 text-white rounded-none uppercase tracking-[0.3em] text-[10px] font-bold hover:bg-orange-600 transition-all duration-500 shadow-xl shadow-stone-200/50"
+                    >
+                        Learn About Legacy <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                </div>
+            </div>
+        </section>
+    );
+};
 
-          <section className="mt-4">
-            <h3 className="sm:text-2xl text-xl font-medium text-gray-700">
-              Temples Under the Committee
-            </h3>
-            <ul className="mt-2 list-disc list-inside leading-7 sm:text-lg font-light text-sm text-gray-500">
-              <li><strong>Kadasiddeshwar Temple:</strong> Ancient Shiva temple with historical and architectural significance.</li>
-              <li><strong>Veerabhadra Swamy Temple:</strong> Spiritual hub for Shaiva devotees.</li>
-              <li><strong>Hanuman Temple:</strong> Center for devotion and strength.</li>
-              <li><strong>Mallayya Temple:</strong> Important local temple for cultural and spiritual gatherings.</li>
-            </ul>
-          </section>
-
-          <section className="mt-4 pb-6">
-            <h3 className="sm:text-2xl text-xl font-medium text-gray-700">
-              Vision
-            </h3>
-            <p className="mt-2 leading-7 sm:text-lg font-light text-sm text-gray-500">
-              The committee aims to preserve Banahatti’s religious heritage while promoting devotion, community harmony, and cultural awareness. By maintaining all four temples, it ensures that both locals and visitors experience the spiritual and historical richness of the region.
-            </p>
-          </section>
-        </div>
-      </div>
-
-
-      {/* <button className='h-10 px-7 mt-5 bg-primary text-white'><Link to='/about'>Know More </Link></button> */}
-
-      {/* About us button */}
-      <Link to='/about'
-        className="group relative inline-flex items-center overflow-hidden rounded-sm bg-primary px-10 py-3 text-white focus:outline-hidden mt-5" href="#">
-        <span className="absolute -end-full transition-all group-hover:end-4">
-          <svg
-            className="size-5 rtl:rotate-180"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M17 8l4 4m0 0l-4 4m4-4H3"
-            />
-          </svg>
-        </span>
-        <span className=" font-medium transition-all group-hover:me-4" onClick={handleClick}> Know More </span>
-      </Link>
-
-    </div>
-  )
-}
-
-export default AboutCard
+export default AboutCard;

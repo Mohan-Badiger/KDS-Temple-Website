@@ -71,57 +71,106 @@ export const accordionContent = [
   {
     id: 3,
     title: "Hanuman Temple",
-    content:{
-        english:[
-          {
-            text: "The Banahatti Hanuman Temple at Mangalvar Peth is an important local shrine where devotees gather daily for darshan and to offer prayers to Lord Hanuman — the brave, devoted protector from the Ramayana who symbolizes courage, service, and strength. The temple sits in the Mangalvar Peth area of Banahatti (Rabkavi-Banahatti taluk), a neighborhood known locally as a community hub and marketplace."
-          },
-          {
-            heading:"History",
-            text:"There are few formal historical records available online specifically about this small-town shrine; most of the temple’s origin and early history are preserved through local memory and oral tradition. Longtime residents often credit the temple’s founding to a community effort several generations ago — built and maintained by local families and the temple trust — and gradually expanded as the number of devotees grew. Because formal documentation is scarce, much of what people celebrate today comes from lived practice rather than archival records."
-          },
-          {
-            heading:"Culture, Rituals",
-            text:"The temple functions as a social as well as a religious center. Typical practices at Hanuman shrines that are observed here include daily aartis, offering of sindoor (vermillion), oil lamps, and simple prasadam (offered food). Hanuman is popularly associated with Tuesdays (Mangalvar) and Saturdays, so these days often draw larger crowds, special bhajans, and extra offerings — hence the significance of the temple’s location in “Mangalvar Peth.” Devotees come for blessings for health, protection, and success; many offer small vows (mannat) or distribute food during festivals."
-          },
-          {
-            heading:"Festivals & Special Days",
-            text:"Hanuman Jayanti (the birth anniversary of Hanuman) is the temple’s biggest annual event — devotees organize special pujas, group recitations of the Hanuman Chalisa, and community meals. On Tuesdays and Saturdays the temple is especially lively, with more devotees offering oil, flowers, and chanting prayers. Local fairs or temporary stalls sometimes appear around the temple on big festival days, reinforcing its role as both religious and community focal point."
-          },
-          {
-            heading:"Architecture & Visuals",
-            text:"Like many village and small-town Hanuman shrines, the temple’s architecture tends to be practical and community-focused rather than monumental — a garbhagriha (sanctum) housing the Hanuman murti (idol), a small hall for devotees, and open space for gatherings and prasadam distribution. Bright paint, garlands, and devotional posters are common, and newer repairs or expansions are usually driven by local donations and volunteer labor."
-          }
-        ],
-        kannada:[
-          {
-            text:"ಮಂಗಳವಾರ ಪೇಠದಲ್ಲಿರುವ ಬಣಹಟ್ಟಿ ಹನುಮಾನ್ ದೇವಾಲಯವು ಭಕ್ತರು ಪ್ರತಿದಿನ ದರ್ಶನಕ್ಕಾಗಿ ಹಾಗೂ ಭಗವಾನ್ ಹನುಮಂತನಿಗೆ ಪ್ರಾರ್ಥನೆ ಸಲ್ಲಿಸಲು ಸೇರುವ ಪ್ರಮುಖ ಸ್ಥಳೀಯ ದೇವಾಲಯವಾಗಿದೆ. ರಾಮಾಯಣದ ಧೈರ್ಯಶಾಲಿ, ನಿಷ್ಠಾವಂತ ರಕ್ಷಕನಾದ ಹನುಮಂತನು ಧೈರ್ಯ, ಸೇವೆ ಮತ್ತು ಶಕ್ತಿಯ ಸಂಕೇತನೆಂದು ಪರಿಗಣಿಸಲ್ಪಡುತ್ತಾನೆ. ಈ ದೇವಾಲಯವು ಬಣಹಟ್ಟಿ (ರಬ್ಕವಿ-ಬಣಹಟ್ಟಿ ತಾಲೂಕು)ಯ ಮಂಗಳವಾರ ಪೇಠ ಪ್ರದೇಶದಲ್ಲಿ, ವ್ಯಾಪಾರ ಹಾಗೂ ಸಮುದಾಯ ಚಟುವಟಿಕೆಗಳ ಕೇಂದ್ರವಾಗಿ ಪ್ರಸಿದ್ಧವಾಗಿದೆ."
-          },
-          {
-            heading:"ಇತಿಹಾಸ",
-            text:"ಈ ಸಣ್ಣ ಪಟ್ಟಣದ ದೇವಾಲಯದ ಬಗ್ಗೆ ಅಧಿಕೃತ ಐತಿಹಾಸಿಕ ದಾಖಲೆಗಳು ಬಹಳಷ್ಟು ಲಭ್ಯವಿಲ್ಲ. ದೇವಾಲಯದ ಉಗಮ ಮತ್ತು ಪ್ರಾರಂಭದ ಇತಿಹಾಸವನ್ನು ಸ್ಥಳೀಯ ಪರಂಪರೆ ಮತ್ತು ಹಿರಿಯರ ನೆನಪುಗಳ ಮೂಲಕ ಸಂರಕ್ಷಿಸಲಾಗಿದೆ. ಹಲವಾರು ಹಿರಿಯ ನಿವಾಸಿಗಳು ಈ ದೇವಾಲಯದ ನಿರ್ಮಾಣವನ್ನು ಕೆಲವು ತಲೆಮಾರುಗಳ ಹಿಂದಿನ ಸಮುದಾಯದ ಪ್ರಯತ್ನವೆಂದು ಪರಿಗಣಿಸುತ್ತಾರೆ. ಸ್ಥಳೀಯ ಕುಟುಂಬಗಳು ಮತ್ತು ದೇವಾಲಯ ಟ್ರಸ್ಟ್ ಅವರಿಂದ ನಿರ್ಮಿಸಿ, ಸಂರಕ್ಷಿಸಿ, ಭಕ್ತರ ಸಂಖ್ಯೆ ಹೆಚ್ಚಾಗುತ್ತಿದ್ದಂತೆ ಹಂತ ಹಂತವಾಗಿ ವಿಸ್ತರಿಸಲಾಯಿತು. ಅಧಿಕೃತ ದಾಖಲೆಗಳ ಕೊರತೆಯಿಂದ, ಇಂದಿನ ಆಚರಣೆಗಳು ಮುಖ್ಯವಾಗಿ ಜನಪದ ಸಂಪ್ರದಾಯ ಮತ್ತು ನಂಬಿಕೆಯಿಂದ ಬೆಳೆದಿವೆ."
-          },
-          {
-            heading:"ಸಂಸ್ಕೃತಿ, ವಿಧಿವಿಧಾನಗಳು",
-            text:"ಈ ದೇವಾಲಯವು ಧಾರ್ಮಿಕ ಕೇಂದ್ರವಾಗಿರುವುದರ ಜೊತೆಗೆ ಸಾಮಾಜಿಕ ಕೇಂದ್ರವಾಗಿಯೂ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತದೆ. ಇಲ್ಲಿ ಪ್ರತಿದಿನದ ಆರತಿ, ಸಿಂಧೂರದ (ವರ್ಮಿಲಿಯನ್) ಅರ್ಪಣೆ, ಎಣ್ಣೆ ದೀಪ ಬೆಳಗುವುದು ಮತ್ತು ಪ್ರಸಾದ ವಿತರಣೆ ಸಾಮಾನ್ಯ ಆಚರಣೆಗಳಾಗಿವೆ. ಹನುಮಂತನನ್ನು ಮಂಗಳವಾರ ಮತ್ತು ಶನಿವಾರ ದಿನಗಳೊಂದಿಗೆ ಹೆಚ್ಚು ಸಂಬಂಧಿಸಲಾಗಿದೆ, ಆದ್ದರಿಂದ ಈ ದಿನಗಳಲ್ಲಿ ಹೆಚ್ಚಿನ ಭಕ್ತರು ಆಗಮಿಸಿ ವಿಶೇಷ ಭಜನಗಳು ಮತ್ತು ವಿಶೇಷ ಪೂಜೆಗಳು ನಡೆಯುತ್ತವೆ. ದೇವಾಲಯವು ಇರುವ “ಮಂಗಳವಾರ ಪೇಠ” ಎಂಬ ಹೆಸರಿನೂ ಇದರ ಮಹತ್ವವನ್ನು ತೋರಿಸುತ್ತದೆ. ಭಕ್ತರು ಆರೋಗ್ಯ, ರಕ್ಷಣೆ ಮತ್ತು ಯಶಸ್ಸಿಗಾಗಿ ಪ್ರಾರ್ಥಿಸುತ್ತಾರೆ; ಅನೇಕರು ಮನಸ್ಸಿನ ಮಾನತೆಯನ್ನು ಪೂರ್ಣಗೊಳಿಸಲು ದೇಣಿಗೆ ಅಥವಾ ಅನ್ನದಾನ ಮಾಡುವರು."
-          },
-          {
-            heading:"ಹಬ್ಬಗಳು ಮತ್ತು ವಿಶೇಷ ದಿನಗಳು",
-            text:"ಹನುಮ ಜಯಂತಿಯು ಈ ದೇವಾಲಯದ ಅತ್ಯಂತ ಪ್ರಮುಖ ವಾರ್ಷಿಕ ಹಬ್ಬವಾಗಿದೆ. ಈ ಸಂದರ್ಭದಲ್ಲಿ ವಿಶೇಷ ಪೂಜೆಗಳು, ಹನುಮಾನ್ ಚಾಲೀಸೆಯ ಪಾರಾಯಣ ಮತ್ತು ಸಮೂಹ ಅನ್ನಸಂತರ್ಪಣೆಗಳು ನಡೆಯುತ್ತವೆ. ಮಂಗಳವಾರ ಮತ್ತು ಶನಿವಾರದಂದು ದೇವಸ್ಥಾನದಲ್ಲಿ ಭಕ್ತರ ಸಂಖ್ಯೆಯು ಹೆಚ್ಚಾಗಿದ್ದು, ಎಣ್ಣೆ, ಹೂಗಳು ಮತ್ತು ಪ್ರಾರ್ಥನೆಗಳ ಅರ್ಪಣೆಯು ಹೆಚ್ಚುತ್ತದೆ. ದೊಡ್ಡ ಹಬ್ಬದ ದಿನಗಳಲ್ಲಿ ದೇವಾಲಯದ ಸುತ್ತಮುತ್ತ ಸ್ಥಳೀಯ ಮೇಳಗಳು ಅಥವಾ ತಾತ್ಕಾಲಿಕ ಅಂಗಡಿಗಳು ಕೂಡಾ ಕಾಣಿಸಿಕೊಳ್ಳುತ್ತವೆ, ಇದು ದೇವಾಲಯದ ಸಾಮಾಜಿಕ ಹಾಗೂ ಧಾರ್ಮಿಕ ಕೇಂದ್ರಸ್ಥಾನವನ್ನು ಬಲಪಡಿಸುತ್ತದೆ."
-          },
-          {
-            heading:"ವಾಸ್ತುಶಿಲ್ಪ ಮತ್ತು ದೃಶ್ಯವೈಶಿಷ್ಟ್ಯ",
-            text:"ಅನೇಕ ಗ್ರಾಮೀಣ ಮತ್ತು ಪಟ್ಟಣ ಹನುಮಾನ್ ದೇವಾಲಯಗಳಂತೆಯೇ, ಬಣಹಟ್ಟಿ ಹನುಮಾನ್ ದೇವಾಲಯದ ವಾಸ್ತುಶಿಲ್ಪವು ಸರಳ ಹಾಗೂ ಸಮುದಾಯ ಕೇಂದ್ರೀತವಾಗಿದೆ. ದೇವಾಲಯದಲ್ಲಿ ಗರ್ಭಗುಡಿಯೊಳಗೆ ಹನುಮಂತನ ವಿಗ್ರಹವಿದ್ದು, ಭಕ್ತರಿಗಾಗಿ ಸಣ್ಣ ಸಭಾಂಗಣ ಹಾಗೂ ಪ್ರಸಾದ ವಿತರಣೆಗಾಗಿ ಮುಕ್ತ ಆವರಣವಿದೆ. ಬೆಳಕಿನ ಬಣ್ಣದ ಬಣ್ಣ ಬಳಕೆ, ಮಾಲೆಗಳು, ಭಕ್ತಿಪೋಸ್ಟರ್‌ಗಳು ಸಾಮಾನ್ಯವಾಗಿವೆ. ಹೊಸ ನಿರ್ಮಾಣಗಳು ಅಥವಾ ದುರಸ್ತಿ ಕಾರ್ಯಗಳು ಸ್ಥಳೀಯ ದೇಣಿಗೆ ಮತ್ತು ಸ್ವಯಂಸೇವಕರ ಸಹಕಾರದಿಂದ ನಡೆಯುತ್ತವೆ."
-          },
-        ]
+    content: {
+      english: [
+        {
+          text: "The Banahatti Hanuman Temple at Mangalvar Peth is an important local shrine where devotees gather daily for darshan and to offer prayers to Lord Hanuman — the brave, devoted protector from the Ramayana who symbolizes courage, service, and strength. The temple sits in the Mangalvar Peth area of Banahatti (Rabkavi-Banahatti taluk), a neighborhood known locally as a community hub and marketplace."
+        },
+        {
+          heading: "History",
+          text: "There are few formal historical records available online specifically about this small-town shrine; most of the temple’s origin and early history are preserved through local memory and oral tradition. Longtime residents often credit the temple’s founding to a community effort several generations ago — built and maintained by local families and the temple trust — and gradually expanded as the number of devotees grew. Because formal documentation is scarce, much of what people celebrate today comes from lived practice rather than archival records."
+        },
+        {
+          heading: "Culture, Rituals",
+          text: "The temple functions as a social as well as a religious center. Typical practices at Hanuman shrines that are observed here include daily aartis, offering of sindoor (vermillion), oil lamps, and simple prasadam (offered food). Hanuman is popularly associated with Tuesdays (Mangalvar) and Saturdays, so these days often draw larger crowds, special bhajans, and extra offerings — hence the significance of the temple’s location in “Mangalvar Peth.” Devotees come for blessings for health, protection, and success; many offer small vows (mannat) or distribute food during festivals."
+        },
+        {
+          heading: "Festivals & Special Days",
+          text: "Hanuman Jayanti (the birth anniversary of Hanuman) is the temple’s biggest annual event — devotees organize special pujas, group recitations of the Hanuman Chalisa, and community meals. On Tuesdays and Saturdays the temple is especially lively, with more devotees offering oil, flowers, and chanting prayers. Local fairs or temporary stalls sometimes appear around the temple on big festival days, reinforcing its role as both religious and community focal point."
+        },
+        {
+          heading: "Architecture & Visuals",
+          text: "Like many village and small-town Hanuman shrines, the temple’s architecture tends to be practical and community-focused rather than monumental — a garbhagriha (sanctum) housing the Hanuman murti (idol), a small hall for devotees, and open space for gatherings and prasadam distribution. Bright paint, garlands, and devotional posters are common, and newer repairs or expansions are usually driven by local donations and volunteer labor."
+        }
+      ],
+      kannada: [
+        {
+          text: "ಮಂಗಳವಾರ ಪೇಠದಲ್ಲಿರುವ ಬಣಹಟ್ಟಿ ಹನುಮಾನ್ ದೇವಾಲಯವು ಭಕ್ತರು ಪ್ರತಿದಿನ ದರ್ಶನಕ್ಕಾಗಿ ಹಾಗೂ ಭಗವಾನ್ ಹನುಮಂತನಿಗೆ ಪ್ರಾರ್ಥನೆ ಸಲ್ಲಿಸಲು ಸೇರುವ ಪ್ರಮುಖ ಸ್ಥಳೀಯ ದೇವಾಲಯವಾಗಿದೆ. ರಾಮಾಯಣದ ಧೈರ್ಯಶಾಲಿ, ನಿಷ್ಠಾವಂತ ರಕ್ಷಕನಾದ ಹನುಮಂತನು ಧೈರ್ಯ, ಸೇವೆ ಮತ್ತು ಶಕ್ತಿಯ ಸಂಕೇತನೆಂದು ಪರಿಗಣಿಸಲ್ಪಡುತ್ತಾನೆ. ಈ ದೇವಾಲಯವು ಬಣಹಟ್ಟಿ (ರಬ್ಕವಿ-ಬಣಹಟ್ಟಿ ತಾಲೂಕು)ಯ ಮಂಗಳವಾರ ಪೇಠ ಪ್ರದೇಶದಲ್ಲಿ, ವ್ಯಾಪಾರ ಹಾಗೂ ಸಮುದಾಯ ಚಟುವಟಿಕೆಗಳ ಕೇಂದ್ರವಾಗಿ ಪ್ರಸಿದ್ಧವಾಗಿದೆ."
+        },
+        {
+          heading: "ಇತಿಹಾಸ",
+          text: "ಈ ಸಣ್ಣ ಪಟ್ಟಣದ ದೇವಾಲಯದ ಬಗ್ಗೆ ಅಧಿಕೃತ ಐತಿಹಾಸಿಕ ದಾಖಲೆಗಳು ಬಹಳಷ್ಟು ಲಭ್ಯವಿಲ್ಲ. ದೇವಾಲಯದ ಉಗಮ ಮತ್ತು ಪ್ರಾರಂಭದ ಇತಿಹಾಸವನ್ನು ಸ್ಥಳೀಯ ಪರಂಪರೆ ಮತ್ತು ಹಿರಿಯರ ನೆನಪುಗಳ ಮೂಲಕ ಸಂರಕ್ಷಿಸಲಾಗಿದೆ. ಹಲವಾರು ಹಿರಿಯ ನಿವಾಸಿಗಳು ಈ ದೇವಾಲಯದ ನಿರ್ಮಾಣವನ್ನು ಕೆಲವು ತಲೆಮಾರುಗಳ ಹಿಂದಿನ ಸಮುದಾಯದ ಪ್ರಯತ್ನವೆಂದು ಪರಿಗಣಿಸುತ್ತಾರೆ. ಸ್ಥಳೀಯ ಕುಟುಂಬಗಳು ಮತ್ತು ದೇವಾಲಯ ಟ್ರಸ್ಟ್ ಅವರಿಂದ ನಿರ್ಮಿಸಿ, ಸಂರಕ್ಷಿಸಿ, ಭಕ್ತರ ಸಂಖ್ಯೆ ಹೆಚ್ಚಾಗುತ್ತಿದ್ದಂತೆ ಹಂತ ಹಂತವಾಗಿ ವಿಸ್ತರಿಸಲಾಯಿತು. ಅಧಿಕೃತ ದಾಖಲೆಗಳ ಕೊರತೆಯಿಂದ, ಇಂದಿನ ಆಚರಣೆಗಳು ಮುಖ್ಯವಾಗಿ ಜನಪದ ಸಂಪ್ರದಾಯ ಮತ್ತು ನಂಬಿಕೆಯಿಂದ ಬೆಳೆದಿವೆ."
+        },
+        {
+          heading: "ಸಂಸ್ಕೃತಿ, ವಿಧಿವಿಧಾನಗಳು",
+          text: "ಈ ದೇವಾಲಯವು ಧಾರ್ಮಿಕ ಕೇಂದ್ರವಾಗಿರುವುದರ ಜೊತೆಗೆ ಸಾಮಾಜಿಕ ಕೇಂದ್ರವಾಗಿಯೂ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತದೆ. ಇಲ್ಲಿ ಪ್ರತಿದಿನದ ಆರತಿ, ಸಿಂಧೂರದ (ವರ್ಮಿಲಿಯನ್) ಅರ್ಪಣೆ, ಎಣ್ಣೆ ದೀಪ ಬೆಳಗುವುದು ಮತ್ತು ಪ್ರಸಾದ ವಿತರಣೆ ಸಾಮಾನ್ಯ ಆಚರಣೆಗಳಾಗಿವೆ. ಹನುಮಂತನನ್ನು ಮಂಗಳವಾರ ಮತ್ತು ಶನಿವಾರ ದಿನಗಳೊಂದಿಗೆ ಹೆಚ್ಚು ಸಂಬಂಧಿಸಲಾಗಿದೆ, ಆದ್ದರಿಂದ ಈ ದಿನಗಳಲ್ಲಿ ಹೆಚ್ಚಿನ ಭಕ್ತರು ಆಗಮಿಸಿ ವಿಶೇಷ ಭಜನಗಳು ಮತ್ತು ವಿಶೇಷ ಪೂಜೆಗಳು ನಡೆಯುತ್ತವೆ. ದೇವಾಲಯವು ಇರುವ “ಮಂಗಳವಾರ ಪೇಠ” ಎಂಬ ಹೆಸರಿನೂ ಇದರ ಮಹತ್ವವನ್ನು ತೋರಿಸುತ್ತದೆ. ಭಕ್ತರು ಆರೋಗ್ಯ, ರಕ್ಷಣೆ ಮತ್ತು ಯಶಸ್ಸಿಗಾಗಿ ಪ್ರಾರ್ಥಿಸುತ್ತಾರೆ; ಅನೇಕರು ಮನಸ್ಸಿನ ಮಾನತೆಯನ್ನು ಪೂರ್ಣಗೊಳಿಸಲು ದೇಣಿಗೆ ಅಥವಾ ಅನ್ನದಾನ ಮಾಡುವರು."
+        },
+        {
+          heading: "ಹಬ್ಬಗಳು ಮತ್ತು ವಿಶೇಷ ದಿನಗಳು",
+          text: "ಹನುಮ ಜಯಂತಿಯು ಈ ದೇವಾಲಯದ ಅತ್ಯಂತ ಪ್ರಮುಖ ವಾರ್ಷಿಕ ಹಬ್ಬವಾಗಿದೆ. ಈ ಸಂದರ್ಭದಲ್ಲಿ ವಿಶೇಷ ಪೂಜೆಗಳು, ಹನುಮಾನ್ ಚಾಲೀಸೆಯ ಪಾರಾಯಣ ಮತ್ತು ಸಮೂಹ ಅನ್ನಸಂತರ್ಪಣೆಗಳು ನಡೆಯುತ್ತವೆ. ಮಂಗಳವಾರ ಮತ್ತು ಶನಿವಾರದಂದು ದೇವಸ್ಥಾನದಲ್ಲಿ ಭಕ್ತರ ಸಂಖ್ಯೆಯು ಹೆಚ್ಚಾಗಿದ್ದು, ಎಣ್ಣೆ, ಹೂಗಳು ಮತ್ತು ಪ್ರಾರ್ಥನೆಗಳ ಅರ್ಪಣೆಯು ಹೆಚ್ಚುತ್ತದೆ. ದೊಡ್ಡ ಹಬ್ಬದ ದಿನಗಳಲ್ಲಿ ದೇವಾಲಯದ ಸುತ್ತಮುತ್ತ ಸ್ಥಳೀಯ ಮೇಳಗಳು ಅಥವಾ ತಾತ್ಕಾಲಿಕ ಅಂಗಡಿಗಳು ಕೂಡಾ ಕಾಣಿಸಿಕೊಳ್ಳುತ್ತವೆ, ಇದು ದೇವಾಲಯದ ಸಾಮಾಜಿಕ ಹಾಗೂ ಧಾರ್ಮಿಕ ಕೇಂದ್ರಸ್ಥಾನವನ್ನು ಬಲಪಡಿಸುತ್ತದೆ."
+        },
+        {
+          heading: "ವಾಸ್ತುಶಿಲ್ಪ ಮತ್ತು ದೃಶ್ಯವೈಶಿಷ್ಟ್ಯ",
+          text: "ಅನೇಕ ಗ್ರಾಮೀಣ ಮತ್ತು ಪಟ್ಟಣ ಹನುಮಾನ್ ದೇವಾಲಯಗಳಂತೆಯೇ, ಬಣಹಟ್ಟಿ ಹನುಮಾನ್ ದೇವಾಲಯದ ವಾಸ್ತುಶಿಲ್ಪವು ಸರಳ ಹಾಗೂ ಸಮುದಾಯ ಕೇಂದ್ರೀತವಾಗಿದೆ. ದೇವಾಲಯದಲ್ಲಿ ಗರ್ಭಗುಡಿಯೊಳಗೆ ಹನುಮಂತನ ವಿಗ್ರಹವಿದ್ದು, ಭಕ್ತರಿಗಾಗಿ ಸಣ್ಣ ಸಭಾಂಗಣ ಹಾಗೂ ಪ್ರಸಾದ ವಿತರಣೆಗಾಗಿ ಮುಕ್ತ ಆವರಣವಿದೆ. ಬೆಳಕಿನ ಬಣ್ಣದ ಬಣ್ಣ ಬಳಕೆ, ಮಾಲೆಗಳು, ಭಕ್ತಿಪೋಸ್ಟರ್‌ಗಳು ಸಾಮಾನ್ಯವಾಗಿವೆ. ಹೊಸ ನಿರ್ಮಾಣಗಳು ಅಥವಾ ದುರಸ್ತಿ ಕಾರ್ಯಗಳು ಸ್ಥಳೀಯ ದೇಣಿಗೆ ಮತ್ತು ಸ್ವಯಂಸೇವಕರ ಸಹಕಾರದಿಂದ ನಡೆಯುತ್ತವೆ."
+        },
+      ]
     }
   },
   {
     id: 4,
     title: "Mallikarjuna Temple",
-    content:{
-        english:[],
-        kannada:[]
+    content: {
+      english: [
+        {
+          text: "The Mallayya Temple in Banahatti is a deeply revered local shrine dedicated to Lord Mallayya, a regional form of Lord Shiva worshipped with great devotion across parts of Karnataka and Maharashtra. The temple serves as a spiritual center for devotees from Banahatti and surrounding areas, where people gather daily for darshan, prayers, and to seek blessings for health, prosperity, and protection."
+        },
+        {
+          heading: "About Lord Mallayya",
+          text: "Mallayya is widely considered a form of Lord Shiva, often associated with rural and folk traditions of devotion. In many regions, Mallayya is worshipped as a guardian deity (Kshetrapalaka) who protects the land and its people. Devotees believe that Lord Mallayya listens to sincere prayers and fulfills wishes, especially related to family well-being, agriculture, and livelihood. The worship of Mallayya reflects a blend of classical Shaivism and local spiritual traditions."
+        },
+        {
+          heading: "History",
+          text: "The exact historical origins of the Mallayya Temple in Banahatti are not formally documented, but the temple is believed to have been established many decades ago through the efforts of local devotees and temple committees. Much of its history has been preserved through oral traditions passed down generations. Over time, the temple has grown in structure and significance, supported by community contributions and regular renovations."
+        },
+        {
+          heading: "Culture, Rituals",
+          text: "The temple follows traditional Shaiva rituals including daily poojas, abhisheka (ritual bathing of the deity), aarti, and offering of bilva leaves, flowers, and prasadam. Mondays, being sacred to Lord Shiva, see increased footfall, along with special prayers and bhajans. Devotees often take vows (harake) and return to offer prayers once their wishes are fulfilled. The temple atmosphere is devotional, simple, and deeply rooted in local culture."
+        },
+        {
+          heading: "Festivals & Special Days",
+          text: "Mahashivaratri is the most significant festival celebrated at the Mallayya Temple, attracting large gatherings of devotees for night-long prayers, abhisheka, and bhajans. Other important days include Shravan month Mondays, where special poojas are performed. Local jatras (fairs) and annual temple festivals are also organized, bringing together the community in celebration and devotion."
+        },
+        {
+          heading: "Architecture & Surroundings",
+          text: "The temple architecture reflects a simple and functional design typical of regional Shiva temples. It includes a sanctum (garbhagriha) housing the Mallayya deity (often in the form of a Shiva Linga), a small hall for devotees, and open spaces for gatherings. Decorations include traditional lamps, garlands, and locally contributed elements. The temple premises serve as both a religious and community gathering space."
+        }
+      ],
+
+      kannada: [
+        {
+          text: "ಬಣಹಟ್ಟಿಯಲ್ಲಿರುವ ಮಲ್ಲಯ್ಯ ದೇವಸ್ಥಾನವು ಸ್ಥಳೀಯವಾಗಿ ಅತ್ಯಂತ ಭಕ್ತಿಭಾವದಿಂದ ಪೂಜಿಸಲ್ಪಡುವ ದೇವಾಲಯವಾಗಿದ್ದು, ಭಗವಾನ್ ಮಲ್ಲಯ್ಯನಿಗೆ ಸಮರ್ಪಿತವಾಗಿದೆ. ಮಲ್ಲಯ್ಯನನ್ನು ಶಿವನ ಒಂದು ರೂಪವೆಂದು ಪರಿಗಣಿಸಲಾಗುತ್ತದೆ ಮತ್ತು ಕರ್ನಾಟಕ ಹಾಗೂ ಮಹಾರಾಷ್ಟ್ರದ ಕೆಲವು ಭಾಗಗಳಲ್ಲಿ ವಿಶೇಷವಾಗಿ ಆರಾಧಿಸಲಾಗುತ್ತದೆ. ಈ ದೇವಸ್ಥಾನವು ಬಣಹಟ್ಟಿ ಮತ್ತು ಸುತ್ತಮುತ್ತಲಿನ ಭಕ್ತರಿಗಾಗಿ ಆಧ್ಯಾತ್ಮಿಕ ಕೇಂದ್ರವಾಗಿದ್ದು, ಪ್ರತಿದಿನ ದರ್ಶನ ಮತ್ತು ಪ್ರಾರ್ಥನೆಗಾಗಿ ಭಕ್ತರು ಇಲ್ಲಿ ಆಗಮಿಸುತ್ತಾರೆ."
+        },
+        {
+          heading: "ಮಲ್ಲಯ್ಯ ದೇವರ ಬಗ್ಗೆ",
+          text: "ಮಲ್ಲಯ್ಯನು ಭಗವಾನ್ ಶಿವನ ಒಂದು ರೂಪವೆಂದು ಪರಿಗಣಿಸಲ್ಪಡುತ್ತಾನೆ ಮತ್ತು ಗ್ರಾಮೀಣ ಹಾಗೂ ಜನಪದ ಸಂಪ್ರದಾಯಗಳಲ್ಲಿ ಪ್ರಮುಖ ಸ್ಥಾನ ಹೊಂದಿದ್ದಾನೆ. ಅನೇಕ ಸ್ಥಳಗಳಲ್ಲಿ ಮಲ್ಲಯ್ಯನನ್ನು ಕ್ಷೇತ್ರಪಾಲಕ (ರಕ್ಷಕ ದೇವರು) ಎಂದು ಆರಾಧಿಸಲಾಗುತ್ತದೆ, ಅಂದರೆ ಗ್ರಾಮ ಮತ್ತು ಜನರ ರಕ್ಷಕನಾಗಿ ನಂಬಿಕೆ ಇದೆ. ಭಕ್ತರು ತಮ್ಮ ಮನಸ್ಸಿನ ಪ್ರಾರ್ಥನೆಗಳನ್ನು ಮಲ್ಲಯ್ಯ ದೇವರು ಕೇಳಿ ಆಶೀರ್ವದಿಸುತ್ತಾನೆ ಎಂದು ನಂಬುತ್ತಾರೆ, ವಿಶೇಷವಾಗಿ ಕುಟುಂಬದ ಸುಖ, ಕೃಷಿ ಮತ್ತು ಜೀವನೋಪಾಯಕ್ಕೆ ಸಂಬಂಧಿಸಿದ ವಿಷಯಗಳಲ್ಲಿ."
+        },
+        {
+          heading: "ಇತಿಹಾಸ",
+          text: "ಬಣಹಟ್ಟಿಯ ಮಲ್ಲಯ್ಯ ದೇವಸ್ಥಾನದ ನಿಖರವಾದ ಐತಿಹಾಸಿಕ ದಾಖಲೆಗಳು ಲಭ್ಯವಿಲ್ಲ. ಆದರೆ, ಈ ದೇವಸ್ಥಾನವು ಹಲವು ದಶಕಗಳ ಹಿಂದೆ ಸ್ಥಳೀಯ ಭಕ್ತರು ಮತ್ತು ಸಮುದಾಯದ ಸಹಕಾರದಿಂದ ನಿರ್ಮಿಸಲ್ಪಟ್ಟಿದೆ ಎಂದು ನಂಬಲಾಗಿದೆ. ದೇವಸ್ಥಾನದ ಇತಿಹಾಸವು ಮುಖ್ಯವಾಗಿ ಜನಪದ ಪರಂಪರೆ ಮತ್ತು ಹಿರಿಯರ ನೆನಪುಗಳ ಮೂಲಕ ಸಾಗುತ್ತಿದೆ. ಕಾಲಕ್ರಮೇಣ, ಭಕ್ತರ ಸಹಕಾರದಿಂದ ದೇವಸ್ಥಾನವು ವಿಸ್ತಾರಗೊಂಡಿದೆ ಮತ್ತು ಪುನರ್ ನಿರ್ಮಾಣಗಳೂ ನಡೆದಿವೆ."
+        },
+        {
+          heading: "ಸಂಸ್ಕೃತಿ ಮತ್ತು ವಿಧಿವಿಧಾನಗಳು",
+          text: "ಈ ದೇವಸ್ಥಾನದಲ್ಲಿ ಶೈವ ಸಂಪ್ರದಾಯದ ಪ್ರಕಾರ ಪ್ರತಿದಿನ ಪೂಜೆ, ಅಭಿಷೇಕ, ಆರತಿ ಮತ್ತು ಬಿಲ್ವಪತ್ರ ಅರ್ಪಣೆ ನಡೆಯುತ್ತದೆ. ಶಿವನಿಗೆ ಪ್ರಿಯವಾದ ಸೋಮವಾರದಂದು ವಿಶೇಷವಾಗಿ ಹೆಚ್ಚಿನ ಭಕ್ತರು ಆಗಮಿಸುತ್ತಾರೆ ಮತ್ತು ವಿಶೇಷ ಪೂಜೆಗಳು ಹಾಗೂ ಭಜನೆಗಳು ನಡೆಯುತ್ತವೆ. ಭಕ್ತರು ತಮ್ಮ ಮನೋವಾಂಛೆಗಳನ್ನು ಪೂರ್ಣಗೊಳಿಸಲು ಹರಕೆಗಳನ್ನು ಇಟ್ಟು ನಂತರ ದೇವಾಲಯಕ್ಕೆ ಬಂದು ಪೂಜೆ ಸಲ್ಲಿಸುತ್ತಾರೆ."
+        },
+        {
+          heading: "ಹಬ್ಬಗಳು ಮತ್ತು ವಿಶೇಷ ದಿನಗಳು",
+          text: "ಮಹಾಶಿವರಾತ್ರಿಯು ಈ ದೇವಸ್ಥಾನದ ಪ್ರಮುಖ ಹಬ್ಬವಾಗಿದ್ದು, ಭಕ್ತರು ರಾತ್ರಿಯಿಡೀ ಪೂಜೆ, ಅಭಿಷೇಕ ಮತ್ತು ಭಜನೆಗಳಲ್ಲಿ ಭಾಗವಹಿಸುತ್ತಾರೆ. ಶ್ರಾವಣ ಮಾಸದ ಸೋಮವಾರಗಳಲ್ಲಿಯೂ ವಿಶೇಷ ಪೂಜೆಗಳು ನಡೆಯುತ್ತವೆ. ದೇವಸ್ಥಾನ ಜಾತ್ರೆಗಳು ಮತ್ತು ವಾರ್ಷಿಕೋತ್ಸವಗಳು ಸಮುದಾಯದ ಎಲ್ಲರನ್ನು ಒಟ್ಟುಗೂಡಿಸಿ ಆಚರಿಸಲಾಗುತ್ತದೆ."
+        },
+        {
+          heading: "ವಾಸ್ತುಶಿಲ್ಪ ಮತ್ತು ಪರಿಸರ",
+          text: "ಮಲ್ಲಯ್ಯ ದೇವಸ್ಥಾನದ ವಾಸ್ತುಶಿಲ್ಪವು ಸರಳ ಮತ್ತು ಸ್ಥಳೀಯ ಶೈಲಿಯಲ್ಲಿದೆ. ಗರ್ಭಗುಡಿಯಲ್ಲಿ ಶಿವಲಿಂಗ ರೂಪದಲ್ಲಿ ಮಲ್ಲಯ್ಯ ದೇವರ ವಿಗ್ರಹವಿದ್ದು, ಭಕ್ತರಿಗಾಗಿ ಸಣ್ಣ ಸಭಾಂಗಣ ಹಾಗೂ ಮುಕ್ತ ಆವರಣವಿದೆ. ದೀಪಗಳು, ಹೂಮಾಲೆಗಳು ಮತ್ತು ಭಕ್ತರಿಂದ ಕೊಡುಗೆಗಳ ಮೂಲಕ ದೇವಸ್ಥಾನ ಅಲಂಕೃತವಾಗಿರುತ್ತದೆ. ಇದು ಧಾರ್ಮಿಕ ಮತ್ತು ಸಾಮಾಜಿಕ ಚಟುವಟಿಕೆಗಳ ಕೇಂದ್ರವಾಗಿದೆ."
+        }
+      ]
     }
   },
 ];

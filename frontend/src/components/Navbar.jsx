@@ -102,15 +102,14 @@ import menu_bar from '../assets/menu_bar.png';
 import cancel_bar from '../assets/cancel_bar.png';
 import { TempleContext } from '../context/TempleContext';
 import { toast } from 'react-toastify';
-import music1 from '../assets/volume.png';
-import music2 from '../assets/silent.png';
+import { Volume2, VolumeX, Menu, X, User } from 'lucide-react';
 import UserDropdown from './User/UserDropdown';
 
 const Navbar = () => {
   const AUTO_LOGOUT_TIME = 20 * 60 * 1000; // 20 minutes
   const [visible, setVisible] = useState(false);
   const { navigate, token, setToken } = useContext(TempleContext);
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
 
   // Logout function
@@ -158,38 +157,32 @@ const Navbar = () => {
     return () => { document.body.style.overflow = 'auto'; };
   }, [visible]);
 
-  // 🔊 Auto play background music when website loads
+  // 🔊 Audio management
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    audio.volume = 0.5; // set 50% volume
+    audio.volume = 0.4; // Devotional background volume
 
-    const playMusic = () => {
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => setIsPlaying(true))
-          .catch(() => {
-            console.log('Autoplay blocked until user interacts.');
-            setIsPlaying(false);
-          });
-      }
+    // Autoplay attempt (most browsers block this)
+    const playAttempt = () => {
+      audio.play()
+        .then(() => setIsPlaying(true))
+        .catch(() => setIsPlaying(false));
     };
 
-    playMusic();
+    playAttempt();
 
-    // Allow music to start after user interacts (if blocked)
-    const startOnClick = () => {
+    // Interaction-based start for restricted browsers
+    const handleFirstInteraction = () => {
       if (!isPlaying) {
-        audio.play();
-        setIsPlaying(true);
+        audio.play().then(() => setIsPlaying(true));
       }
-      window.removeEventListener('click', startOnClick);
+      window.removeEventListener('click', handleFirstInteraction);
     };
-    window.addEventListener('click', startOnClick);
 
-    return () => window.removeEventListener('click', startOnClick);
+    window.addEventListener('click', handleFirstInteraction);
+    return () => window.removeEventListener('click', handleFirstInteraction);
   }, []);
 
   // 🎵 Toggle music on/off
@@ -197,14 +190,14 @@ const Navbar = () => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    audio.volume = 0.008; // always reset to 50%
-
     if (isPlaying) {
       audio.pause();
       setIsPlaying(false);
     } else {
-      audio.play().then(() => setIsPlaying(true))
-        .catch(() => console.log('User interaction required to play audio.'));
+      audio.volume = 0.4;
+      audio.play()
+        .then(() => setIsPlaying(true))
+        .catch(err => console.error("Audio playback error:", err));
     }
   };
 
@@ -220,22 +213,31 @@ const Navbar = () => {
           <NavLink to='/contact'><p className='text-md'>Contact</p></NavLink>
         </ul>
 
-        {/* 🎧 Music Toggle Icon (Always visible) */}
+        {/* 🎧 Music Toggle Icon (Devotional Pulse) */}
         <div className="flex items-center gap-7">
-          <div className='flex gap-7'>
+          <div className='flex items-center gap-4'>
             <button
               onClick={toggleMusic}
-              className="focus:outline-none hover:opacity-70 transition"
+              className={`group flex items-center gap-2 p-2 rounded-full transition-all duration-500 ${isPlaying ? 'bg-orange-50 text-orange-600 shadow-sm' : 'text-stone-400 hover:text-orange-500'}`}
+              title={isPlaying ? "Mute Shiv Dhun" : "Play Shiv Dhun"}
             >
-              <img
-                src={isPlaying ? music1 : music2}
-                alt="music toggle"
-                className="h-6 w-6"
-              />
+              <div className="relative">
+                {isPlaying ? (
+                  <>
+                    <Volume2 size={20} className="relative z-10" />
+                    <span className="absolute inset-0 bg-orange-400/20 rounded-full animate-ping scale-150"></span>
+                  </>
+                ) : (
+                  <VolumeX size={20} />
+                )}
+              </div>
+              <span className={`text-[10px] uppercase tracking-widest font-semibold hidden md:block transition-all ${isPlaying ? 'opacity-100 max-w-xs' : 'opacity-0 max-w-0 overflow-hidden'}`}>
+                Shiv Dhun
+              </span>
             </button>
 
             <div className='w-6 block sm:hidden'>
-              <img src={menu_bar} alt="menu" onClick={() => setVisible(true)} />
+               <Menu className="text-gray-600 cursor-pointer" onClick={() => setVisible(true)} />
             </div>
           </div>
 
@@ -246,7 +248,7 @@ const Navbar = () => {
                 <UserDropdown isMobile={false} />
               ) : (
                 <Link
-                  className="border-1 py-2 px-5 bg-primary hover:bg-amber-600 border-none text-white transition-colors"
+                  className="border-1 py-1.5 px-6 bg-gray-900 hover:bg-orange-600 border-none text-white text-xs uppercase tracking-widest transition-all rounded-sm shadow-md"
                   to="/login"
                 >
                   LogIn
@@ -264,7 +266,7 @@ const Navbar = () => {
         <div className='flex flex-col text-gray-600 h-full'>
           <div onClick={() => setVisible(false)} className='flex items-center justify-between p-6 border-b border-stone-200'>
              <div className="flex items-center gap-4">
-                <img className='h-4 rotate-450' src={cancel_bar} alt="cancel" />
+                <X className='h-5 w-5 text-gray-400' />
                 <p className="text-xs uppercase tracking-widest">Close Menu</p>
              </div>
              <Link to='/' onClick={() => setVisible(false)}><h1 className='text-xl'>BNT<span className='text-orange-400'>.</span></h1></Link>
