@@ -7,6 +7,7 @@ const TempleSelection = () => {
 
     const handleSelect = (temple) => {
         setSelectedTemple(temple);
+        navigate("/pooja");
     };
 
     const handleContinue = () => {

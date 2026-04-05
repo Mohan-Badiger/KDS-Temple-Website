@@ -16,7 +16,7 @@ const decodeToken = (token) => {
 };
 
 const PaymentGateway = () => {
-  const { selectedPoojas, totalAmount, selectedTemple, selectedDate, setSelectedDate } = useContext(TempleContext);
+  const { selectedPoojas, setSelectedPoojas, totalAmount, selectedTemple, selectedDate, setSelectedDate } = useContext(TempleContext);
   const [loading, setLoading] = useState(false);
   const [verifying, setVerifying] = useState(false);
   const [poojaInNameOf, setPoojaInNameOf] = useState("");
@@ -126,6 +126,8 @@ const PaymentGateway = () => {
 
               if (bookingRes.data.success) {
                 toast.success("Booking confirmed successfully!");
+                setSelectedPoojas([]);
+                setSelectedDate("");
                 navigate("/booking-confirmation");
               } else {
                 toast.error("Booking failed.");
