@@ -6,7 +6,6 @@ import {
   verifyRegisterOtp,
   registerUser,
   loginUser,
-  adminLogin,
   requestResetOtp,
   verifyResetOtp,
   getProfile,
@@ -28,7 +27,6 @@ router.post('/register', registerUser);
 
 // ===== Login =====
 router.post('/login', loginUser);
-router.post('/admin', adminLogin);
 
 // ===== Password Reset =====
 router.post('/request-reset-otp', requestResetOtp);

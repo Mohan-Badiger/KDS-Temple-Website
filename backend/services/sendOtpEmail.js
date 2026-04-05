@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 
-const sendOtpEmail = async (toEmail, otp) => {
+const sendOtpEmail = async (toEmail, otp, subject = 'Your OTP for Password Reset', title = 'Password Reset OTP') => {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -11,9 +11,9 @@ const sendOtpEmail = async (toEmail, otp) => {
 
   const otpHtml = `
     <div style="font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6; padding: 20px; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 5px; background: #ffffff;">
-      <h2 style="color: #E38C00;">Password Reset OTP</h2>
+      <h2 style="color: #E38C00;">${title}</h2>
       <p>Hello,</p>
-      <p>Your OTP for resetting your password is:</p>
+      <p>Your OTP is:</p>
       <p style="font-size: 24px; font-weight: bold; background: #FFDBA2; padding: 10px; border-left: 5px solid #E38C00;">${otp}</p>
       <p>This OTP is valid for the next <strong>10 minutes</strong>.</p>
       <p>If you didn’t request this, please ignore this email.</p>
@@ -27,7 +27,7 @@ const sendOtpEmail = async (toEmail, otp) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: toEmail,
-    subject: 'Your OTP for Password Reset',
+    subject: subject,
     html: otpHtml,
   };
 

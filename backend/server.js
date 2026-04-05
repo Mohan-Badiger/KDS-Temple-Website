@@ -12,6 +12,7 @@ import donationRoutes from './routes/donationRoute.js';
 import templeRouter from './routes/templeRoute.js';
 import annaprasadRouter from './routes/annaprasadRoute.js';
 import reportRouter from './routes/reportRoute.js';
+import adminRouter from './routes/adminRoute.js';
 
 //App config
 const app = express();
@@ -25,6 +26,7 @@ app.use(cors())
 
 //api endpoints
 app.use('/api/user', userRouter);
+app.use('/api/admin', adminRouter);
 app.use('/api/pooja', poojaRouter);
 app.use("/api/bookings", bookingRouter);
 app.use('/api/donations', donationRoutes);
