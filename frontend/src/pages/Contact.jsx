@@ -1,126 +1,266 @@
-import React, { useContext, useState } from 'react';
-import Swal from 'sweetalert2';
+import React, { useContext, useState, useEffect } from 'react';
 import { TempleContext } from '../context/TempleContext';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import axiosInstance from '../utils/axiosInstance';
+import { MessageSquare, Bug, Send, Mail, MapPin, Phone } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Contact = () => {
-
     const { token, backendUrl } = useContext(TempleContext);
+    const [activeTab, setActiveTab] = useState('contact'); // 'contact' or 'feedback'
 
+    // Form States
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
+    const [feedbackType, setFeedbackType] = useState('Improvement');
+    const [feedbackMsg, setFeedbackMsg] = useState('');
+
     const [mapLoading, setMapLoading] = useState(true);
     const [loading, setLoading] = useState(false);
 
-    const onSubmitHandler = async (e) => {
+    // Autofill user details if logged in
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            if (token) {
+                try {
+                    const response = await axiosInstance.get('/api/user/profile');
+                    if (response.data.success) {
+                        setName(response.data.user.name || '');
+                        setEmail(response.data.user.email || '');
+                    }
+                } catch (error) {
+                    console.error("Error fetching profile for autofill:", error);
+                }
+            } else {
+                // Clear if logged out
+                setName('');
+                setEmail('');
+            }
+        };
+        fetchUserProfile();
+    }, [token, backendUrl]);
+
+    const onContactSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         try {
-            if (token === localStorage.getItem('token')) {
-                const response = await axios.post(backendUrl + '/api/contact', { name, email, message });
-                if (response.data.success) {
-                    toast.success("Email sent successfully");
-                    setName('');
-                    setEmail('');
-                    setMessage('');
-                } else {
-                    toast.error(response.data.message);
-                }
-            } else {
-                toast.error("Please Login to Contact Us");
-                setName('');
-                setEmail('');
+            const response = await axios.post(backendUrl + '/api/contact', { name, email, message });
+            if (response.data.success) {
+                toast.success(response.data.message);
                 setMessage('');
+            } else {
+                toast.error(response.data.message);
             }
         } catch (error) {
-            console.log(error);
-            toast.error(error.message);
+            console.error(error);
+            toast.error(error.response?.data?.error || "Failed to send message");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const onFeedbackSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            const response = await axios.post(backendUrl + '/api/feedback/submit', {
+                name,
+                email,
+                type: feedbackType,
+                message: feedbackMsg
+            });
+            if (response.data.success) {
+                toast.success(response.data.message);
+                setFeedbackMsg('');
+            } else {
+                toast.error(response.data.message);
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error(error.response?.data?.error || "Failed to submit feedback");
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className='font-primary'>
-            <section className="text-gray-600 body-font relative">
-                <div className="container px-1 mx-auto flex sm:flex-nowrap flex-wrap">
-                    {/*----------------------- Left Side Google Map--------------------- */}
-                    <div className="lg:w-3/5 md:w-2/3 w-full h-120 mt-15 bg-neutral-400 relative overflow-hidden sm:mr-10 sm:flex-col p-10 flex items-end justify-start">
-                        {mapLoading && (
-                            <div className="absolute inset-0 z-10 bg-white bg-opacity-80 flex items-center justify-center">
-                                <p className="text-gray-700 text-lg font-medium">Getting Temple Location......</p>
+        <div className='font-primary min-h-screen py-12'>
+            <div className="container mx-auto px-4 max-w-6xl">
+                {/* Header Section */}
+                <div className="text-center mb-12">
+                    <h1 className="text-4xl font-light text-gray-900 uppercase tracking-widest mb-4">Get in Touch</h1>
+                    <p className="text-stone-500 max-w-2xl mx-auto">We value your connection. Whether you have an inquiry or want to help us improve, we're here to listen.</p>
+                </div>
+
+                <div className="flex flex-col lg:flex-row gap-12">
+                    {/* Left Side: Info & Map */}
+                    <div className="lg:w-1/2 space-y-8">
+                        <div className="bg-white p-8 rounded-sm shadow-sm border border-stone-100">
+                            <h2 className="text-xl font-normal text-gray-900 mb-6 uppercase tracking-wider">Temple Information</h2>
+                            <div className="space-y-6">
+                                <div className="flex items-start gap-4">
+                                    <div className="p-3 bg-orange-50 text-orange-600 rounded-sm">
+                                        <MapPin size={20} />
+                                    </div>
+                                    <div>
+                                        <p className="font-medium text-gray-900">Address</p>
+                                        <p className="text-stone-500 text-sm">Kadasiddheshwar Temple, Banahatti, Karnataka 587311</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-4">
+                                    <div className="p-3 bg-orange-50 text-orange-600 rounded-sm">
+                                        <Phone size={20} />
+                                    </div>
+                                    <div>
+                                        <p className="font-medium text-gray-900">Phone</p>
+                                        <p className="text-stone-500 text-sm">+91 98450 00000</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-4">
+                                    <div className="p-3 bg-orange-50 text-orange-600 rounded-sm">
+                                        <Mail size={20} />
+                                    </div>
+                                    <div>
+                                        <p className="font-medium text-gray-900">Email</p>
+                                        <p className="text-stone-500 text-sm">contact@banahattitemples.com</p>
+                                    </div>
+                                </div>
                             </div>
-                        )}
-                        <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3825.925928835828!2d75.12446747473987!3d16.47928788426119!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc730c899a0dffb%3A0x61e2a5390925d9f!2sKadasiddheshwar%20Temple%20Banahatti!5e0!3m2!1sen!2sin!4v1740727319556!5m2!1sen!2sin"
-                            width="100%"
-                            height="100%"
-                            className="absolute inset-0"
-                            style={{ border: "0" }}
-                            allowFullScreen
-                            loading="lazy"
-                            referrerPolicy="no-referrer-when-downgrade"
-                            onLoad={() => setMapLoading(false)} // This is key!
-                        ></iframe>
+                        </div>
+
+                        {/* Map */}
+                        <div className="h-80 bg-stone-200 rounded-sm overflow-hidden relative shadow-sm border border-stone-100">
+                            {mapLoading && (
+                                <div className="absolute inset-0 z-10 bg-white/80 flex items-center justify-center">
+                                    <div className="w-6 h-6 border-2 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+                                </div>
+                            )}
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3825.925928835828!2d75.12446747473987!3d16.47928788426119!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc730c899a0dffb%3A0x61e2a5390925d9f!2sKadasiddheshwar%20Temple%20Banahatti!5e0!3m2!1sen!2sin!4v1740727319556!5m2!1sen!2sin"
+                                width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"
+                                onLoad={() => setMapLoading(false)}
+                            ></iframe>
+                        </div>
                     </div>
 
-                    {/* ------------------------Right side Info-------------------------- */}
-                    <div className="lg:w-1/3 md:w-1/2 flex flex-col md:ml-auto w-full md:py-8 mt-8 md:mt-3">
-                        <h2 className="text-gray-900 text-lg mb-1 font-medium title-font">Contact us</h2>
-                        <p className="leading-relaxed mb-5 text-gray-600">We are happy to serve you, Please use the form below for enquiries</p>
-                        <form onSubmit={onSubmitHandler}>
-                            <div className="relative mb-2">
-                                <label htmlFor="name" className="leading-7 text-sm text-gray-600">Name</label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    name="name"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    required
-                                    className="w-full bg-auto border border-gray-300 focus:border-black text-base outline-none text-gray-700 py-2 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                />
+                    {/* Right Side: Tabbed Form */}
+                    <div className="lg:w-1/2">
+                        <div className="bg-white rounded-sm shadow-sm border border-stone-100 overflow-hidden">
+                            {/* Tabs */}
+                            <div className="flex border-b border-stone-100">
+                                <button
+                                    onClick={() => setActiveTab('contact')}
+                                    className={`flex-1 py-4 text-sm uppercase tracking-widest font-medium transition-all flex items-center justify-center gap-2 ${activeTab === 'contact' ? 'bg-orange-500 text-white' : 'text-stone-400 hover:text-orange-500 hover:bg-orange-50/30'}`}
+                                >
+                                    <MessageSquare size={16} /> Contact Us
+                                </button>
+                                <button
+                                    onClick={() => setActiveTab('feedback')}
+                                    className={`flex-1 py-4 text-sm uppercase tracking-widest font-medium transition-all flex items-center justify-center gap-2 ${activeTab === 'feedback' ? 'bg-orange-500 text-white' : 'text-stone-400 hover:text-orange-500 hover:bg-orange-50/30'}`}
+                                >
+                                    <Bug size={16} /> Improvements
+                                </button>
                             </div>
-                            <div className="relative mb-2">
-                                <label htmlFor="email" className="leading-7 text-sm text-gray-600">Email</label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    required
-                                    className="w-full bg-auto border border-gray-300 focus:border-black text-base outline-none text-gray-700 py-2 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                />
-                            </div>
-                            <div className="relative mb-4">
-                                <label htmlFor="message" className="leading-7 text-sm text-gray-600">Message</label>
-                                <textarea
-                                    id="message"
-                                    name="message"
-                                    value={message}
-                                    onChange={(e) => setMessage(e.target.value)}
-                                    required
-                                    className="w-full bg-auto border border-gray-300 focus:border-black h-32 text-base outline-none text-gray-700 py-2 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"
-                                ></textarea>
-                            </div>
-                            <button
-                                type="submit"
-                                className={`text-white w-full border-0 py-2 px-6 focus:outline-none text-lg transition-all duration-200 ${loading
-                                    ? 'bg-orange-300'
-                                    : 'bg-primary hover:bg-orange-400'
-                                    }`}
-                                disabled={loading}
-                            >
-                                {loading ? 'Sending mail...' : 'Submit'}
-                            </button>
 
-                        </form>
+                            <div className="p-8">
+                                <AnimatePresence mode='wait'>
+                                    {activeTab === 'contact' ? (
+                                        <motion.form
+                                            key="contact-form"
+                                            initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
+                                            onSubmit={onContactSubmit} className="space-y-6"
+                                        >
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                                <div className="space-y-2">
+                                                    <label className="block text-xs uppercase tracking-widest text-stone-500">Your Name</label>
+                                                    <input
+                                                        type="text" value={name} onChange={(e) => setName(e.target.value)} required
+                                                        className="w-full px-4 py-3 bg-stone-50 border border-stone-100 focus:border-orange-500 outline-none transition-all text-sm rounded-sm"
+                                                        placeholder="John Doe"
+                                                    />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <label className="block text-xs uppercase tracking-widest text-stone-500">Email Address</label>
+                                                    <input
+                                                        type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
+                                                        className="w-full px-4 py-3 bg-stone-50 border border-stone-100 focus:border-orange-500 outline-none transition-all text-sm rounded-sm"
+                                                        placeholder="john@example.com"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="block text-xs uppercase tracking-widest text-stone-500">Message</label>
+                                                <textarea
+                                                    rows="5" value={message} onChange={(e) => setMessage(e.target.value)} required
+                                                    className="w-full px-4 py-3 bg-stone-50 border border-stone-100 focus:border-orange-500 outline-none transition-all text-sm rounded-sm resize-none"
+                                                    placeholder="How can we help you?"
+                                                ></textarea>
+                                            </div>
+                                            <button
+                                                disabled={loading}
+                                                className="w-full py-4 bg-gray-900 hover:bg-orange-500 text-white uppercase tracking-[0.2em] text-sm font-medium transition-all flex items-center justify-center gap-2 rounded-sm disabled:bg-stone-300"
+                                            >
+                                                {loading ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> : <><Send size={16} /> Send Message</>}
+                                            </button>
+                                        </motion.form>
+                                    ) : (
+                                        <motion.form
+                                            key="feedback-form"
+                                            initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
+                                            onSubmit={onFeedbackSubmit} className="space-y-6"
+                                        >
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                                <div className="space-y-2">
+                                                    <label className="block text-xs uppercase tracking-widest text-stone-500">Your Name</label>
+                                                    <input
+                                                        type="text" value={name} onChange={(e) => setName(e.target.value)} required
+                                                        className="w-full px-4 py-3 bg-stone-50 border border-stone-100 focus:border-orange-500 outline-none transition-all text-sm rounded-sm"
+                                                        placeholder="John Doe"
+                                                    />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <label className="block text-xs uppercase tracking-widest text-stone-500">Email Address</label>
+                                                    <input
+                                                        type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
+                                                        className="w-full px-4 py-3 bg-stone-50 border border-stone-100 focus:border-orange-500 outline-none transition-all text-sm rounded-sm"
+                                                        placeholder="john@example.com"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="block text-xs uppercase tracking-widest text-stone-500">Feedback Type</label>
+                                                <select
+                                                    value={feedbackType} onChange={(e) => setFeedbackType(e.target.value)}
+                                                    className="w-full px-4 py-3 bg-stone-50 border border-stone-100 focus:border-orange-500 outline-none transition-all text-sm rounded-sm"
+                                                >
+                                                    <option value="Improvement">Improvement Suggestion</option>
+                                                    <option value="Technical Issue">Technical Issue/Bug</option>
+                                                </select>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="block text-xs uppercase tracking-widest text-stone-500">Details</label>
+                                                <textarea
+                                                    rows="5" value={feedbackMsg} onChange={(e) => setFeedbackMsg(e.target.value)} required
+                                                    className="w-full px-4 py-3 bg-stone-50 border border-stone-100 focus:border-orange-500 outline-none transition-all text-sm rounded-sm resize-none"
+                                                    placeholder="Please describe the improvement or issue..."
+                                                ></textarea>
+                                            </div>
+                                            <button
+                                                disabled={loading}
+                                                className="w-full py-4 bg-gray-900 hover:bg-orange-500 text-white uppercase tracking-[0.2em] text-sm font-medium transition-all flex items-center justify-center gap-2 rounded-sm disabled:bg-stone-300"
+                                            >
+                                                {loading ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> : <><Bug size={16} /> Submit Feedback</>}
+                                            </button>
+                                        </motion.form>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </section>
+            </div>
         </div>
     );
 };

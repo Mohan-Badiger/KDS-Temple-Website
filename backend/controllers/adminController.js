@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import validator from "validator";
 import sendOtpEmail from "../services/sendOtpEmail.js";
+import Notification from "../models/notificationModel.js";
 
 // ===============================
 // 1. Request OTP for Admin Login
@@ -112,4 +113,31 @@ const verifyAdminOtp = async (req, res) => {
   }
 };
 
-export { requestAdminOtp, verifyAdminOtp };
+// ===============================
+// 3. Get All Notifications
+// ===============================
+const getNotifications = async (req, res) => {
+  try {
+    const notifications = await Notification.find().sort({ createdAt: -1 });
+    return res.json({ success: true, notifications });
+  } catch (err) {
+    console.error("Fetch Notifications Error:", err);
+    return res.json({ success: false, message: err.message });
+  }
+};
+
+// ===============================
+// 4. Clear (Delete) Notification
+// ===============================
+const clearNotification = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Notification.findByIdAndDelete(id);
+    return res.json({ success: true, message: "Notification cleared" });
+  } catch (err) {
+    console.error("Clear Notification Error:", err);
+    return res.json({ success: false, message: err.message });
+  }
+};
+
+export { requestAdminOtp, verifyAdminOtp, getNotifications, clearNotification };
