@@ -12,7 +12,7 @@ const ServiceCard = () => {
 
     const poojaClickHandler = () => {
         if(token === localStorage.getItem('token')){
-         navigate('/pooja');
+         navigate('/temples');
         }else{
             toast.error("Please Login to Book Pooja");
         }

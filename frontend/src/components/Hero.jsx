@@ -43,7 +43,7 @@ const Hero = () => {
                 {token === localStorage.getItem('token') && (
                   <>
                     <Link
-                      to="/pooja"
+                      to="/temples"
                       className="group relative inline-flex items-center overflow-hidden rounded-sm px-5 md:px-10 py-3 text-primary border-primary border hover:text-white hover:bg-primary focus:outline-hidden"
                     >
                       <span className="absolute -end-full transition-all group-hover:end-4">
