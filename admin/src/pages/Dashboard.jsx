@@ -1,247 +1,388 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { backendUrl } from "../App";
+import { 
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
+  LineChart, Line, PieChart, Pie, Cell, AreaChart, Area 
+} from "recharts";
+import { 
+  DollarSign, Landmark, Calendar, ShoppingBag, TrendingUp, 
+  Filter, Download, FileText, ChevronRight, Search 
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import * as XLSX from "xlsx";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { toast } from "react-toastify";
+
+const COLORS = ["#f97316", "#fb923c", "#fdba74", "#fed7aa", "#ffedd5"];
 
 const Dashboard = () => {
-  const [bookings, setBookings] = useState([]);
-  const [poojaStats, setPoojaStats] = useState([]);
-  
-  const [donations, setDonations] = useState([]);
-  const [annaprasads, setAnnaprasads] = useState([]);
+  const [summary, setSummary] = useState({
+    totalRevenue: 0,
+    poojaRevenue: 0,
+    donationRevenue: 0,
+    todayRevenue: 0,
+    thisMonthRevenue: 0,
+    totalBookings: 0,
+    totalDonors: 0,
+  });
+  const [analytics, setAnalytics] = useState({ templeAnalytics: [], poojaAnalytics: [] });
+  const [trend, setTrend] = useState([]);
+  const [transactions, setTransactions] = useState([]);
   const [temples, setTemples] = useState([]);
-  
   const [loading, setLoading] = useState(true);
 
+  // Filters State
+  const [filters, setFilters] = useState({
+    templeId: "",
+    startDate: "",
+    endDate: "",
+  });
+
+  const apiToken = localStorage.getItem("token");
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const headers = { token: apiToken };
+      const [summaryRes, analyticsRes, trendRes, templeRes] = await Promise.all([
+        axios.get(`${backendUrl}/api/reports/summary`, { headers }),
+        axios.get(`${backendUrl}/api/reports/analytics`, { headers }),
+        axios.get(`${backendUrl}/api/reports/trend`, { headers }),
+        axios.get(`${backendUrl}/api/temple/all`, { headers })
+      ]);
+
+      if (summaryRes.data.success) setSummary(summaryRes.data.summary);
+      if (analyticsRes.data.success) setAnalytics(analyticsRes.data);
+      if (trendRes.data.success) setTrend(trendRes.data.trend);
+      if (templeRes.data.success) setTemples(templeRes.data.temples);
+
+      // Fetch initial transactions
+      await fetchTransactions();
+
+    } catch (error) {
+      console.error("Dashboard error:", error);
+      toast.error("Failed to load divine analytics.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchTransactions = async () => {
+    try {
+      const params = new URLSearchParams(filters).toString();
+      const res = await axios.get(`${backendUrl}/api/reports/transactions?${params}`, {
+        headers: { token: apiToken }
+      });
+      if (res.data.success) setTransactions(res.data.transactions);
+    } catch (error) {
+      toast.error("Failed to update transaction list.");
+    }
+  };
+
   useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        const [bookingsRes, donationsRes, annaprasadsRes, templesRes] = await Promise.all([
-          axios.get(`${backendUrl}/api/bookings/all`, { headers: { "Content-Type": "application/json" } }),
-          axios.get(`${backendUrl}/api/donations/donations`),
-          axios.get(`${backendUrl}/api/annaprasads/annaprasads`),
-          axios.get(`${backendUrl}/api/temple/all`)
-        ]);
-
-        // Process Bookings
-        if (bookingsRes.data && bookingsRes.data.bookings) {
-          const allBookings = bookingsRes.data.bookings;
-          const approvedBookings = allBookings.filter((b) => b.status === "approved" || b.status === "confirmed" || b.status === "completed");
-          setBookings(approvedBookings);
-
-          const statsMap = {};
-          approvedBookings.forEach((booking) => {
-            booking.poojas.forEach((pooja) => {
-              statsMap[pooja.name] = (statsMap[pooja.name] || 0) + 1;
-            });
-          });
-
-          const statsArray = Object.entries(statsMap)
-            .map(([name, count]) => ({ name, count }))
-            .sort((a, b) => b.count - a.count);
-          setPoojaStats(statsArray);
-        }
-
-        // Process Donations
-        if (donationsRes.data && donationsRes.data.donations) {
-          setDonations(donationsRes.data.donations);
-        }
-
-        // Process Annaprasads
-        if (annaprasadsRes.data && annaprasadsRes.data.annaprasads) {
-          setAnnaprasads(annaprasadsRes.data.annaprasads);
-        }
-
-        // Process Temples
-        if (templesRes.data && templesRes.data.temples) {
-          setTemples(templesRes.data.temples);
-        }
-
-      } catch (error) {
-        console.error("Error fetching dashboard data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDashboardData();
+    fetchData();
   }, []);
 
-  const totalDonationAmount = donations.reduce((sum, d) => sum + Number(d.amount), 0);
-  const totalAnnaprasadAmount = annaprasads.reduce((sum, a) => sum + Number(a.amount), 0);
-  
-  const recentDonations = [...donations].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5);
-  const recentAnnaprasads = [...annaprasads].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5);
+  // Update table when filters change with a small delay for better UX
+  useEffect(() => {
+    if (!loading) fetchTransactions();
+  }, [filters]);
+
+  // Export to Excel
+  const exportExcel = () => {
+    const data = transactions.map(t => ({
+      Date: new Date(t.date).toLocaleDateString(),
+      Temple: t.temple,
+      Pooja: t.pooja,
+      Devotee: t.devotee,
+      Amount: t.amount,
+      "Payment ID": t.paymentId
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Divine Report");
+    XLSX.writeFile(workbook, `Temple_Report_${new Date().toISOString().split('T')[0]}.xlsx`);
+    toast.success("Excel report generating...");
+  };
+
+  // Export to PDF
+  const exportPDF = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(22);
+    doc.text("KDS Temple Finance Report", 14, 20);
+    doc.setFontSize(12);
+    doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 30);
+    
+    autoTable(doc, {
+      startY: 40,
+      head: [["Date", "Temple", "Service", "Devotee", "Amount", "Payment ID"]],
+      body: transactions.map(t => [
+        new Date(t.date).toLocaleDateString(),
+        t.temple,
+        t.pooja,
+        t.devotee,
+        `Rs. ${t.amount}`,
+        t.paymentId
+      ]),
+      theme: 'grid',
+      headStyles: { fillColor: [249, 115, 22] } // Orange-500
+    });
+    
+    doc.save(`Divine_Report_${Date.now()}.pdf`);
+    toast.success("PDF report saved.");
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-stone-50">
+        <motion.div 
+          animate={{ rotate: 360 }}
+          transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+          className="w-12 h-12 border-4 border-stone-200 border-t-orange-500 rounded-full"
+        />
+      </div>
+    );
+  }
 
   return (
-    <div className="sm:mt-6 font-primary text-gray-800">
-      {loading ? (
-        <div className="flex items-center justify-center py-20 font-primary">
-          <div className="w-8 h-8 border-2 border-stone-200 border-t-orange-400 rounded-full animate-spin"></div>
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="pb-20 space-y-10 font-primary"
+    >
+      {/* Header & Main Export */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-stone-100 pb-8 gap-6">
+        <div>
+          <h1 className="text-4xl tracking-tight text-gray-900 uppercase font-normal">Finance Dashboard</h1>
+          <p className="text-[11px] text-stone-500 uppercase tracking-[0.3em] mt-2">Divine Revenue Monitoring & Audit System</p>
         </div>
-      ) : (
-        <>
-          {/* 📊 Summary Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-            <div className="p-4 border rounded-l bg-white">
-              <h3 className="text-sm text-gray-500 mb-1">Active Temples</h3>
-              <p className="text-2xl">{temples.length}</p>
+        <div className="flex gap-3">
+          <button 
+            onClick={exportExcel}
+            className="flex items-center gap-2 px-5 py-2.5 border border-stone-200 text-[10px] uppercase tracking-widest text-stone-600 hover:bg-white hover:shadow-sm transition-all rounded-sm active:scale-95"
+          >
+            <Download size={14} className="text-stone-400" /> Excel
+          </button>
+          <button 
+             onClick={exportPDF}
+            className="flex items-center gap-2 px-5 py-2.5 bg-gray-900 text-white text-[10px] uppercase tracking-widest hover:bg-orange-500 transition-all rounded-sm active:scale-95 shadow-lg"
+          >
+            <FileText size={14} /> PDF Report
+          </button>
+        </div>
+      </div>
+
+      {/* 1. Summary Cards Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {[
+          { label: "Total Divine Revenue", val: summary.totalRevenue, icon: DollarSign, color: "bg-gray-900 text-white" },
+          { label: "Today's Collection", val: summary.todayRevenue, icon: TrendingUp, color: "bg-white border-stone-200" },
+          { label: "This Month Revenue", val: summary.thisMonthRevenue, icon: Calendar, color: "bg-white border-stone-200" },
+          { label: "Completed Bookings", val: summary.totalBookings, showRs: false, icon: ShoppingBag, color: "bg-white border-stone-200" },
+        ].map((card, i) => (
+          <motion.div 
+            key={i}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: i * 0.1 }}
+            className={`p-6 rounded-sm flex flex-col justify-between h-40 group ${card.color} ${card.color === 'bg-white border-stone-200' ? 'hover:border-orange-200' : ''} transition-all`}
+          >
+            <div className="flex justify-between items-start">
+              <span className={`text-[9px] uppercase tracking-[0.3em] ${card.color === 'bg-gray-900 text-white' ? 'text-stone-400' : 'text-stone-400'}`}>{card.label}</span>
+              <card.icon size={18} className={card.color === 'bg-gray-900 text-white' ? 'text-orange-400' : 'text-orange-400'} />
             </div>
-            <div className="p-4 border rounded-l bg-white">
-              <h3 className="text-sm text-gray-500 mb-1">Approved Bookings</h3>
-              <p className="text-2xl">{bookings.length}</p>
+            <div className="flex items-baseline gap-1">
+              <span className="text-3xl font-normal tabular-nums">{card.showRs === false ? card.val : `₹${card.val.toLocaleString('en-IN')}`}</span>
+              {card.showRs !== false && <span className="text-[10px] uppercase tracking-widest opacity-40 ml-1">INR</span>}
             </div>
-            <div className="p-4 border rounded-l bg-white">
-              <h3 className="text-sm text-gray-500 mb-1">Total Poojas Booked</h3>
-              <p className="text-2xl">
-                {poojaStats.reduce((acc, curr) => acc + curr.count, 0)}
-              </p>
-            </div>
-            <div className="p-4 border rounded-l bg-white">
-              <h3 className="text-sm text-gray-500 mb-1">Top Booked Pooja</h3>
-              <p className="text-xl">
-                {poojaStats[0]?.name || "N/A"}
-              </p>
-            </div>
-            <div className="p-4 border rounded-l bg-white">
-              <h3 className="text-sm text-gray-500 mb-1">Total Donations</h3>
-              <p className="text-2xl">₹{totalDonationAmount.toLocaleString('en-IN')}</p>
-            </div>
-            <div className="p-4 border rounded-l bg-white">
-              <h3 className="text-sm text-gray-500 mb-1">Donation Counts</h3>
-              <p className="text-2xl">{donations.length}</p>
-            </div>
-            <div className="p-4 border rounded-l bg-white">
-              <h3 className="text-sm text-gray-500 mb-1">Annaprasad Revenue</h3>
-              <p className="text-2xl">₹{totalAnnaprasadAmount.toLocaleString('en-IN')}</p>
-            </div>
-            <div className="p-4 border rounded-l bg-white">
-              <h3 className="text-sm text-gray-500 mb-1">Annaprasad Counts</h3>
-              <p className="text-2xl">{annaprasads.length}</p>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* 2. Charts Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Monthly Trend Area Chart */}
+        <div className="bg-white border border-stone-100 p-8 rounded-sm space-y-6 shadow-sm">
+          <div className="flex justify-between items-center">
+            <h3 className="text-xs uppercase tracking-widest text-stone-400">Monthly Revenue Trend</h3>
+            <span className="text-[9px] bg-orange-50 text-orange-600 px-2 py-1 rounded-full uppercase tracking-tighter font-bold">Live Data</span>
+          </div>
+          <div className="h-[300px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={trend}>
+                <defs>
+                  <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#f97316" stopOpacity={0.1}/>
+                    <stop offset="95%" stopColor="#f97316" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f5f5f5" />
+                <XAxis dataKey="name" fontSize={10} axisLine={false} tickLine={false} tick={{fill: '#a8a29e'}} />
+                <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{fill: '#a8a29e'}} tickFormatter={(v) => `₹${v/1000}k`} />
+                <Tooltip 
+                  contentStyle={{ border: 'none', borderRadius: '4px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontFamily: 'Inter' }}
+                  formatter={(v) => [`₹${v.toLocaleString()}`, 'Revenue']}
+                />
+                <Area type="monotone" dataKey="revenue" stroke="#f97316" strokeWidth={2} fillOpacity={1} fill="url(#colorRev)" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Temple Breakdown Pie Chart */}
+        <div className="bg-white border border-stone-100 p-8 rounded-sm space-y-6 shadow-sm">
+          <h3 className="text-xs uppercase tracking-widest text-stone-400">Temple Revenue Breakdown</h3>
+          <div className="flex flex-col md:flex-row items-center gap-8 h-[300px]">
+            <ResponsiveContainer width="100%" height="80%">
+              <PieChart>
+                <Pie
+                  data={analytics.templeAnalytics}
+                  innerRadius={60}
+                  outerRadius={80}
+                  paddingAngle={5}
+                  dataKey="value"
+                >
+                  {analytics.templeAnalytics.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip 
+                   contentStyle={{ border: 'none', borderRadius: '4px', fontSize: '11px' }}
+                   formatter={(v) => [`₹${v.toLocaleString()}`, 'Total Revenue']}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+            <div className="flex flex-col gap-3 w-full md:w-48">
+              {analytics.templeAnalytics.map((entry, index) => (
+                <div key={index} className="flex items-center justify-between group">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }}></div>
+                    <span className="text-[10px] text-stone-600 uppercase tracking-tight">{entry.name}</span>
+                  </div>
+                  <span className="text-[10px] font-bold tabular-nums opacity-60">
+                    {((entry.value / summary.totalRevenue) * 100).toFixed(1)}%
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
+        </div>
+      </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-10">
-            {/* 📋 Pooja Stats Table */}
-            <div>
-              <h2 className="text-xl mb-4 uppercase tracking-tight">Pooja Booking Stats</h2>
-              <div className="bg-white border overflow-hidden">
-                <table className="min-w-full text-sm text-left">
-                  <thead className="bg-gray-100 text-xs uppercase tracking-wider text-gray-500 border-b">
-                    <tr>
-                      <th className="py-3 px-4">Pooja Name</th>
-                      <th className="py-3 px-4">Total Bookings</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100">
-                    {poojaStats.map((stat, index) => (
-                      <tr key={index} className="hover:bg-gray-50/50">
-                        <td className="py-3 px-4">{stat.name}</td>
-                        <td className="py-3 px-4">{stat.count}</td>
-                      </tr>
-                    ))}
-                    {poojaStats.length === 0 && (
-                       <tr><td colSpan="2" className="py-6 text-center text-gray-400">No pooja stats available</td></tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+      {/* 3. Pooja Performance Bar Chart */}
+      <div className="bg-white border border-stone-100 p-8 rounded-sm shadow-sm">
+        <h3 className="text-xs uppercase tracking-widest text-stone-400 mb-8">Pooja Service Analytics</h3>
+        <div className="h-[400px] w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={analytics.poojaAnalytics} layout="vertical" margin={{ left: 40, right: 30 }}>
+              <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#f8fafc" />
+              <XAxis type="number" hide />
+              <YAxis dataKey="name" type="category" fontSize={9} axisLine={false} tickLine={false} width={150} tick={{fill: '#475569'}} />
+              <Tooltip 
+                 contentStyle={{ border: 'none', borderRadius: '4px', fontSize: '11px' }}
+                 cursor={{ fill: '#f8fafc' }}
+                 formatter={(v) => [`₹${v.toLocaleString()}`, 'Revenue']}
+              />
+              <Bar dataKey="revenue" fill="#f97316" radius={[0, 4, 4, 0]} barSize={20} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
 
-            {/* 📋 Recent Donations Table */}
-            <div>
-              <h2 className="text-xl mb-4 uppercase tracking-tight">Recent Donations</h2>
-              <div className="bg-white border overflow-hidden">
-                <table className="min-w-full text-sm text-left">
-                  <thead className="bg-gray-100 text-xs uppercase tracking-wider text-gray-500 border-b">
-                    <tr>
-                      <th className="py-3 px-4">Donor</th>
-                      <th className="py-3 px-4">Amount</th>
-                      <th className="py-3 px-4 text-right">Date</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100">
-                    {recentDonations.map((d) => (
-                      <tr key={d._id} className="hover:bg-gray-50/50 border-b">
-                        <td className="py-3 px-4 uppercase text-xs">{d.firstName} {d.lastName}</td>
-                        <td className="py-3 px-4">₹{d.amount}</td>
-                        <td className="py-3 px-4 text-right text-xs text-gray-500">
-                          {new Date(d.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
-                        </td>
-                      </tr>
-                    ))}
-                    {recentDonations.length === 0 && (
-                       <tr><td colSpan="3" className="py-6 text-center text-gray-400">No donations found</td></tr>
-                    )}
-                  </tbody>
-                </table>
+      {/* 4. Controls & Transactions */}
+      <div className="space-y-6">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-6 bg-stone-50/50 p-6 rounded-sm border border-stone-100">
+           <div className="flex items-center gap-4 text-[10px] uppercase tracking-widest text-stone-400">
+              <Filter size={14} /> Global Filters
+           </div>
+           <div className="flex flex-wrap items-center gap-4 w-full lg:w-auto">
+              <div className="flex flex-col gap-1.5 flex-1 min-w-[200px]">
+                <label className="text-[9px] uppercase tracking-[0.2em] text-stone-400 ml-1">Specific Temple</label>
+                <select 
+                  value={filters.templeId}
+                  onChange={(e) => setFilters({...filters, templeId: e.target.value})}
+                  className="bg-white border border-stone-100 px-4 py-2.5 text-xs outline-none focus:border-orange-400 transition-all rounded-sm cursor-pointer"
+                >
+                  <option value="">All Temples</option>
+                  {temples.map(t => <option key={t._id} value={t._id}>{t.name}</option>)}
+                </select>
               </div>
-            </div>
+              <div className="flex flex-col gap-1.5 flex-1 min-w-[150px]">
+                <label className="text-[9px] uppercase tracking-[0.2em] text-stone-400 ml-1">Start Date</label>
+                <input 
+                  type="date" 
+                  value={filters.startDate}
+                  onChange={(e) => setFilters({...filters, startDate: e.target.value})}
+                  className="bg-white border border-stone-100 px-4 py-2 text-xs outline-none focus:border-orange-400 transition-all rounded-sm"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5 flex-1 min-w-[150px]">
+                <label className="text-[9px] uppercase tracking-[0.2em] text-stone-400 ml-1">End Date</label>
+                <input 
+                  type="date" 
+                  value={filters.endDate}
+                  onChange={(e) => setFilters({...filters, endDate: e.target.value})}
+                  className="bg-white border border-stone-100 px-4 py-2 text-xs outline-none focus:border-orange-400 transition-all rounded-sm"
+                />
+              </div>
+              <button 
+                onClick={() => setFilters({ templeId: "", startDate: "", endDate: "" })}
+                className="mt-5 px-4 py-2 text-[9px] uppercase tracking-widest text-orange-500 hover:text-orange-600"
+              >
+                Clear All
+              </button>
+           </div>
+        </div>
+
+        {/* Transactions Table */}
+        <div className="bg-white border border-stone-100 rounded-sm overflow-hidden shadow-sm">
+          <div className="p-6 border-b border-stone-50 flex justify-between items-center">
+            <h3 className="text-xs uppercase tracking-[0.2em] font-medium text-gray-900">Completed Data Stream</h3>
+            <span className="text-[10px] text-stone-400 tabular-nums">{transactions.length} Records Found</span>
           </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-10">
-            {/* 📋 Recent Annaprasad Table */}
-            <div>
-              <h2 className="text-xl mb-4 uppercase tracking-tight">Recent Annaprasad</h2>
-              <div className="bg-white border overflow-hidden">
-                <table className="min-w-full text-sm text-left">
-                  <thead className="bg-gray-100 text-xs uppercase tracking-wider text-gray-500 border-b">
-                    <tr>
-                      <th className="py-3 px-4">Donor</th>
-                      <th className="py-3 px-4">Amount</th>
-                      <th className="py-3 px-4 text-right">Date</th>
+          <div className="overflow-x-auto">
+             <table className="w-full text-left">
+                <thead className="bg-stone-50/50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-100">
+                  <tr>
+                    <th className="px-6 py-4 font-normal">Divine Date</th>
+                    <th className="px-6 py-4 font-normal">Temple</th>
+                    <th className="px-6 py-4 font-normal">Pooja Service</th>
+                    <th className="px-6 py-4 font-normal">Devotee Name</th>
+                    <th className="px-6 py-4 font-normal">Total Amount</th>
+                    <th className="px-6 py-4 font-normal">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-stone-50">
+                  {transactions.map((t, idx) => (
+                    <tr key={idx} className="hover:bg-stone-50/20 transition-all group">
+                       <td className="px-6 py-5 text-[11px] tabular-nums text-stone-400 font-normal">
+                          {new Date(t.date).toLocaleDateString()}
+                       </td>
+                       <td className="px-6 py-5 text-[11px] uppercase tracking-tight text-gray-900">{t.temple}</td>
+                       <td className="px-6 py-5 text-[11px] uppercase tracking-tight text-orange-500">{t.pooja}</td>
+                       <td className="px-6 py-5 text-[11px] text-gray-600">{t.devotee}</td>
+                       <td className="px-6 py-5 text-[11px] tabular-nums font-bold text-gray-900">₹{t.amount.toLocaleString()}</td>
+                       <td className="px-6 py-5">
+                          <span className="text-[8px] uppercase tracking-widest bg-green-50 text-green-600 px-2 py-1 rounded-sm border border-green-100">Completed</span>
+                       </td>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100">
-                    {recentAnnaprasads.map((a) => (
-                      <tr key={a._id} className="hover:bg-gray-50/50 border-b">
-                        <td className="py-3 px-4 uppercase text-xs">{a.firstName} {a.lastName}</td>
-                        <td className="py-3 px-4">₹{a.amount}</td>
-                        <td className="py-3 px-4 text-right text-xs text-gray-500">
-                          {new Date(a.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
-                        </td>
-                      </tr>
-                    ))}
-                    {recentAnnaprasads.length === 0 && (
-                       <tr><td colSpan="3" className="py-6 text-center text-gray-400">No records found</td></tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* 📋 Approved Bookings Table */}
-            <div className="overflow-x-auto w-full">
-              <h2 className="text-xl mb-4 uppercase tracking-tight">Latest Bookings</h2>
-              <div className="bg-white border overflow-hidden">
-                <table className="min-w-full text-sm text-left">
-                  <thead className="bg-gray-100 text-xs uppercase tracking-wider text-gray-500 border-b">
+                  ))}
+                  {transactions.length === 0 && (
                     <tr>
-                      <th className="py-3 px-4">User</th>
-                      <th className="py-3 px-4">Poojas</th>
-                      <th className="py-3 px-4">Status</th>
+                      <td colSpan="6" className="py-20 text-center font-normal italic opacity-40 text-stone-400 text-xs uppercase tracking-widest">
+                        No financial records found for current filters
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100">
-                    {bookings.slice(0, 5).map((booking) => (
-                      <tr key={booking._id} className="hover:bg-gray-50/50 border-b">
-                        <td className="py-3 px-4">{booking.user?.name || "Anonymous"}</td>
-                        <td className="py-3 px-4 text-xs uppercase text-orange-500">
-                          {booking.poojas[0]?.name} {booking.poojas.length > 1 ? `+${booking.poojas.length - 1}` : ''}
-                        </td>
-                        <td className="py-3 px-4 uppercase text-[10px] text-green-600 tracking-widest">{booking.status}</td>
-                      </tr>
-                    ))}
-                    {bookings.length === 0 && (
-                       <tr><td colSpan="3" className="py-6 text-center text-gray-400">No bookings yet</td></tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+                  )}
+                </tbody>
+             </table>
           </div>
-        </>
-      )}
-    </div>
+        </div>
+      </div>
+    </motion.div>
   );
 };
 

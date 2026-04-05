@@ -11,6 +11,7 @@ import paymentRoutes from './routes/paymentRoutes.js';
 import donationRoutes from './routes/donationRoute.js';
 import templeRouter from './routes/templeRoute.js';
 import annaprasadRouter from './routes/annaprasadRoute.js';
+import reportRouter from './routes/reportRoute.js';
 
 //App config
 const app = express();
@@ -30,6 +31,7 @@ app.use('/api/donations', donationRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/temple', templeRouter);
 app.use('/api/annaprasads', annaprasadRouter);
+app.use('/api/reports', reportRouter);
 
 app.post('/api/contact', contactMail)
 
