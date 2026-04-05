@@ -21,6 +21,8 @@ const userSchema = new mongoose.Schema({
   // For password reset
   resetOtp: { type: String },
   resetOtpExpiry: { type: Number },
+  // Admin Notes
+  notes: { type: String, trim: true, default: '' },
 },
 {
   timestamps: true,

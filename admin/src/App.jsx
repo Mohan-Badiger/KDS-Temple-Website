@@ -16,6 +16,9 @@ import DonationManage from './pages/DonationManage.jsx'
 import Manage from './pages/Manage.jsx';
 import TempleManage from './pages/TempleManage.jsx';
 import TodaySeva from './pages/TodaySeva.jsx';
+import UserManage from './pages/UserManage.jsx';
+import UsersList from './pages/UsersList.jsx';
+import AddUser from './pages/AddUser.jsx';
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -60,6 +63,13 @@ const App = () => {
                 </Route>
                 <Route path='/annaprasad-manage' element={<AnnaprasadManage />} />
                 <Route path='/donation-manage' element={<DonationManage />} />
+
+                {/* User Management */}
+                <Route path='/user-manage' element={<UserManage />}>
+                  <Route index element={<Navigate to="users-list" replace />} />
+                  <Route path='users-list' element={<UsersList />} />
+                  <Route path='add-user' element={<AddUser />} />
+                </Route>
 
               </Routes>
             </div>

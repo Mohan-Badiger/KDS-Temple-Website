@@ -1,4 +1,5 @@
 import jsPDF from 'jspdf';
+import { formatDateToDDMMYYYY } from './stringUtils';
 
 /**
  * Generates a premium E-Ticket PDF for temple bookings.
@@ -9,7 +10,7 @@ export const generateBookingReceipt = (booking) => {
   const templeName = booking.temple?.name || "Kadasiddeshwar Temple";
   const templeLocation = booking.temple?.location || "Banahatti";
   const devoteeName = booking.poojaInNameOf || "Devotee";
-  const date = booking.poojaDate ? new Date(booking.poojaDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }) : "N/A";
+  const date = booking.poojaDate ? formatDateToDDMMYYYY(booking.poojaDate) : "N/A";
   const paymentId = booking.paymentId || "Verified";
   const receiptId = booking.receiptId || booking._id?.slice(-8).toUpperCase();
   const totalAmount = booking.totalAmount;

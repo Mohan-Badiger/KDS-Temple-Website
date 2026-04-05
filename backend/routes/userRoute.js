@@ -11,7 +11,13 @@ import {
   verifyResetOtp,
   getProfile,
   updateProfile,
+  getAllUsersAdmin,
+  getUserDetailsAdmin,
+  addUserManual,
+  updateUserNote,
+  getUserStats
 } from '../controllers/userController.js';
+import adminAuth from '../middleware/adminAuth.js';
 
 const router = express.Router();
 
@@ -31,6 +37,13 @@ router.post('/verify-reset-otp', verifyResetOtp);
 // ===== Profile =====
 router.get('/profile', authMiddleware, getProfile);
 router.put('/update-profile', authMiddleware, upload.single('profileImage'), updateProfile);
+
+// ===== Admin User Management =====
+router.get('/admin/all', adminAuth, getAllUsersAdmin);
+router.get('/admin/details/:userId', adminAuth, getUserDetailsAdmin);
+router.post('/admin/add', adminAuth, addUserManual);
+router.post('/admin/update-note', adminAuth, updateUserNote);
+router.get('/admin/stats', adminAuth, getUserStats);
 
 export default router;
 

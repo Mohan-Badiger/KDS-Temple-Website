@@ -4,6 +4,8 @@ import jwt from 'jsonwebtoken';
 import validator from 'validator';
 import sendOtpEmail from '../services/sendOtpEmail.js';
 import cloudinary from '../config/cloudinary.js';
+import BookingModel from '../models/bookingModel.js';
+import DonationModel from '../models/donationModel.js';
 
 const createToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
@@ -307,6 +309,137 @@ const updateProfile = async (req, res) => {
 };
 
 // ===============================
+// 10. Admin: Get All Users with stats
+// ===============================
+const getAllUsersAdmin = async (req, res) => {
+  try {
+    const users = await userModel.find({}).select('-password').sort({ createdAt: -1 });
+    
+    const userStats = await Promise.all(users.map(async (user) => {
+      const bookings = await BookingModel.find({ user: user._id });
+      const donations = await DonationModel.find({ 
+        $or: [{ email: user.email }, { phone: user.phone }] 
+      });
+
+      const totalBookingsAmount = bookings.reduce((sum, b) => sum + b.totalAmount, 0);
+      const totalDonationsAmount = donations.reduce((sum, d) => sum + d.amount, 0);
+
+      return {
+        ...user._doc,
+        totalBookings: bookings.length,
+        totalDonations: donations.length,
+        totalAmount: totalBookingsAmount + totalDonationsAmount
+      };
+    }));
+
+    res.json({ success: true, users: userStats });
+  } catch (error) {
+    console.error('GetAllUsersAdmin Error:', error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// ===============================
+// 11. Admin: Get User Details with History
+// ===============================
+const getUserDetailsAdmin = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await userModel.findById(userId).select('-password');
+    if (!user) return res.json({ success: false, message: 'User not found' });
+
+    const bookings = await BookingModel.find({ user: userId }).populate('temple poojas');
+    const donations = await DonationModel.find({ 
+      $or: [{ email: user.email }, { phone: user.phone }] 
+    }).populate('temple');
+
+    res.json({ 
+      success: true, 
+      user, 
+      history: { 
+        bookings, 
+        donations 
+      } 
+    });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// ===============================
+// 12. Admin: Add User Manually
+// ===============================
+const addUserManual = async (req, res) => {
+  try {
+    const { name, email, phone, notes } = req.body;
+
+    if (!email) return res.json({ success: false, message: 'Email is required' });
+
+    const existingUser = await userModel.findOne({ email });
+    if (existingUser) return res.json({ success: false, message: 'User with this email already exists' });
+
+    const newUser = new userModel({
+      name,
+      email,
+      phone,
+      notes,
+      isVerified: true // Admin added users are pre-verified
+    });
+
+    await newUser.save();
+    res.json({ success: true, message: 'User added successfully', user: newUser });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// ===============================
+// 13. Admin: Update User Note
+// ===============================
+const updateUserNote = async (req, res) => {
+  try {
+    const { userId, notes } = req.body;
+    await userModel.findByIdAndUpdate(userId, { notes });
+    res.json({ success: true, message: 'Note updated successfully' });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// ===============================
+// 14. Admin: Get User Stats for Dashboard
+// ===============================
+const getUserStats = async (req, res) => {
+  try {
+    const totalUsers = await userModel.countDocuments();
+    
+    const startOfMonth = new Date();
+    startOfMonth.setDate(1);
+    startOfMonth.setHours(0, 0, 0, 0);
+    
+    const newUsersMonth = await userModel.countDocuments({ createdAt: { $gte: startOfMonth } });
+
+    // For total amount, we need to sum all bookings and donations
+    const allBookings = await BookingModel.find({});
+    const allDonations = await DonationModel.find({});
+
+    const totalAmount = allBookings.reduce((sum, b) => sum + b.totalAmount, 0) + 
+                        allDonations.reduce((sum, d) => sum + d.amount, 0);
+
+    res.json({ 
+      success: true, 
+      stats: { 
+        totalUsers, 
+        newUsersMonth, 
+        totalAmount 
+      } 
+    });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// ===============================
 // Export All Controllers
 // ===============================
 export {
@@ -319,4 +452,9 @@ export {
   verifyResetOtp,
   getProfile,
   updateProfile,
+  getAllUsersAdmin,
+  getUserDetailsAdmin,
+  addUserManual,
+  updateUserNote,
+  getUserStats
 };

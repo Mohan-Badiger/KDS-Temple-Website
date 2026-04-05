@@ -21,6 +21,9 @@ const Sidebar = () => {
                     <img className='w-4 block sm:hidden' src={dashboard_img} alt="" />
                     <p className='text-md sm:block hidden'>Temple Manage</p>
                 </NavLink>
+                <NavLink to='/user-manage' className='flex items-center border border-gray-300 px-3 py-2 border-r-0 rounded-l'>
+                    <p className='text-md sm:block hidden'>User Manage</p>
+                </NavLink>
                 <NavLink to='/pooja-manage' className='flex items-center border border-gray-300 px-3 py-2 border-r-0 rounded-l'>
                     <img className='w-4 block sm:hidden' src={seva} alt="" />
                     <p className='text-md sm:block hidden'>Pooja Manage</p>

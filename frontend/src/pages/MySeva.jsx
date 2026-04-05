@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axiosInstance from "../utils/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { formatDateToDDMMYYYY } from "../utils/stringUtils";
 
 const StatusBadge = ({ status }) => {
   const statusLower = status?.toLowerCase();
@@ -127,7 +128,7 @@ const MySeva = () => {
                   <div>
                     <p className="text-[10px] text-stone-400 uppercase tracking-widest mb-1">Ceremony Date</p>
                     <p className="text-sm text-gray-800 tracking-wide">
-                      {booking.poojaDate ? new Date(booking.poojaDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : "N/A"}
+                      {booking.poojaDate ? formatDateToDDMMYYYY(booking.poojaDate) : "N/A"}
                     </p>
                   </div>
                   <div className="text-right">
@@ -172,7 +173,7 @@ const MySeva = () => {
                       <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <span className="text-[10px] text-stone-400 uppercase tracking-widest">{new Date(donation.createdAt).toLocaleDateString()}</span>
+                  <span className="text-[10px] text-stone-400 uppercase tracking-widest">{formatDateToDDMMYYYY(donation.createdAt)}</span>
                 </div>
 
                 <div className="mb-8">

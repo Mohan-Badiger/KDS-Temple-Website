@@ -5,6 +5,7 @@ import axiosInstance from "../utils/axiosInstance";
 import { TempleContext } from "../context/TempleContext";
 import { motion } from "framer-motion";
 import { generateBookingReceipt } from "../utils/receiptGenerator";
+import { formatDateToDDMMYYYY } from "../utils/stringUtils";
 
 const BookingConfirmation = () => {
     const [bookingDetails, setBookingDetails] = useState(null);
@@ -103,7 +104,7 @@ const BookingConfirmation = () => {
                             <div>
                                 <p className="text-[10px] text-stone-400 uppercase tracking-widest mb-3">Divine Date</p>
                                 <p className="text-lg text-gray-900 uppercase tracking-tight">
-                                    {poojaDate ? new Date(poojaDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }) : "Today"}
+                                    {poojaDate ? formatDateToDDMMYYYY(poojaDate) : "Today"}
                                 </p>
                                 <p className="text-[10px] text-stone-400 uppercase tracking-widest mt-1">Schedule assigned</p>
                             </div>

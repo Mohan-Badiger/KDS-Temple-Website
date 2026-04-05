@@ -36,6 +36,17 @@ const TempleContextProvider = (props) => {
             const res = await axiosInstance.get('/api/temple/list');
             if (res.data.success) {
                 setTemples(res.data.temples);
+                
+                // Sync selectedTemple with latest data
+                if (selectedTemple) {
+                    const updatedTemple = res.data.temples.find(t => t._id === selectedTemple._id);
+                    if (updatedTemple) {
+                        setSelectedTemple(updatedTemple);
+                    }
+                }
+
+                // Sync selectedPoojas with latest data (requires fetching poojas or having them in temple data)
+                // If poojas are separate, we might need a separate sync or handle it in PaymentGateway
             }
         } catch (error) {
             console.error("Error fetching temples:", error);

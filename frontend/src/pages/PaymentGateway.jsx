@@ -4,6 +4,7 @@ import axiosInstance from "../utils/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
+import { formatDateToDDMMYYYY } from "../utils/stringUtils";
 
 const decodeToken = (token) => {
   try {
@@ -16,7 +17,13 @@ const decodeToken = (token) => {
 };
 
 const PaymentGateway = () => {
-  const { selectedPoojas, setSelectedPoojas, totalAmount, selectedTemple, selectedDate, setSelectedDate } = useContext(TempleContext);
+  const { 
+    selectedPoojas, setSelectedPoojas, 
+    totalAmount, 
+    selectedTemple, setSelectedTemple,
+    selectedDate, setSelectedDate,
+    fetchTemples 
+  } = useContext(TempleContext);
   const [loading, setLoading] = useState(false);
   const [verifying, setVerifying] = useState(false);
   const [poojaInNameOf, setPoojaInNameOf] = useState("");
@@ -30,8 +37,32 @@ const PaymentGateway = () => {
     if (!selectedTemple) {
       toast.error("Please select a temple first.");
       navigate("/temples");
+      return;
     }
-  }, [selectedTemple, navigate]);
+
+    // Force a fresh fetch of temple and pooja data to ensure we have latest availability
+    const refreshData = async () => {
+      try {
+        // 1. Refresh temple list (which syncs selectedTemple in context)
+        await fetchTemples();
+
+        // 2. Refresh selected poojas data
+        if (selectedPoojas.length > 0) {
+            const { data } = await axiosInstance.get(`/api/pooja/all?templeId=${selectedTemple._id}`);
+            if (data.success) {
+                const updatedPoojas = selectedPoojas.map(selectedPooja => {
+                    const freshPooja = data.poojas.find(p => p._id === selectedPooja._id);
+                    return freshPooja || selectedPooja;
+                });
+                setSelectedPoojas(updatedPoojas);
+            }
+        }
+      } catch (error) {
+        console.error("Error refreshing divine availability:", error);
+      }
+    };
+    refreshData();
+  }, [selectedTemple?._id]); // Run when temple is confirmed, or on mount
 
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
@@ -73,7 +104,7 @@ const PaymentGateway = () => {
     });
 
     if (templeBlocked) {
-      toast.error(`The ${selectedTemple.name} is closed on this date for a festival/maintenance. Please select another divine date.`);
+      toast.error(`The ${selectedTemple.name} is closed on ${formatDateToDDMMYYYY(selectedDate)} for a festival/maintenance. Please select another divine date.`);
       return;
     }
 
@@ -293,7 +324,7 @@ const PaymentGateway = () => {
                       <h4 className="text-[10px] text-red-700 uppercase tracking-widest font-bold mb-1">Divine Restriction Active</h4>
                       <p className="text-[10px] text-red-600 leading-relaxed uppercase tracking-widest opacity-80">
                         {selectedTemple?.unavailableDates?.includes(selectedDate) 
-                          ? `The temple is closed on ${selectedDate} for maintenance or festival.` 
+                          ? `The temple is closed on ${formatDateToDDMMYYYY(selectedDate)} for maintenance or festival.` 
                           : "Certain selected services are restricted on this date. Please select a different date to proceed."}
                       </p>
                     </div>

@@ -7,7 +7,7 @@ import {
 } from "recharts";
 import {
   DollarSign, Landmark, Calendar, ShoppingBag, TrendingUp,
-  Filter, Download, FileText, ChevronRight, Search, Gift
+  Filter, Download, FileText, ChevronRight, Search, Gift, User
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import * as XLSX from "xlsx";
@@ -26,6 +26,9 @@ const Dashboard = () => {
     thisMonthRevenue: 0,
     totalBookings: 0,
     totalDonors: 0,
+    totalUsers: 0,
+    newUsersMonth: 0,
+    totalUserAmount: 0,
   });
   const [analytics, setAnalytics] = useState({ templeAnalytics: [], poojaAnalytics: [] });
   const [dailyTrend, setDailyTrend] = useState([]);
@@ -48,14 +51,26 @@ const Dashboard = () => {
     setLoading(true);
     try {
       const headers = { token: apiToken };
-      const [summaryRes, analyticsRes, trendRes, templeRes] = await Promise.all([
+      const [summaryRes, analyticsRes, trendRes, templeRes, userStatsRes] = await Promise.all([
         axios.get(`${backendUrl}/api/reports/summary`, { headers }),
         axios.get(`${backendUrl}/api/reports/analytics`, { headers }),
         axios.get(`${backendUrl}/api/reports/trend`, { headers }),
-        axios.get(`${backendUrl}/api/temple/all`, { headers })
+        axios.get(`${backendUrl}/api/temple/all`, { headers }),
+        axios.get(`${backendUrl}/api/user/admin/stats`, { headers })
       ]);
 
-      if (summaryRes.data.success) setSummary(summaryRes.data.summary);
+      if (summaryRes.data.success) {
+        let updatedSummary = summaryRes.data.summary;
+        if (userStatsRes.data.success) {
+           updatedSummary = {
+             ...updatedSummary,
+             totalUsers: userStatsRes.data.stats.totalUsers,
+             newUsersMonth: userStatsRes.data.stats.newUsersMonth,
+             totalUserAmount: userStatsRes.data.stats.totalAmount
+           };
+        }
+        setSummary(updatedSummary);
+      }
       if (analyticsRes.data.success) setAnalytics(analyticsRes.data);
       if (trendRes.data.success) {
         setDailyTrend(trendRes.data.dailyTrend);
@@ -286,12 +301,14 @@ const Dashboard = () => {
       </div>
 
       {/* 1. Summary Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[
           { label: "Daily Revenue", val: summary.todayRevenue, icon: DollarSign, color: "bg-orange-50 border-orange-200 text-gray-800" },
           { label: "Monthly Revenue", val: summary.thisMonthRevenue, icon: Landmark, color: "bg-white border-stone-200" },
-          { label: "Pooja/Seva Revenue", val: summary.poojaRevenue, icon: Calendar, color: "bg-white border-stone-200" },
-          { label: "Donation Revenue", val: summary.donationRevenue, icon: Gift, color: "bg-white border-stone-200" },
+          { label: "Total Divine Collections", val: summary.totalUserAmount, icon: TrendingUp, color: "bg-white border-stone-200" },
+          { label: "Total Registered Devotees", val: summary.totalUsers, icon: User, color: "bg-white border-stone-200", prefix: "" },
+          { label: "New Devotees (This Month)", val: summary.newUsersMonth, icon: User, color: "bg-white border-stone-200", prefix: "" },
+          { label: "Donation/Pooja Split", val: summary.poojaRevenue, icon: Gift, color: "bg-white border-stone-200" },
         ].map((card, i) => (
           <motion.div
             key={i}
@@ -305,8 +322,8 @@ const Dashboard = () => {
               <card.icon size={18} className={card.color === 'bg-gray-900 text-white' ? 'text-orange-400' : 'text-orange-400'} />
             </div>
             <div className="flex items-baseline gap-1">
-              <span className="text-3xl font-normal tabular-nums">₹{card.val.toLocaleString('en-IN')}</span>
-              <span className="text-[10px] uppercase tracking-widest opacity-40 ml-1">INR</span>
+              <span className="text-3xl font-normal tabular-nums">{card.prefix !== undefined ? card.prefix : '₹'}{card.val.toLocaleString('en-IN')}</span>
+              <span className="text-[10px] uppercase tracking-widest opacity-40 ml-1">{card.prefix === "" ? "Users" : "INR"}</span>
             </div>
           </motion.div>
         ))}
