@@ -71,33 +71,33 @@ const AboutCard = () => {
                                     transition={{ delay: idx * 0.1 }}
                                     className="p-6 bg-white border border-stone-100 rounded-sm hover:shadow-xl hover:shadow-stone-200/40 transition-all group"
                                 >
-                                    <div className="mb-4 p-3 bg-stone-50 w-fit rounded-sm group-hover:bg-orange-50 transition-colors">
-                                        {obj.icon}
-                                    </div>
-                                    <h3 className="text-lg font-medium text-gray-800 mb-2">{obj.title}</h3>
-                                    <p className="text-sm text-stone-500 leading-relaxed font-light">{obj.desc}</p>
-                                </motion.div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Temples List: 1/3 Width */}
-                    <div className="space-y-6">
-                        <div className="bg-stone-50 p-8 rounded-sm border border-stone-100">
-                            <h3 className="text-xs uppercase tracking-[0.2em] font-bold text-gray-400 mb-6">Administrated Temples</h3>
-                            <div className="space-y-5">
-                                {temples.map((temple, idx) => (
-                                    <motion.div 
-                                        key={idx}
-                                        initial={{ opacity: 0, x: 20 }}
-                                        whileInView={{ opacity: 1, x: 0 }}
-                                        viewport={{ once: true }}
-                                        transition={{ delay: idx * 0.1 }}
-                                        className="flex items-center gap-4 group"
-                                    >
-                                        <div className="p-2 text-stone-400 group-hover:text-orange-500 transition-colors">
-                                            {temple.icon}
+                                        <div className="mb-4 p-3 bg-stone-50 w-fit rounded-sm group-hover:bg-orange-50 transition-colors" aria-hidden="true">
+                                            {obj.icon}
                                         </div>
+                                        <h3 className="text-lg font-medium text-gray-800 mb-2">{obj.title}</h3>
+                                        <p className="text-sm text-stone-500 leading-relaxed font-light">{obj.desc}</p>
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </div>
+    
+                        {/* Temples List: 1/3 Width */}
+                        <div className="space-y-6">
+                            <div className="bg-stone-50 p-8 rounded-sm border border-stone-100">
+                                <h3 className="text-xs uppercase tracking-[0.2em] font-bold text-gray-400 mb-6">Administrated Temples</h3>
+                                <div className="space-y-5">
+                                    {temples.map((temple, idx) => (
+                                        <motion.div 
+                                            key={idx}
+                                            initial={{ opacity: 0, x: 20 }}
+                                            whileInView={{ opacity: 1, x: 0 }}
+                                            viewport={{ once: true }}
+                                            transition={{ delay: idx * 0.1 }}
+                                            className="flex items-center gap-4 group"
+                                        >
+                                            <div className="p-2 text-stone-400 group-hover:text-orange-500 transition-colors" aria-hidden="true">
+                                                {temple.icon}
+                                            </div>
                                         <div>
                                             <p className="text-sm font-medium text-gray-800 group-hover:text-orange-600 transition-all">{temple.name}</p>
                                             <p className="text-[10px] uppercase tracking-widest text-stone-400">{temple.type}</p>

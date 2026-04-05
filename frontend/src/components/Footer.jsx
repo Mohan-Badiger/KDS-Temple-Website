@@ -66,18 +66,18 @@ const Footer = () => {
                             <h4 className="text-[11px] uppercase tracking-[0.3em] text-gray-400 font-bold mb-8">Connectivity</h4>
                             <div className="space-y-6 text-[13px] font-medium">
                                 <div className="flex gap-4">
-                                    <MapPin size={16} className="text-orange-400 shrink-0 mt-1" />
+                                    <MapPin size={16} className="text-orange-400 shrink-0 mt-1" aria-hidden="true" />
                                     <p className="leading-snug text-stone-600">
                                         SH 53, Rabkavi Banhatti, <br />
                                         Bagalkot, Karnataka 587311.
                                     </p>
                                 </div>
                                 <div className="flex items-center gap-4 text-stone-600">
-                                    <Phone size={16} className="text-orange-400 shrink-0" />
+                                    <Phone size={16} className="text-orange-400 shrink-0" aria-hidden="true" />
                                     <p>+91 91234 56789</p>
                                 </div>
                                 <div className="flex items-center gap-4 text-stone-600">
-                                    <Mail size={16} className="text-orange-400 shrink-0" />
+                                    <Mail size={16} className="text-orange-400 shrink-0" aria-hidden="true" />
                                     <p className="truncate">info@banahattitemple.com</p>
                                 </div>
                             </div>
@@ -92,7 +92,7 @@ const Footer = () => {
                         © {new Date().getFullYear()} Shri Kadasiddheshwar Temple Trust • Banahatti
                     </p>
                     <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-stone-400 font-light translate-y-[-1px]">
-                        Built with <Heart size={10} className="text-orange-400 fill-orange-400" /> for the Community
+                        Built with <Heart size={10} className="text-orange-400 fill-orange-400" aria-hidden="true" /> for the Community
                     </div>
                 </div>
 

@@ -61,12 +61,12 @@ const Testimonials = () => {
               className="bg-white p-10 rounded-sm border border-stone-100 hover:border-orange-200 transition-all duration-500 group shadow-sm hover:shadow-md relative overflow-hidden"
             >
               {/* Decorative Quote Icon */}
-              <div className="absolute top-[-20px] right-[-10px] text-stone-50 group-hover:text-orange-50/50 transition-colors duration-500">
+              <div className="absolute top-[-20px] right-[-10px] text-stone-50 group-hover:text-orange-50/50 transition-colors duration-500" aria-hidden="true">
                 <Quote size={120} />
               </div>
 
               <div className="relative z-10">
-                <div className="flex gap-1 mb-6">
+                <div className="flex gap-1 mb-6" aria-hidden="true">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} size={14} className="fill-orange-400 text-orange-400" />
                   ))}
@@ -85,7 +85,7 @@ const Testimonials = () => {
                     <h4 className="text-sm font-bold text-gray-900 uppercase tracking-widest">{t.author}</h4>
                     <p className="text-[10px] text-stone-400 uppercase tracking-wider">{t.location}</p>
                   </div>
-                  <Heart size={16} className="text-stone-200 group-hover:text-orange-400 group-hover:fill-orange-400 transition-all duration-500" />
+                  <Heart size={16} className="text-stone-200 group-hover:text-orange-400 group-hover:fill-orange-400 transition-all duration-500" aria-hidden="true" />
                 </div>
               </div>
             </motion.div>

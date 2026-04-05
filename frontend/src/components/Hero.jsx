@@ -21,17 +21,34 @@ const Hero = () => {
 
   return (
     <>
-      <section
-        className="relative bg-cover bg-center bg-no-repeat rounded-sm"
-        style={{ backgroundImage: `url(${images[currentImageIndex]})` }}
-      >
-        <div className="absolute inset-0 bg-gray-900/75 sm:bg-transparent sm:from-gray-900/95 sm:to-gray-900/25 ltr:sm:bg-gradient-to-r rtl:sm:bg-gradient-to-l rounded-sm"></div>
+      <section className="relative rounded-sm overflow-hidden bg-gray-900 min-h-[30rem] lg:h-143">
+        {/* Background Images Layer (Optimized for LCP) */}
+        {images.map((img, index) => (
+          <img
+            key={index}
+            src={img}
+            alt="Divine temple heritage banner"
+            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${
+              currentImageIndex === index ? 'opacity-100' : 'opacity-0'
+            }`}
+            style={{ 
+              objectPosition: 'center 30%',
+              // Only allow the first image to be the LCP candidate if it's the first render
+            }}
+            fetchPriority={index === 0 ? "high" : "auto"}
+            loading={index === 0 ? "eager" : "lazy"}
+            width="1920"
+            height="1080"
+          />
+        ))}
+        
+        <div className="absolute inset-0 bg-gray-900/40 sm:bg-transparent sm:from-gray-900/80 sm:to-gray-900/10 ltr:sm:bg-gradient-to-r rtl:sm:bg-gradient-to-l rounded-sm"></div>
 
         <div className="relative mx-auto max-w-screen-xl px-4 py-32 sm:px-6 lg:flex lg:h-143 lg:items-center lg:px-8 mb-10">
           <div className="max-w-xl text-center ltr:sm:text-left rtl:sm:text-right">
             <h1 className="text-3xl font-extrabold sm:text-5xl text-primary">
               BANAHATTI-
-              <p className="block uppercase text-4xl text-white">Temples Management Trust Committee</p>
+              <span className="block uppercase text-4xl text-white mt-2">Temples Management Trust Committee</span>
             </h1>
 
             <p className="mt-4 max-w-lg sm:text-xl/relaxed text-gray-300">

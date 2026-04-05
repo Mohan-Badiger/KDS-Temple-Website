@@ -62,12 +62,12 @@ const Dashboard = () => {
       if (summaryRes.data.success) {
         let updatedSummary = summaryRes.data.summary;
         if (userStatsRes.data.success) {
-           updatedSummary = {
-             ...updatedSummary,
-             totalUsers: userStatsRes.data.stats.totalUsers,
-             newUsersMonth: userStatsRes.data.stats.newUsersMonth,
-             totalUserAmount: userStatsRes.data.stats.totalAmount
-           };
+          updatedSummary = {
+            ...updatedSummary,
+            totalUsers: userStatsRes.data.stats.totalUsers,
+            newUsersMonth: userStatsRes.data.stats.newUsersMonth,
+            totalUserAmount: userStatsRes.data.stats.totalAmount
+          };
         }
         setSummary(updatedSummary);
       }
@@ -125,7 +125,7 @@ const Dashboard = () => {
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(data);
-    
+
     // Add Donation Records Sheet section or separate sheet
     // For simplicity while maintaining data integrity, we append it after a gap
     const donationData = donations.map(d => ({
@@ -160,21 +160,21 @@ const Dashboard = () => {
   const exportPDF = () => {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
-    
+
     // 1. HEADER - TRUST BRANDING
     doc.setFont("helvetica", "bold");
     doc.setFontSize(22);
     doc.setTextColor(249, 115, 22); // Orange-500
     doc.text("KDS TEMPLE TRUST", pageWidth / 2, 25, { align: "center" });
-    
+
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
     doc.setTextColor(115, 115, 115);
     doc.text("Divine Management System - Official Finance Audit Report", pageWidth / 2, 32, { align: "center" });
-    
+
     doc.setDrawColor(245, 245, 245);
     doc.line(14, 38, pageWidth - 14, 38);
-    
+
     // 2. METADATA
     doc.setFontSize(9);
     doc.text(`Generated On: ${new Date().toLocaleString()}`, 14, 45);
@@ -231,13 +231,13 @@ const Dashboard = () => {
 
     doc.setFillColor(250, 250, 249);
     doc.rect(14, nextY, pageWidth - 28, 35, 'F');
-    
+
     doc.setFontSize(10);
     doc.setTextColor(0, 0, 0);
     doc.text("FINANCIAL SUMMARY", 20, nextY + 10);
     doc.text(`Total Pooja Revenue: Rs. ${summary.poojaRevenue.toLocaleString()}`, 20, nextY + 18);
     doc.text(`Total Donation Revenue: Rs. ${summary.donationRevenue.toLocaleString()}`, 20, nextY + 25);
-    
+
     doc.setFontSize(11);
     doc.setTextColor(249, 115, 22);
     doc.text(`GRAND TOTAL COLLECTION: Rs. ${summary.totalRevenue.toLocaleString()}`, 20, nextY + 33);
@@ -246,11 +246,11 @@ const Dashboard = () => {
     const footerY = doc.internal.pageSize.getHeight() - 40;
     doc.setDrawColor(229, 229, 229);
     doc.line(pageWidth - 70, footerY, pageWidth - 14, footerY);
-    
+
     doc.setFontSize(10);
     doc.setTextColor(50, 50, 50);
     doc.text("Admin Digital Signature", pageWidth - 70, footerY + 8);
-    
+
     doc.setFontSize(7);
     doc.setTextColor(150, 150, 150);
     doc.text("Digitally Verified by Divine Audit System", pageWidth - 70, footerY + 13);
@@ -281,7 +281,7 @@ const Dashboard = () => {
       {/* Header & Main Export */}
       <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-stone-100 pb-8 gap-6">
         <div>
-          <h1 className="text-4xl tracking-tight text-gray-900 uppercase font-normal">Dashboard</h1>
+          <h1 className="text-3xl tracking-tight text-gray-900 uppercase font-normal">Dashboard</h1>
           <p className="text-[11px] text-stone-500 uppercase tracking-[0.3em] mt-2">Divine Revenue Monitoring & Audit System</p>
         </div>
         <div className="flex gap-3">

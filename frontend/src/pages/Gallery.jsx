@@ -88,6 +88,8 @@ const GalleryImage = ({ image, onClick, index }) => {
                 src={image.src}
                 alt={image.title}
                 loading="lazy"
+                width={400}
+                height={300}
                 onLoad={() => setIsLoaded(true)}
                 className={`w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
             />

@@ -80,7 +80,7 @@ const ServiceCard = () => {
                     <div
                         className="bg-red-100 rounded-full w-16 h-16 flex justify-center items-center text-red-500 shadow-2xl"
                     >
-                        <img src={donate} alt="" className='w-9' />
+                        <img src={donate} alt="Donation Icon" className='w-9' width="36" height="36" />
                     </div>
                     <h2 className="uppercase mt-6 font-medium mb-3">
                         Donations
