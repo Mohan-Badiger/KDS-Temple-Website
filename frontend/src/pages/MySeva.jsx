@@ -5,10 +5,10 @@ import { motion } from "framer-motion";
 
 const StatusBadge = ({ status }) => {
   const statusLower = status?.toLowerCase();
-  
+
   if (statusLower === "completed") {
     return (
-      <span className="flex items-center gap-1.5 px-3 py-1 rounded-md text-[10px] border uppercase tracking-widest bg-green-100 text-green-700 border-green-200 font-bold">
+      <span className="flex items-center gap-1.5 px-2 py-1 rounded text-[10px] border uppercase tracking-widest bg-green-100 text-green-700 border-green-200 font-semibold">
         <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
         </svg>
@@ -19,7 +19,7 @@ const StatusBadge = ({ status }) => {
 
   const getStatusStyles = (s) => {
     if (s === "confirmed" || s === "approved") {
-      return "bg-green-50 text-green-600 border-green-100";
+      return "bg-orange-50 text-orange-600 border-orange-100";
     }
     if (s === "pending") {
       return "bg-amber-50 text-amber-600 border-amber-100";
@@ -28,7 +28,7 @@ const StatusBadge = ({ status }) => {
   };
 
   return (
-    <span className={`px-3 py-1 rounded-md text-[10px] border uppercase tracking-widest ${getStatusStyles(statusLower)}`}>
+    <span className={`px-3 py-1 rounded text-[10px] border uppercase tracking-widest ${getStatusStyles(statusLower)}`}>
       {status || "Confirmed"}
     </span>
   );
@@ -77,7 +77,7 @@ const MySeva = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-16 font-primary text-gray-800">
-      
+
       {/* Bookings Section */}
       <section className="mb-20">
         <div className="flex items-center gap-4 mb-10 border-b border-stone-200 pb-8">
@@ -174,7 +174,7 @@ const MySeva = () => {
                   </div>
                   <span className="text-[10px] text-stone-400 uppercase tracking-widest">{new Date(donation.createdAt).toLocaleDateString()}</span>
                 </div>
-                
+
                 <div className="mb-8">
                   <p className="text-xs text-green-600 uppercase tracking-widest mb-2">{donation.temple?.name || "Temple Welfare"}</p>
                   <p className="text-3xl text-gray-900 tabular-nums">₹{donation.amount}</p>

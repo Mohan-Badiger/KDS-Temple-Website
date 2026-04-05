@@ -160,15 +160,32 @@ export const getAnalyticsDetails = async (req, res) => {
     }
 };
 
-// 3. Monthly Monthly Trend
-export const getMonthlyTrend = async (req, res) => {
+// 3. Trend Analysis (Daily & Monthly)
+export const getTrends = async (req, res) => {
     try {
+        // Daily Trend (Last 30 days)
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 29);
+        thirtyDaysAgo.setHours(0, 0, 0, 0);
+
+        const dailyTrend = await BookingModel.aggregate([
+            { $match: { status: "completed", createdAt: { $gte: thirtyDaysAgo } } },
+            {
+                $group: {
+                    _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+                    revenue: { $sum: "$totalAmount" }
+                }
+            },
+            { $sort: { _id: 1 } }
+        ]);
+
+        // Monthly Trend (Last 12 months)
         const twelveMonthsAgo = new Date();
         twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 11);
         twelveMonthsAgo.setDate(1);
         twelveMonthsAgo.setHours(0, 0, 0, 0);
 
-        const trend = await BookingModel.aggregate([
+        const monthlyTrend = await BookingModel.aggregate([
             { $match: { status: "completed", createdAt: { $gte: twelveMonthsAgo } } },
             {
                 $group: {
@@ -182,14 +199,16 @@ export const getMonthlyTrend = async (req, res) => {
             { $sort: { "_id.year": 1, "_id.month": 1 } }
         ]);
 
-        // Format for recharts
         const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        const formattedTrend = trend.map(t => ({
-            name: `${months[t._id.month - 1]} ${t._id.year}`,
-            revenue: t.revenue
-        }));
-
-        res.json({ success: true, trend: formattedTrend });
+        
+        res.json({ 
+            success: true, 
+            dailyTrend: dailyTrend.map(d => ({ name: d._id.split('-').slice(1).join('/'), revenue: d.revenue })),
+            monthlyTrend: monthlyTrend.map(t => ({
+                name: `${months[t._id.month - 1]} ${t._id.year}`,
+                revenue: t.revenue
+            }))
+        });
 
     } catch (error) {
         console.error(error);
@@ -216,7 +235,21 @@ export const getDashboardTransactions = async (req, res) => {
             .populate("poojas", "name")
             .populate("user", "name email")
             .sort({ createdAt: -1 })
-            .limit(100); // Limit for performance in initial dashboard view
+            .limit(100);
+
+        // Fetch Donations based on filters
+        let donationQuery = {};
+        if (templeId) donationQuery.temple = new mongoose.Types.ObjectId(templeId);
+        if (startDate || endDate) {
+            donationQuery.createdAt = {};
+            if (startDate) donationQuery.createdAt.$gte = new Date(startDate);
+            if (endDate) donationQuery.createdAt.$lte = new Date(endDate);
+        }
+
+        const donations = await DonationModel.find(donationQuery)
+            .populate("temple", "name")
+            .sort({ createdAt: -1 })
+            .limit(100);
 
         res.json({
             success: true,
@@ -228,6 +261,15 @@ export const getDashboardTransactions = async (req, res) => {
                 devotee: t.poojaInNameOf || t.user?.name || "Devotee",
                 amount: t.totalAmount,
                 paymentId: t.paymentId || "N/A"
+            })),
+            donations: donations.map(d => ({
+                id: d._id,
+                date: d.createdAt,
+                donor: d.name || "Anonymous",
+                temple: d.temple?.name || "Temple Trust",
+                amount: d.amount,
+                phone: d.phone || "N/A",
+                paymentId: d.paymentId || "N/A"
             }))
         });
 
