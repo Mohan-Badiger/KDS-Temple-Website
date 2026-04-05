@@ -1,6 +1,7 @@
 import RazorpayService from "../services/razorpayService.js";
 import mongoose from "mongoose";
 import BookingModel from "../models/bookingModel.js";
+import PoojaModel from "../models/poojaModel.js";
 import nodemailer from 'nodemailer';
 
 // Setup nodemailer transporter
@@ -29,10 +30,34 @@ export const createBooking = async (req, res) => {
       return res.status(400).json({ success: false, message: "Temple ID is required" });
     }
 
+    // Check availability (Server-side validation)
+    const [day, month, year] = poojaDate.split("-");
+    const isoDateStr = `${year}-${month}-${day}`; // YYYY-MM-DD
+
+    // 1. Check Temple-wide restrictions (Festival/Closure)
+    const temple = await mongoose.model("Temple").findById(templeId);
+    if (temple?.unavailableDates?.includes(isoDateStr)) {
+      return res.status(400).json({ 
+        success: false, 
+        message: `The ${temple.name} is closed on ${poojaDate} due to a festival or maintenance. Please select another date.` 
+      });
+    }
+
+    // 2. Check Service-specific restrictions
+    const poojasData = await PoojaModel.find({ _id: { $in: poojas } });
+    for (const pooja of poojasData) {
+      const templeConfig = pooja.temples.find(t => (t.templeId?._id || t.templeId).toString() === templeId);
+      if (templeConfig?.unavailableDates?.includes(isoDateStr)) {
+        return res.status(400).json({ 
+          success: false, 
+          message: `The selected date (${poojaDate}) is restricted for ${pooja.name}. Please select another date.` 
+        });
+      }
+    }
+
     // Amount in paise for Razorpay
     const razorpayOrder = await RazorpayService.createOrder(totalAmount * 100);
 
-    const [day, month, year] = poojaDate.split("-");
     const formattedDate = new Date(`${year}-${month}-${day}`);
 
     const booking = new BookingModel({

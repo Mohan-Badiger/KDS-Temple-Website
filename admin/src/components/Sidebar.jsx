@@ -25,10 +25,10 @@ const Sidebar = () => {
                     <img className='w-4 block sm:hidden' src={seva} alt="" />
                     <p className='text-md sm:block hidden'>Pooja Manage</p>
                 </NavLink>
-                <NavLink to='/annaprasad-manage' className='flex items-center border border-gray-300 px-3 py-2 border-r-0 rounded-l'>
+                {/* <NavLink to='/annaprasad-manage' className='flex items-center border border-gray-300 px-3 py-2 border-r-0 rounded-l'>
                     <img className='w-4 block sm:hidden' src={food} alt="" />
                     <p className='text-md sm:block hidden'>Annaprasad</p>
-                </NavLink>
+                </NavLink> */}
                 <NavLink to='/donation-manage' className='flex items-center border border-gray-300 px-3 py-2 border-r-0 rounded-l'>
                     <img className='w-4 block sm:hidden' src={donate} alt="" />
                     <p className='text-md sm:block hidden'>Donation</p>

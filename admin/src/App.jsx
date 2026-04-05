@@ -6,7 +6,7 @@ import { ToastContainer } from 'react-toastify';
 import Dashboard from './pages/Dashboard'
 import Login from './components/Login'
 import PoojaManage from './pages/PoojaManage.jsx'
-import RequestPooja from './pages/RequestPooja.jsx'
+import AvailabilityManage from './pages/AvailabilityManage.jsx'
 import PoojaList from './pages/PoojaList.jsx'
 import Add from './pages/Add.jsx'
 import Update from './pages/Update.jsx'
@@ -49,9 +49,8 @@ const App = () => {
                 <Route path='/pooja-manage' element={<PoojaManage />}>
 
                   {/* ✅ Default route */}
-                  <Route index element={<Navigate to="confirmed-booking" replace />} />
-
-                  <Route path='confirmed-booking' element={<RequestPooja />} />
+                  <Route index element={<Navigate to="availability" replace />} />
+                  <Route path='availability' element={<AvailabilityManage />} />
                   <Route path='pooja-list' element={<PoojaList />} />
                   <Route path='add' element={<Add />} />
                   <Route path='manage' element={<Manage />} />

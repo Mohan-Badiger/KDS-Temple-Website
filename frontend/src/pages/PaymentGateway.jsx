@@ -64,6 +64,24 @@ const PaymentGateway = () => {
       return;
     }
 
+    // Check availability
+    const templeBlocked = selectedTemple?.unavailableDates?.includes(selectedDate);
+    
+    const blockedPooja = selectedPoojas.find(pooja => {
+      const config = pooja.temples.find(t => (t.templeId?._id || t.templeId) === selectedTemple._id);
+      return config?.unavailableDates?.includes(selectedDate);
+    });
+
+    if (templeBlocked) {
+      toast.error(`The ${selectedTemple.name} is closed on this date for a festival/maintenance. Please select another divine date.`);
+      return;
+    }
+
+    if (blockedPooja) {
+      toast.error(`The service "${blockedPooja.name}" is restricted on this date. Please choose another date.`);
+      return;
+    }
+
     const selectedDateTime = new Date(selectedDate);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -257,14 +275,44 @@ const PaymentGateway = () => {
                   </div>
                   <p className="text-[10px] text-stone-400 uppercase tracking-widest mt-2">Bookings are instantly confirmed.</p>
                 </div>
+
+                {/* Restricted Date Notice - Premium Styling */}
+                {selectedDate && (selectedTemple?.unavailableDates?.includes(selectedDate) || selectedPoojas.some(p => {
+                    const config = p.temples.find(t => (t.templeId?._id || t.templeId) === selectedTemple._id);
+                    return config?.unavailableDates?.includes(selectedDate);
+                })) && (
+                  <motion.div 
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    className="p-4 bg-red-50 border border-red-100 rounded-md flex gap-3 items-start"
+                  >
+                    <svg className="w-4 h-4 text-red-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <div>
+                      <h4 className="text-[10px] text-red-700 uppercase tracking-widest font-bold mb-1">Divine Restriction Active</h4>
+                      <p className="text-[10px] text-red-600 leading-relaxed uppercase tracking-widest opacity-80">
+                        {selectedTemple?.unavailableDates?.includes(selectedDate) 
+                          ? `The temple is closed on ${selectedDate} for maintenance or festival.` 
+                          : "Certain selected services are restricted on this date. Please select a different date to proceed."}
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
              </div>
 
              <div className="pt-4 space-y-6">
                 <button
                   onClick={handlePayment}
-                  disabled={loading || verifying}
+                  disabled={loading || verifying || (selectedDate && (selectedTemple?.unavailableDates?.includes(selectedDate) || selectedPoojas.some(p => {
+                    const config = p.temples.find(t => (t.templeId?._id || t.templeId) === selectedTemple._id);
+                    return config?.unavailableDates?.includes(selectedDate);
+                  })))}
                   className={`w-full py-4 text-white text-xs uppercase tracking-widest rounded-md shadow-sm transition-all flex items-center justify-center gap-3 ${
-                    loading || verifying
+                    loading || verifying || (selectedDate && (selectedTemple?.unavailableDates?.includes(selectedDate) || selectedPoojas.some(p => {
+                      const config = p.temples.find(t => (t.templeId?._id || t.templeId) === selectedTemple._id);
+                      return config?.unavailableDates?.includes(selectedDate);
+                    })))
                       ? "bg-stone-300 cursor-not-allowed shadow-none"
                       : "bg-orange-500 hover:bg-orange-600 active:scale-[0.98]"
                   }`}

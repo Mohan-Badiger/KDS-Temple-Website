@@ -126,3 +126,27 @@ export const deleteTemple = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+// Update temple availability (unavailable dates)
+export const updateTempleAvailability = async (req, res) => {
+  try {
+    const { templeId, unavailableDates } = req.body;
+    
+    if (!templeId) {
+      return res.status(400).json({ success: false, message: "Temple ID is required" });
+    }
+
+    const temple = await TempleModel.findById(templeId);
+    if (!temple) {
+      return res.status(404).json({ success: false, message: "Temple not found" });
+    }
+
+    temple.unavailableDates = unavailableDates;
+    await temple.save();
+
+    res.status(200).json({ success: true, message: 'Temple availability updated successfully' });
+  } catch (error) {
+    console.error('Temple Availability Update Error:', error);
+    res.status(500).json({ success: false, message: 'Error updating temple availability', error: error.message });
+  }
+};

@@ -79,18 +79,18 @@ const TempleManage = () => {
 
     return (
         <div className="flex flex-col gap-8 font-primary text-gray-800 pb-20">
-            
+
             {/* Header Section */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-stone-100 pb-6 mb-4">
                 <div>
                     <h2 className="text-3xl tracking-tight uppercase leading-none">Temple Management</h2>
-                    <p className="text-[10px] text-stone-400 uppercase tracking-[0.2em] mt-2 italic">
+                    <p className="text-[10px] text-stone-400 uppercase tracking-[0.2em] mt-2">
                         “Register and manage your divine locations”
                     </p>
                 </div>
                 <button
                     onClick={() => setShowAddModal(true)}
-                    className="bg-orange-400 text-white px-8 py-3 text-[11px] uppercase tracking-[0.2em] font-bold rounded-sm hover:bg-orange-500 transition-all active:scale-95 shadow-sm"
+                    className="bg-orange-400 text-white px-8 py-3 text-[11px] uppercase tracking-[0.2em] font hover:bg-orange-500 transition-all active:scale-95 shadow-sm"
                 >
                     Add Temple
                 </button>
@@ -107,8 +107,8 @@ const TempleManage = () => {
 
                 <div className="grid grid-cols-1 gap-4">
                     {temples.map((temple) => (
-                        <motion.div 
-                            key={temple._id} 
+                        <motion.div
+                            key={temple._id}
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             className="flex flex-col sm:flex-row items-center gap-6 p-5 border border-stone-200 bg-white rounded-sm hover:border-orange-300 hover:shadow-sm transition-all duration-300 group"
@@ -129,7 +129,7 @@ const TempleManage = () => {
                                 <h4 className="text-xl text-gray-900 uppercase tracking-tight mb-2 font-medium">{temple.name}</h4>
                                 <div className="flex items-center justify-center sm:justify-start gap-2 text-stone-500">
                                     <div className="w-1.5 h-1.5 rounded-full bg-orange-400"></div>
-                                    <p className="text-sm tracking-wide lowercase italic first-letter:uppercase">{temple.location}</p>
+                                    <p className="text-sm tracking-wide lowercase first-letter:uppercase">{temple.location}</p>
                                 </div>
                             </div>
 
@@ -137,7 +137,7 @@ const TempleManage = () => {
                             <div className="flex-shrink-0 mt-6 sm:mt-0 w-full sm:w-auto">
                                 <button
                                     onClick={() => deleteTemple(temple._id)}
-                                    className="w-full sm:w-auto text-[10px] text-red-500 hover:text-white hover:bg-red-500 border border-stone-200 hover:border-red-500 uppercase tracking-[0.2em] font-bold px-10 py-3 rounded-sm transition-all duration-300 active:scale-95"
+                                    className="w-full sm:w-auto text-[10px] text-orange-500 hover:text-white hover:bg-orange-500 border border-orange-200 hover:border-orange-500 uppercase tracking-[0.2em] font-bold px-10 py-3 rounded-sm transition-all duration-300 active:scale-95"
                                 >
                                     Remove
                                 </button>
@@ -176,11 +176,11 @@ const TempleManage = () => {
                             >
                                 {/* Top Decoration */}
                                 <div className="h-1 bg-orange-400 w-full"></div>
-                                
+
                                 <div className="p-8">
                                     <div className="flex justify-between items-center mb-8">
                                         <h2 className="text-2xl text-gray-900 uppercase tracking-tight font-medium">Add New Temple</h2>
-                                        <button 
+                                        <button
                                             onClick={() => setShowAddModal(false)}
                                             className="text-stone-400 hover:text-gray-900 transition-colors"
                                         >
@@ -226,7 +226,7 @@ const TempleManage = () => {
                                                     className="w-full p-4 border border-stone-100 bg-stone-50 text-[10px] text-stone-400 uppercase tracking-widest rounded-sm file:mr-4 file:py-1 file:px-2 file:rounded-sm file:border-0 file:text-[10px] file:uppercase file:bg-orange-50 file:text-orange-500 hover:file:bg-orange-100 transition-all cursor-pointer"
                                                 />
                                                 {image && (
-                                                   <p className="text-[10px] text-orange-500 italic font-medium">✨ {image.name} selected</p>
+                                                    <p className="text-[10px] text-orange-500 italic font-medium">✨ {image.name} selected</p>
                                                 )}
                                             </div>
                                         </div>
