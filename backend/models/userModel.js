@@ -6,9 +6,6 @@ const userSchema = new mongoose.Schema({
   phone: { type: String, trim: true },
   password: { type: String },
   profile: {
-    gothra: { type: String, trim: true },
-    nakshatra: { type: String, trim: true },
-    rashi: { type: String, trim: true },
     address: { type: String, trim: true },
     profileImage: { type: String, trim: true }
   },
