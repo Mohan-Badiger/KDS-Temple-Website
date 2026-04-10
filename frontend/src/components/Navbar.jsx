@@ -237,7 +237,7 @@ const Navbar = () => {
             </button>
 
             <div className='w-6 block sm:hidden'>
-               <Menu className="text-gray-600 cursor-pointer" onClick={() => setVisible(true)} />
+              <Menu className="text-gray-600 cursor-pointer" onClick={() => setVisible(true)} />
             </div>
           </div>
 
@@ -248,7 +248,7 @@ const Navbar = () => {
                 <UserDropdown isMobile={false} />
               ) : (
                 <Link
-                  className="border-1 py-1.5 px-6 bg-gray-900 hover:bg-orange-600 border-none text-white text-xs uppercase tracking-widest transition-all rounded-sm shadow-md"
+                  className="border-1 py-2.5 px-6 bg-orange-400 hover:bg-orange-500 border-none text-white text-xs uppercase tracking-widest transition-all shadow-md"
                   to="/login"
                 >
                   LogIn
@@ -265,13 +265,13 @@ const Navbar = () => {
       <div className={`fixed top-0 right-0 h-screen overflow-y-auto bg-gradient-to-br from-yellow-100 via-gray-200 to-yellow-100 transition-all z-[999] ${visible ? 'w-full' : 'w-0'}`}>
         <div className='flex flex-col text-gray-600 h-full'>
           <div onClick={() => setVisible(false)} className='flex items-center justify-between p-6 border-b border-stone-200'>
-             <div className="flex items-center gap-4">
-                <X className='h-5 w-5 text-gray-400' />
-                <p className="text-xs uppercase tracking-widest">Close Menu</p>
-             </div>
-             <Link to='/' onClick={() => setVisible(false)}><h1 className='text-xl'>BNT<span className='text-orange-400'>.</span></h1></Link>
+            <div className="flex items-center gap-4">
+              <X className='h-5 w-5 text-gray-400' />
+              <p className="text-xs uppercase tracking-widest">Close Menu</p>
+            </div>
+            <Link to='/' onClick={() => setVisible(false)}><h1 className='text-xl'>BNT<span className='text-orange-400'>.</span></h1></Link>
           </div>
-          
+
           <div className="flex flex-col py-4">
             <NavLink onClick={() => setVisible(false)} className='py-4 pl-10 text-sm uppercase tracking-widest border-b border-stone-100' to='/'>Home</NavLink>
             <NavLink onClick={() => setVisible(false)} className='py-4 pl-10 text-sm uppercase tracking-widest border-b border-stone-100' to='/about'>About</NavLink>
@@ -287,8 +287,8 @@ const Navbar = () => {
               <NavLink onClick={() => setVisible(false)} className='py-4 pl-10 text-sm uppercase tracking-widest border-b border-stone-100' to='/myseva'>My Seva History</NavLink>
               <NavLink onClick={() => setVisible(false)} className='py-4 pl-10 text-sm uppercase tracking-widest border-b border-stone-100' to='/profile'>My Profile</NavLink>
               <NavLink onClick={() => setVisible(false)} className='py-4 pl-10 text-sm uppercase tracking-widest border-b border-stone-100' to='/settings'>Account Settings</NavLink>
-              <button 
-                onClick={() => { logout(); setVisible(false); }} 
+              <button
+                onClick={() => { logout(); setVisible(false); }}
                 className='py-6 pl-10 text-left text-sm uppercase tracking-widest text-red-500 font-bold bg-white/50 border-t border-stone-200'
               >
                 Logout Account
