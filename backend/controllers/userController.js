@@ -236,7 +236,7 @@ const getProfile = async (req, res) => {
 // ===============================
 const updateProfile = async (req, res) => {
   try {
-    const { name, email, phone, gothra, nakshatra, rashi, address } = req.body;
+    const { name, email, phone, address } = req.body;
     
     // Check if email is being updated and if it's already taken by someone else
     if (email) {
@@ -274,9 +274,6 @@ const updateProfile = async (req, res) => {
     }
 
     updatedData.profile = {
-      gothra: gothra !== undefined ? gothra : (user.profile?.gothra || ''),
-      nakshatra: nakshatra !== undefined ? nakshatra : (user.profile?.nakshatra || ''),
-      rashi: rashi !== undefined ? rashi : (user.profile?.rashi || ''),
       address: address !== undefined ? address : (user.profile?.address || ''),
       profileImage: profileImageUrl
     };

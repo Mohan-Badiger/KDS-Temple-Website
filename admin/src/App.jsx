@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
 import { Navigate, Route, Routes, } from 'react-router-dom'
@@ -29,6 +30,23 @@ const App = () => {
   useEffect(() => {
     localStorage.setItem('token', token)
   }, [token])
+
+  useEffect(() => {
+    const interceptor = axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+          setToken('');
+          localStorage.removeItem('token');
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    return () => {
+      axios.interceptors.response.eject(interceptor);
+    };
+  }, []);
 
 
   return (
