@@ -12,7 +12,7 @@ const Footer = () => {
             <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-7xl">
                 {/* Main Content Grid - Balanced Two-Column Structure */}
                 <div className="flex flex-col lg:flex-row justify-between gap-16 lg:gap-24 mb-20">
-                    
+
                     {/* Brand & Mission (Structured Left) */}
                     <div className="lg:w-5/12">
                         <div className="mb-8">
@@ -87,7 +87,7 @@ const Footer = () => {
                 </div>
 
                 {/* Footer Bottom Bar */}
-                <div className="pt-10 border-t border-stone-100 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div className="pt-10 border-t border-orange-100 flex flex-col md:flex-row justify-between items-center gap-6">
                     <p className="text-[10px] uppercase tracking-widest text-stone-400 font-light">
                         © {new Date().getFullYear()} Shri Kadasiddheshwar Temple Trust • Banahatti
                     </p>
