@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../utils/axiosInstance';
 import { toast } from 'react-toastify';
 import { TempleContext } from '../../context/TempleContext';
 
 const SettingsForm = ({ initialData }) => {
+  const navigate = useNavigate();
   const { token, backendUrl } = useContext(TempleContext);
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState(null);
@@ -13,9 +15,6 @@ const SettingsForm = ({ initialData }) => {
     name: '',
     email: '',
     phone: '',
-    gothra: '',
-    nakshatra: '',
-    rashi: '',
     address: ''
   });
 
@@ -25,9 +24,6 @@ const SettingsForm = ({ initialData }) => {
         name: initialData.name || '',
         email: initialData.email || '',
         phone: initialData.phone || '',
-        gothra: initialData.profile?.gothra || '',
-        nakshatra: initialData.profile?.nakshatra || '',
-        rashi: initialData.profile?.rashi || '',
         address: initialData.profile?.address || ''
       });
       if (initialData.profile?.profileImage) {
@@ -62,9 +58,6 @@ const SettingsForm = ({ initialData }) => {
       const payload = new FormData();
       payload.append('name', formData.name);
       payload.append('phone', formData.phone);
-      payload.append('gothra', formData.gothra);
-      payload.append('nakshatra', formData.nakshatra);
-      payload.append('rashi', formData.rashi);
       payload.append('address', formData.address);
 
       if (imageFile) {
@@ -79,6 +72,7 @@ const SettingsForm = ({ initialData }) => {
 
       if (response.data.success) {
         toast.success("Profile updated successfully!");
+        navigate('/profile');
         if (response.data.user?.profile?.profileImage) {
           setImagePreview(response.data.user.profile.profileImage);
         }
@@ -171,52 +165,6 @@ const SettingsForm = ({ initialData }) => {
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
               placeholder="+91"
             />
-          </div>
-        </div>
-      </div>
-
-      {/* SECTION 2: Ritual Profile */}
-      <div className="mb-8 p-6 bg-gray-50 rounded-xl border border-gray-100">
-        <h3 className="text-xl font-medium mb-4 text-orange-600 border-b border-gray-200 pb-2">Ritual Profile</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Gothra</label>
-            <input
-              type="text"
-              name="gothra"
-              value={formData.gothra}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
-              placeholder="E.g. Kashyapa, Bharadwaja"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Nakshatra</label>
-            <select
-              name="nakshatra"
-              value={formData.nakshatra}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500 bg-white"
-            >
-              <option value="">Select Nakshatra</option>
-              {['Ashwini', 'Bharani', 'Krittika', 'Rohini', 'Mrigashira', 'Ardra', 'Punarvasu', 'Pushya', 'Ashlesha', 'Magha', 'Purva Phalguni', 'Uttara Phalguni', 'Hasta', 'Chitra', 'Swati', 'Vishakha', 'Anuradha', 'Jyeshtha', 'Mula', 'Purva Ashadha', 'Uttara Ashadha', 'Shravana', 'Dhanishta', 'Shatabhisha', 'Purva Bhadrapada', 'Uttara Bhadrapada', 'Revati'].map(n => (
-                <option key={n} value={n}>{n}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Rashi</label>
-            <select
-              name="rashi"
-              value={formData.rashi}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500 bg-white"
-            >
-              <option value="">Select Rashi</option>
-              {['Mesha (Aries)', 'Vrishabha (Taurus)', 'Mithuna (Gemini)', 'Karka (Cancer)', 'Simha (Leo)', 'Kanya (Virgo)', 'Tula (Libra)', 'Vrishchika (Scorpio)', 'Dhanu (Sagittarius)', 'Makara (Capricorn)', 'Kumbha (Aquarius)', 'Meena (Pisces)'].map(r => (
-                <option key={r} value={r}>{r}</option>
-              ))}
-            </select>
           </div>
           <div className="md:col-span-2">
             <label className="block text-sm font-medium text-gray-700 mb-1">Full Address</label>

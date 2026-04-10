@@ -45,18 +45,6 @@ const ProfileCard = ({ user }) => {
               <p className="text-[10px] text-stone-400 uppercase tracking-widest mb-1">Phone Number</p>
               <p className="text-gray-800 tracking-wide">{user.phone || 'Not provided'}</p>
             </div>
-            <div className="bg-stone-50 p-4 rounded-md border border-stone-100">
-              <p className="text-[10px] text-stone-400 uppercase tracking-widest mb-1">Gothra</p>
-              <p className="text-gray-800 tracking-wide">{user.profile?.gothra || 'Not provided'}</p>
-            </div>
-            <div className="bg-stone-50 p-4 rounded-md border border-stone-100">
-              <p className="text-[10px] text-stone-400 uppercase tracking-widest mb-1">Nakshatra</p>
-              <p className="text-gray-800 tracking-wide">{user.profile?.nakshatra || 'Not provided'}</p>
-            </div>
-            <div className="bg-stone-50 p-4 rounded-md border border-stone-100">
-              <p className="text-[10px] text-stone-400 uppercase tracking-widest mb-1">Rashi</p>
-              <p className="text-gray-800 tracking-wide">{user.profile?.rashi || 'Not provided'}</p>
-            </div>
             <div className="bg-stone-50 p-4 rounded-md border border-stone-100 sm:col-span-2">
               <p className="text-[10px] text-stone-400 uppercase tracking-widest mb-1">Permanent Address</p>
               <p className="text-gray-800 tracking-wide">{user.profile?.address || 'Not provided'}</p>
