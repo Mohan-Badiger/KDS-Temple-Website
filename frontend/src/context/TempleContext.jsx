@@ -54,7 +54,15 @@ const TempleContextProvider = (props) => {
     };
 
     useEffect(() => {
-        if (!token && localStorage.getItem('token')) {
+        const storedLastActivity = localStorage.getItem('lastActivity');
+        const now = Date.now();
+        const tenMinutes = 10 * 60 * 1000;
+
+        // Clear session if > 10 mins passed since last activity (across tabs/windows)
+        if (storedLastActivity && (now - parseInt(storedLastActivity, 10) >= tenMinutes)) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('lastActivity');
+        } else if (!token && localStorage.getItem('token')) {
             setToken(localStorage.getItem('token'));
         }
         fetchTemples();
