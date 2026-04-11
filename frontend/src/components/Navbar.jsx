@@ -106,7 +106,7 @@ import { Volume2, VolumeX, Menu, X, User } from 'lucide-react';
 import UserDropdown from './User/UserDropdown';
 
 const Navbar = () => {
-  const AUTO_LOGOUT_TIME = 20 * 60 * 1000; // 20 minutes
+  const AUTO_LOGOUT_TIME = 10 * 60 * 1000; // 10 minutes
   const [visible, setVisible] = useState(false);
   const { navigate, token, setToken } = useContext(TempleContext);
   const [isPlaying, setIsPlaying] = useState(false);
