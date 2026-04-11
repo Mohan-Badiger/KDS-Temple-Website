@@ -24,11 +24,25 @@ import AddUser from './pages/AddUser.jsx';
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 const App = () => {
+  const [token, setToken] = useState(() => {
+    const storedToken = localStorage.getItem('token');
+    const lastActivity = localStorage.getItem('adminActivity');
+    const now = Date.now();
+    const tenMinutes = 10 * 60 * 1000;
 
-  const [token, setToken] = useState(localStorage.getItem('token') ? localStorage.getItem('token') : '');
+    if (storedToken && lastActivity && (now - parseInt(lastActivity, 10) >= tenMinutes)) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('adminActivity');
+      return '';
+    }
+    return storedToken || '';
+  });
 
   useEffect(() => {
-    localStorage.setItem('token', token)
+    localStorage.setItem('token', token);
+    if (token) {
+      localStorage.setItem('adminActivity', Date.now().toString());
+    }
   }, [token])
 
   useEffect(() => {
@@ -38,6 +52,7 @@ const App = () => {
         if (error.response && (error.response.status === 401 || error.response.status === 403)) {
           setToken('');
           localStorage.removeItem('token');
+          localStorage.removeItem('adminActivity');
         }
         return Promise.reject(error);
       }
@@ -47,6 +62,36 @@ const App = () => {
       axios.interceptors.response.eject(interceptor);
     };
   }, []);
+
+  useEffect(() => {
+    if (!token) return;
+
+    const updateActivity = () => {
+      localStorage.setItem('adminActivity', Date.now().toString());
+    };
+
+    const checkInactivity = () => {
+      const stored = localStorage.getItem('adminActivity');
+      const last = stored ? parseInt(stored, 10) : Date.now();
+      const now = Date.now();
+      const tenMinutes = 10 * 60 * 1000;
+
+      if (now - last >= tenMinutes) {
+        setToken('');
+        localStorage.removeItem('token');
+        localStorage.removeItem('adminActivity');
+      }
+    };
+
+    const interval = setInterval(checkInactivity, 5000);
+    const events = ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart'];
+    events.forEach((evt) => window.addEventListener(evt, updateActivity));
+
+    return () => {
+      clearInterval(interval);
+      events.forEach((evt) => window.removeEventListener(evt, updateActivity));
+    };
+  }, [token]);
 
 
   return (
