@@ -262,8 +262,8 @@ const Navbar = () => {
       <audio ref={audioRef} src="/music.mp3" loop preload="auto" />
 
       {/* Sidebar for small screens */}
-      <div className={`fixed top-0 right-0 h-screen overflow-y-auto bg-gradient-to-br from-yellow-100 via-gray-200 to-yellow-100 transition-all z-[999] ${visible ? 'w-full' : 'w-0'}`}>
-        <div className='flex flex-col text-gray-600 h-full'>
+      <div className={`fixed top-0 right-0 h-[100dvh] overflow-y-auto bg-gradient-to-br from-yellow-100 via-gray-200 to-yellow-100 transition-all z-[999] ${visible ? 'w-full' : 'w-0'}`}>
+        <div className='flex flex-col text-gray-600 min-h-[100dvh]'>
           <div onClick={() => setVisible(false)} className='flex items-center justify-between p-6 border-b border-stone-200'>
             <div className="flex items-center gap-4">
               <X className='h-5 w-5 text-gray-400' />
@@ -295,7 +295,9 @@ const Navbar = () => {
               </button>
             </div>
           ) : (
-            <NavLink onClick={() => setVisible(false)} className='py-6 pl-10 text-sm uppercase tracking-widest bg-primary text-white mt-auto' to='/login'>Login / Sign Up</NavLink>
+            <div className="mt-auto mb-8 px-6">
+              <NavLink onClick={() => setVisible(false)} className='block py-4 text-center text-sm uppercase tracking-widest bg-primary text-white rounded-md shadow-md' to='/login'>Login / Sign Up</NavLink>
+            </div>
           )}
         </div>
       </div>
