@@ -116,7 +116,7 @@ EMAIL_PASS=your_email_password
 
 ---
 
-## 📦 Installation & Setup
+## Installation & Setup
 
 ### Clone Repository
 
