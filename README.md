@@ -8,7 +8,7 @@ Built with modern technologies to ensure scalability, security, and smooth user 
 ### Live Features
 
 ### 👥 User Features
-- Select temple (supports multiple temples)
+- Select temple
 - Browse poojas based on selected temple
 - Select multiple poojas in one booking
 - Submit booking request (Admin approval required)
