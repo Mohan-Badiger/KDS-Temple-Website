@@ -16,7 +16,6 @@ Built with modern technologies to ensure scalability, security, and smooth user 
 - View assigned pooja date (selected by admin)
 - Download virtual pooja ticket after approval
 - Donation system
-- Annaprasad contribution system
 - Email OTP verification during signup
 - Secure login & authentication (Token-based)
 
