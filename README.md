@@ -76,7 +76,7 @@ Built with modern technologies to ensure scalability, security, and smooth user 
 
 ---
 
-## 🔐 Authentication Flow
+## Authentication Flow
 
 1. User enters Name + Email + Password
 2. Email OTP is sent (valid for 10 minutes)
@@ -86,7 +86,7 @@ Built with modern technologies to ensure scalability, security, and smooth user 
 
 ---
 
-## 🛕 Booking Flow
+## Booking Flow
 
 1. User selects temple
 2. Selects one or multiple poojas
