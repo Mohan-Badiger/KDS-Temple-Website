@@ -160,7 +160,6 @@ node server.js
 - Admin Analytics Charts
 - Role-Based Admin Access
 - Multi-language Support
-- Mobile App Version
 
 ---
 
