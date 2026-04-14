@@ -102,7 +102,7 @@ import menu_bar from '../assets/menu_bar.png';
 import cancel_bar from '../assets/cancel_bar.png';
 import { TempleContext } from '../context/TempleContext';
 import { toast } from 'react-toastify';
-import { Volume2, VolumeX, Menu, X, User } from 'lucide-react';
+import { Volume2, VolumeX, Menu, X, User, History, Settings, LogOut } from 'lucide-react';
 import UserDropdown from './User/UserDropdown';
 
 const Navbar = () => {
@@ -280,19 +280,32 @@ const Navbar = () => {
           </div>
 
           {token ? (
-            <div className="flex flex-col bg-white/30 backdrop-blur-sm mt-auto mb-10">
-              <div className="px-10 py-4 border-b border-stone-200">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-stone-400">User Account</p>
+            <div className="flex flex-col mt-auto mb-8 px-6">
+              <div className="bg-white rounded-xl shadow-lg border border-orange-100/50 overflow-hidden">
+                <div className="px-6 py-4 bg-orange-50/50 border-b border-orange-100 flex items-center gap-3">
+                   <div className="w-8 h-8 rounded-full bg-orange-200 flex items-center justify-center text-orange-600">
+                      <User size={16} />
+                   </div>
+                   <p className="text-[11px] uppercase tracking-[0.2em] font-semibold text-gray-800">Your Account</p>
+                </div>
+                <div className="flex flex-col">
+                  <NavLink onClick={() => setVisible(false)} className='flex items-center gap-4 px-6 py-4 text-sm text-gray-700 hover:bg-orange-50 transition-colors border-b border-stone-50' to='/myseva'>
+                    <History size={16} className="text-orange-400" /> <span className="uppercase tracking-widest text-[11px]">My Seva History</span>
+                  </NavLink>
+                  <NavLink onClick={() => setVisible(false)} className='flex items-center gap-4 px-6 py-4 text-sm text-gray-700 hover:bg-orange-50 transition-colors border-b border-stone-50' to='/profile'>
+                    <User size={16} className="text-orange-400" /> <span className="uppercase tracking-widest text-[11px]">My Profile</span>
+                  </NavLink>
+                  <NavLink onClick={() => setVisible(false)} className='flex items-center gap-4 px-6 py-4 text-sm text-gray-700 hover:bg-orange-50 transition-colors' to='/settings'>
+                    <Settings size={16} className="text-orange-400" /> <span className="uppercase tracking-widest text-[11px]">Account Settings</span>
+                  </NavLink>
+                </div>
+                <button
+                  onClick={() => { logout(); setVisible(false); }}
+                  className='w-full flex items-center gap-4 px-6 py-5 text-left text-sm text-red-500 hover:bg-red-50 transition-colors border-t border-stone-100 bg-stone-50/50'
+                >
+                  <LogOut size={16} className="text-red-400" /> <span className="uppercase tracking-widest font-bold text-[11px]">Logout</span>
+                </button>
               </div>
-              <NavLink onClick={() => setVisible(false)} className='py-4 pl-10 text-sm uppercase tracking-widest border-b border-stone-100' to='/myseva'>My Seva History</NavLink>
-              <NavLink onClick={() => setVisible(false)} className='py-4 pl-10 text-sm uppercase tracking-widest border-b border-stone-100' to='/profile'>My Profile</NavLink>
-              <NavLink onClick={() => setVisible(false)} className='py-4 pl-10 text-sm uppercase tracking-widest border-b border-stone-100' to='/settings'>Account Settings</NavLink>
-              <button
-                onClick={() => { logout(); setVisible(false); }}
-                className='py-6 pl-10 text-left text-sm uppercase tracking-widest text-red-500 font-bold bg-white/50 border-t border-stone-200'
-              >
-                Logout Account
-              </button>
             </div>
           ) : (
             <div className="mt-auto mb-8 px-6">
