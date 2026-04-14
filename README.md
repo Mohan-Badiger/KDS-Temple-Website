@@ -8,7 +8,7 @@ Built with modern technologies to ensure scalability, security, and smooth user 
 ### Live Features
 
 ### 👥 User Features
-- Select temple (supports multiple temples)
+- Select temple
 - Browse poojas based on selected temple
 - Select multiple poojas in one booking
 - Submit booking request (Admin approval required)
@@ -16,7 +16,6 @@ Built with modern technologies to ensure scalability, security, and smooth user 
 - View assigned pooja date (selected by admin)
 - Download virtual pooja ticket after approval
 - Donation system
-- Annaprasad contribution system
 - Email OTP verification during signup
 - Secure login & authentication (Token-based)
 
@@ -77,7 +76,7 @@ Built with modern technologies to ensure scalability, security, and smooth user 
 
 ---
 
-## 🔐 Authentication Flow
+## Authentication Flow
 
 1. User enters Name + Email + Password
 2. Email OTP is sent (valid for 10 minutes)
@@ -87,7 +86,7 @@ Built with modern technologies to ensure scalability, security, and smooth user 
 
 ---
 
-## 🛕 Booking Flow
+## Booking Flow
 
 1. User selects temple
 2. Selects one or multiple poojas
@@ -117,7 +116,7 @@ EMAIL_PASS=your_email_password
 
 ---
 
-## 📦 Installation & Setup
+## Installation & Setup
 
 ### Clone Repository
 
@@ -161,7 +160,6 @@ node server.js
 - Admin Analytics Charts
 - Role-Based Admin Access
 - Multi-language Support
-- Mobile App Version
 
 ---
 
