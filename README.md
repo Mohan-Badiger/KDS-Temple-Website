@@ -1,4 +1,4 @@
-# Temple Management & Pooja Booking System
+# Temple Management & Pooja Booking System (BNT Temples)
 
 A full-stack Temple Management Web Application designed to handle online pooja bookings, donations, annaprasad contributions, and admin operations with a secure approval workflow.
 
