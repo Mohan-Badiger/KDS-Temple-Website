@@ -28,16 +28,16 @@ const Footer = () => {
                     </div>
 
                     {/* Links & Connectivity (Structured Right) */}
-                    <div className="lg:w-7/12 grid grid-cols-1 sm:grid-cols-3 gap-12 sm:gap-8 lg:gap-12">
+                    <div className="lg:w-8/12 grid grid-cols-1 sm:grid-cols-3 gap-12 sm:gap-8">
                         {/* Sacred Services */}
                         <div>
                             <h4 className="text-[11px] uppercase tracking-[0.3em] text-gray-400 font-bold mb-8">Sacred Services</h4>
                             <ul className="space-y-4 text-sm font-medium">
                                 <li>
-                                    <Link to="/pooja" onClick={handleScrollTop} className="text-stone-600 hover:text-orange-500 transition-colors duration-300">E-Pooja Booking</Link>
+                                    <Link to="/temples" onClick={handleScrollTop} className="text-stone-600 hover:text-orange-500 transition-colors duration-300">E-Pooja Booking</Link>
                                 </li>
                                 <li>
-                                    <Link to="/donation" onClick={handleScrollTop} className="text-stone-600 hover:text-orange-500 transition-colors duration-300">Annasantoor</Link>
+                                    <Link to="/donation" onClick={handleScrollTop} className="text-stone-600 hover:text-orange-500 transition-colors duration-300">Donation</Link>
                                 </li>
                                 <li>
                                     <Link to="/gallery" onClick={handleScrollTop} className="text-stone-600 hover:text-orange-500 transition-colors duration-300">Divine Gallery</Link>
