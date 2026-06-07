@@ -6,14 +6,18 @@ import { motion } from "framer-motion";
 
 const About = () => {
   return (
-    <div className="font-primary min-h-screen">
+    <div className="font-primary min-h-screen pt-6 sm:pt-8 flex flex-col gap-0 pb-12">
       {/* Hero Section - Immersive & Premium */}
-      <section className="relative h-[60vh] flex items-center justify-center overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 scale-105"
-          style={{ backgroundImage: `url(${Hero_img})` }}
-        >
-          <div className="absolute inset-0 bg-gray-900/40 backdrop-blur-[2px]"></div>
+      <section className="relative rounded-sm overflow-hidden bg-stone-900 min-h-[16rem] sm:min-h-[20rem] lg:min-h-[24rem] flex items-center justify-center w-full px-6 sm:px-10 lg:px-14">
+        {/* Background Image Layer */}
+        <div className="absolute inset-0">
+          <img
+            src={Hero_img}
+            alt="Divine temple heritage banner"
+            className="absolute inset-0 h-full w-full object-cover opacity-40 scale-105 transition-transform duration-[2000ms]"
+            style={{ objectPosition: 'center 35%' }}
+          />
+          <div className="absolute inset-0 bg-stone-950/40 pointer-events-none"></div>
         </div>
 
         <div className="relative z-10 container mx-auto px-4 text-center">
@@ -21,14 +25,20 @@ const About = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
-            className="max-w-4xl mx-auto"
+            className="max-w-2xl mx-auto space-y-4"
           >
-            <span className="text-[10px] uppercase tracking-[0.5em] text-orange-400 font-bold mb-6 block">Divine Heritage</span>
-            <h1 className="text-3xl md:text-5xl lg:text-6xl text-white font-light leading-tight mb-8 drop-shadow-2xl">
-              Experience the Divine Legacy of <br />
-              <span className="font-medium text-orange-50">Shri Kadasiddeshwar Temple</span>
+            <span className="text-[9px] uppercase tracking-[0.4em] text-orange-400 font-bold block mb-1">Divine Heritage</span>
+            
+            <h1 className="font-cinzel tracking-wider text-stone-200">
+              <span className="block text-xs sm:text-sm md:text-base font-light uppercase tracking-[0.25em] mb-2">
+                Experience the Divine Legacy of
+              </span>
+              <span className="block text-xl sm:text-2xl md:text-3xl font-semibold text-orange-400 uppercase tracking-widest leading-snug">
+                Shri Kadasiddeshwar Temple
+              </span>
             </h1>
-            <p className="text-gray-200 text-sm md:text-lg font-light tracking-wide max-w-2xl mx-auto leading-relaxed border-t border-white/20 pt-8 italic">
+
+            <p className="text-[10px] sm:text-xs md:text-sm text-stone-300 font-light tracking-wide max-w-lg mx-auto leading-relaxed border-t border-white/10 pt-4 italic font-primary">
               "A Sacred Haven of Faith and Tradition, standing tall for generations."
             </p>
           </motion.div>
@@ -36,11 +46,14 @@ const About = () => {
       </section>
 
       {/* Main Content - Clean & Informative */}
-      <section className="py-20 bg-stone-50/30">
-        <div className="container mx-auto px-4 max-w-5xl">
-          <div className="mb-16 text-center">
-            <h2 className="text-sm uppercase tracking-[0.3em] text-stone-400 font-bold mb-2">Detailed History</h2>
-            <div className="w-12 h-[2px] bg-orange-500 mx-auto"></div>
+      <section className="py-12 md:py-16 bg-transparent border-t border-stone-100">
+        <div className="container mx-auto px-6 max-w-5xl">
+          <div className="mb-12 text-center">
+            <span className="text-[10px] uppercase tracking-[0.3em] text-orange-600 font-bold mb-2 block">Heritage & Lore</span>
+            <h2 className="text-3xl md:text-4xl font-light text-stone-950 font-cinzel tracking-wide mb-4">
+              Detailed History
+            </h2>
+            <div className="w-12 h-[1px] bg-stone-300 mx-auto"></div>
           </div>
 
           <div className="space-y-4">

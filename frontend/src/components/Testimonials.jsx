@@ -28,29 +28,30 @@ const testimonials = [
 
 const Testimonials = () => {
   return (
-    <section className="py-24 bg-stone-50/50 font-primary">
+    <section className="pt-6 pb-12 md:pt-8 md:pb-16 bg-stone-50/50 font-primary border-t border-stone-100">
       <div className="container mx-auto px-6 max-w-7xl">
+        
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-16 space-y-2.5">
           <motion.span 
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            className="text-[10px] uppercase tracking-[0.4em] text-orange-500 font-bold mb-4 block"
+            className="text-[10px] uppercase tracking-[0.4em] text-orange-600 font-bold block"
           >
             Devotee Stories
           </motion.span>
           <motion.h2 
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
-            className="text-3xl md:text-4xl font-light text-gray-900 tracking-tight"
+            className="text-3xl md:text-5xl font-light text-stone-950 font-cinzel tracking-wide"
           >
-            Voices of the <span className="font-medium">Faithful</span>
+            Voices of the Faithful
           </motion.h2>
-          <div className="w-12 h-[1px] bg-stone-300 mx-auto mt-6"></div>
+          <div className="w-12 h-[1px] bg-stone-300 mx-auto mt-4" aria-hidden="true"></div>
         </div>
 
         {/* Testimonials Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {testimonials.map((t, idx) => (
             <motion.div
               key={t.id}
@@ -58,35 +59,35 @@ const Testimonials = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1, duration: 0.6 }}
-              className="bg-white p-10 rounded-sm border border-stone-100 hover:border-orange-200 transition-all duration-500 group shadow-sm hover:shadow-md relative overflow-hidden"
+              className="bg-white p-8 border border-stone-200/60 rounded-sm hover:border-orange-500/20 hover:shadow-md transition-all duration-300 group relative overflow-hidden flex flex-col justify-between"
             >
               {/* Decorative Quote Icon */}
-              <div className="absolute top-[-20px] right-[-10px] text-stone-50 group-hover:text-orange-50/50 transition-colors duration-500" aria-hidden="true">
-                <Quote size={120} />
+              <div className="absolute top-[-15px] right-[-10px] text-stone-100/50 pointer-events-none" aria-hidden="true">
+                <Quote size={90} />
               </div>
 
-              <div className="relative z-10">
-                <div className="flex gap-1 mb-6" aria-hidden="true">
+              <div className="relative z-10 space-y-4">
+                <div className="flex gap-1" aria-hidden="true">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={14} className="fill-orange-400 text-orange-400" />
+                    <Star key={i} size={12} className="fill-orange-400 text-orange-400" />
                   ))}
                 </div>
 
-                <h3 className="text-xl font-medium text-gray-900 mb-4 leading-relaxed">
+                <h3 className="text-md font-semibold font-cinzel text-stone-900 leading-snug tracking-wide">
                   "{t.quote}"
                 </h3>
                 
-                <p className="text-stone-500 text-sm font-light leading-relaxed mb-8">
+                <p className="text-stone-500 text-xs sm:text-sm font-light leading-relaxed">
                   {t.content}
                 </p>
+              </div>
 
-                <div className="flex items-center justify-between border-t border-stone-50 pt-6">
-                  <div>
-                    <h4 className="text-sm font-bold text-gray-900 uppercase tracking-widest">{t.author}</h4>
-                    <p className="text-[10px] text-stone-400 uppercase tracking-wider">{t.location}</p>
-                  </div>
-                  <Heart size={16} className="text-stone-200 group-hover:text-orange-400 group-hover:fill-orange-400 transition-all duration-500" aria-hidden="true" />
+              <div className="relative z-10 flex items-center justify-between border-t border-stone-100 pt-6 mt-6">
+                <div>
+                  <h4 className="text-xs font-bold text-stone-950 uppercase tracking-widest">{t.author}</h4>
+                  <p className="text-[9px] text-stone-400 uppercase tracking-wider">{t.location}</p>
                 </div>
+                <Heart size={14} className="text-stone-200 group-hover:text-orange-500 group-hover:fill-orange-500 transition-colors" aria-hidden="true" />
               </div>
             </motion.div>
           ))}

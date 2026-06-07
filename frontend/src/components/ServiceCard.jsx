@@ -1,141 +1,118 @@
-import React, { useContext } from 'react'
-import seva from '/seva.svg'
-import donate from '/donate.png'
-import myseva from '/myseva.png'
-import { Link } from 'react-router-dom'
-import { TempleContext } from '../context/TempleContext'
-import { toast } from 'react-toastify'
+import React, { useContext } from 'react';
+import seva from '/seva.svg';
+import donate from '/donate.png';
+import myseva from '/myseva.png';
+import { TempleContext } from '../context/TempleContext';
+import { toast } from 'react-toastify';
+import { ChevronRight } from 'lucide-react';
 
 const ServiceCard = () => {
-
-    const {token, navigate} = useContext(TempleContext);
+    const { token, navigate } = useContext(TempleContext);
 
     const poojaClickHandler = () => {
-        if(token === localStorage.getItem('token')){
-         navigate('/temples');
-        }else{
+        if (token === localStorage.getItem('token')) {
+            navigate('/temples');
+        } else {
             toast.error("Please Login to Book Pooja");
         }
-    }
+    };
     const donationClickHandler = () => {
-        if(token === localStorage.getItem('token')){
-         navigate('/donation');
-        }else{
+        if (token === localStorage.getItem('token')) {
+            navigate('/donation');
+        } else {
             toast.error("Please Login For Donation");
         }
-    }
+    };
 
     const annaprasadClickHandler = () => {
-        if(token === localStorage.getItem('token')){
-         navigate('/myseva');
-        }else{
+        if (token === localStorage.getItem('token')) {
+            navigate('/myseva');
+        } else {
             toast.error("Please Login To Open MySeva");
         }
-    }
+    };
 
     return (
-        <div>
-            <div className="py-8">
-
-                <h1 className="text-3xl font-medium text-gray-700 text-center mt-6">
-                    E-Services
-                </h1>
-                <p className="text-center mt-4 text-lg font-light text-gray-500">
-                    Divine E-Services – Connecting You to Spiritual Bliss with Ease!
-                </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3">
-                <div className="px-3 py-8">
-                    <div
-                        className="bg-indigo-100 rounded-full w-16 h-16 flex justify-center items-center text-indigo-500 shadow-2xl"
-                    >
-                        <img src={seva} alt="" className='w-9' />
-                    </div>
-                    <h2 className="uppercase mt-6 font-medium mb-3">
-                        Pooja's
+        <section className="w-full pt-6 pb-6 md:pt-8 md:pb-8 font-primary text-stone-900 border-t border-stone-100 bg-white">
+            <div className="container mx-auto px-6 max-w-7xl">
+                
+                {/* Header */}
+                <div className="text-center mb-16 space-y-3">
+                    <h2 className="text-3xl md:text-5xl font-light text-stone-950 font-cinzel tracking-wide">
+                        E-Services
                     </h2>
-                    <p className="font-light text-sm text-gray-500 mb-3">
-                        The Pooja Module enables devotees to seamlessly book poojas like Abhishek, Kumkum Pooja, Belli Pooja, and Butti Pooja online,
-                        ensuring a hassle-free and spiritually fulfilling experience.
+                    <p className="text-stone-500 text-sm max-w-lg mx-auto font-light leading-relaxed">
+                        Divine E-Services – Connecting You to Spiritual Bliss with Ease!
                     </p>
-                    <button className="text-indigo-500 flex items-center hover:text-indigo-600 hover:opacity-70 cursor-pointer" onClick={poojaClickHandler} >    
-                        Book Pooja
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
+                </div>
+
+                {/* Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 lg:gap-12">
+                    
+                    {/* Pooja Card */}
+                    <div className="flex flex-col items-center text-center md:items-start md:text-left space-y-4 p-6 bg-stone-50/40 border border-stone-100 rounded-sm hover:shadow-md hover:border-orange-500/15 transition-all duration-300">
+                        <div className="bg-indigo-100 rounded-full w-14 h-14 flex justify-center items-center text-indigo-500 shadow-lg shrink-0">
+                            <img src={seva} alt="Seva Pooja" className="w-8 h-8 object-contain" />
+                        </div>
+                        <h3 className="uppercase text-lg font-semibold font-cinzel text-stone-900 tracking-wider">
+                            Pooja's
+                        </h3>
+                        <p className="text-xs text-stone-500 leading-relaxed font-light">
+                            The Pooja Module enables devotees to seamlessly book poojas like Abhishek, Kumkum Pooja, Belli Pooja, and Butti Pooja online, ensuring a hassle-free and spiritually fulfilling experience.
+                        </p>
+                        <button 
+                            className="text-indigo-600 flex items-center gap-1.5 hover:text-indigo-800 font-semibold text-xs tracking-wider uppercase cursor-pointer pt-2 group" 
+                            onClick={poojaClickHandler} 
+                        >    
+                            <span>Book Pooja</span>
+                            <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+                        </button>
+                    </div>
+
+                    {/* Donation Card */}
+                    <div className="flex flex-col items-center text-center md:items-start md:text-left space-y-4 p-6 bg-stone-50/40 border border-stone-100 rounded-sm hover:shadow-md hover:border-orange-500/15 transition-all duration-300">
+                        <div className="bg-red-100 rounded-full w-14 h-14 flex justify-center items-center text-red-500 shadow-lg shrink-0">
+                            <img src={donate} alt="Donation" className="w-8 h-8 object-contain" />
+                        </div>
+                        <h3 className="uppercase text-lg font-semibold font-cinzel text-stone-900 tracking-wider">
+                            Donations
+                        </h3>
+                        <p className="text-xs text-stone-500 leading-relaxed font-light">
+                            The Donation Module provides a secure and transparent platform for devotees to contribute towards temple development, renovations, and maintenance, ensuring the preservation of spiritual and cultural heritage.
+                        </p>
+                        <button 
+                            className="text-red-600 flex items-center gap-1.5 hover:text-red-800 font-semibold text-xs tracking-wider uppercase cursor-pointer pt-2 group"  
+                            onClick={donationClickHandler}
                         >
-                            <path
-                                fillRule="evenodd"
-                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                clipRule="evenodd"
-                            />
-                        </svg>
-                    </button>
-                </div>
-
-                <div className="px-3 py-8">
-                    <div
-                        className="bg-red-100 rounded-full w-16 h-16 flex justify-center items-center text-red-500 shadow-2xl"
-                    >
-                        <img src={donate} alt="Donation Icon" className='w-9' width="36" height="36" />
+                            <span>Donate Now</span>
+                            <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+                        </button>
                     </div>
-                    <h2 className="uppercase mt-6 font-medium mb-3">
-                        Donations
-                    </h2>
-                    <p className="font-light text-sm text-gray-500 mb-3">
-                        The Donation Module provides a secure and transparent platform for devotees to contribute towards temple development, renovations, and maintenance, ensuring the preservation of spiritual and cultural heritage.
-                    </p>
-                    <a className="text-indigo-500 flex items-center hover:text-indigo-600 hover:opacity-70 cursor-pointer"  onClick={donationClickHandler}>
-                        Donate Now
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
+
+                    {/* My Seva Card */}
+                    <div className="flex flex-col items-center text-center md:items-start md:text-left space-y-4 p-6 bg-stone-50/40 border border-stone-100 rounded-sm hover:shadow-md hover:border-orange-500/15 transition-all duration-300">
+                        <div className="bg-green-100 rounded-full w-14 h-14 flex justify-center items-center text-green-500 shadow-lg shrink-0">
+                            <img src={myseva} alt="My Seva" className="w-8 h-8 object-contain" />
+                        </div>
+                        <h3 className="uppercase text-lg font-semibold font-cinzel text-stone-900 tracking-wider">
+                            My Seva
+                        </h3>
+                        <p className="text-xs text-stone-500 leading-relaxed font-light">
+                            Track your spiritual journey and contributions. This section allows you to view your pooja bookings and manage your donations, providing a complete record of your temple activities in one place.
+                        </p>
+                        <button 
+                            className="text-green-600 flex items-center gap-1.5 hover:text-green-800 font-semibold text-xs tracking-wider uppercase cursor-pointer pt-2 group" 
+                            onClick={annaprasadClickHandler}
                         >
-                            <path
-                                fillRule="evenodd"
-                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                clipRule="evenodd"
-                            />
-                        </svg>
-                    </a>
-                </div>
-
-                <div className="px-3 py-8">
-                    <div
-                        className="bg-green-100 rounded-full w-16 h-16 flex justify-center items-center text-green-500 shadow-2xl"
-                    >
-                        <img src={myseva} alt="" className='w-10' />
+                            <span>My Seva's</span>
+                            <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+                        </button>
                     </div>
-                    <h2 className="uppercase mt-6 font-medium mb-3">
-                        My Seva
-                    </h2>
-                    <p className="font-light text-sm text-gray-500 mb-3">
-                        Track your spiritual journey and contributions. This section allows you to view your pooja bookings and manage your donations, providing a complete record of your temple activities in one place.
-                    </p>
-                    <a className="text-indigo-500 flex items-center hover:text-indigo-600 hover:opacity-70 cursor-pointer" onClick={annaprasadClickHandler}>
-                        My Seva's
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5"
-                            viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path
-                                fillRule="evenodd"
-                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                clipRule="evenodd"
-                            />
-                        </svg>
-                    </a>
+
                 </div>
-
             </div>
-        </div>
-    )
-}
+        </section>
+    );
+};
 
-export default ServiceCard
+export default ServiceCard;

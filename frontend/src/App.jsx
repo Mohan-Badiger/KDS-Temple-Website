@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Universal Lazy Loading for Performance
 import Home from './pages/Home';
@@ -40,8 +41,16 @@ const PoojaContent = () => {
 const App = () => {
   return (
     <>
-      <ToastContainer autoClose={2000} position="top-right" />
-      <div className='px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] bg-gradient-to-br from-yellow-100 via-gray-200 to-yellow-100 min-h-screen flex flex-col'>
+      <ToastContainer 
+        autoClose={2000} 
+        position="top-right" 
+        hideProgressBar={true} 
+        newestOnTop={true} 
+        closeOnClick 
+        pauseOnHover 
+        theme="light"
+      />
+      <div className='px-4 sm:px-[3vw] md:px-[4vw] lg:px-[5vw] bg-gradient-to-br from-amber-50/30 via-stone-100 to-stone-50 min-h-screen flex flex-col'>
         <Navbar />
         <ScrollToTop />
         <main className="flex-grow">
