@@ -13,7 +13,7 @@ import adminAuth from "../middleware/adminAuth.js";
 const router = express.Router();
 
 router.post("/create", authMiddleware, createBooking);
-router.get("/all", getAllBookings);
+router.get("/all", adminAuth, getAllBookings);
 router.get("/latest", authMiddleware, getLatestBooking);
 router.get("/my-bookings", authMiddleware, getMyBookings);
 router.get("/today", adminAuth, getTodayBookings);

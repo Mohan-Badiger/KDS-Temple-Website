@@ -9,8 +9,8 @@ poojaRouter.get('/all', allPoojas);
 poojaRouter.put('/update-availability', adminAuth, updatePoojaAvailability);
 poojaRouter.put('/bulk-update-availability', adminAuth, bulkUpdatePoojaAvailability);
 poojaRouter.get('/:id', getPoojaById); 
-poojaRouter.post('/add', upload.single('image'), addPooja);
-poojaRouter.delete('/remove/:id', removePooja);
-poojaRouter.put('/update/:id', upload.single('image'), updatePooja); 
+poojaRouter.post('/add', adminAuth, upload.single('image'), addPooja);
+poojaRouter.delete('/remove/:id', adminAuth, removePooja);
+poojaRouter.put('/update/:id', adminAuth, upload.single('image'), updatePooja); 
 
 export default poojaRouter;
