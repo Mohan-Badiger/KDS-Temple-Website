@@ -1,9 +1,24 @@
 import nodemailer from 'nodemailer';
 import Donation from '../models/donationModel.js';
+import verifyRazorpaySignature from '../utils/verifyPayment.js';
+import RazorpayService from '../services/razorpayService.js';
+import { escapeHtml } from '../utils/escapeHtml.js';
 
 export const donateController = async (req, res) => {
   try {
-    const { firstName, lastName, phone, amount, message, email: bodyEmail, templeId } = req.body;
+    const { 
+      firstName, 
+      lastName, 
+      phone, 
+      amount, 
+      message, 
+      email: bodyEmail, 
+      templeId,
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature
+    } = req.body;
+    
     const email = bodyEmail || (req.user ? req.user.email : null); 
 
     if (!firstName || !lastName || !phone || !email || !templeId || amount < 1) {
@@ -13,15 +28,43 @@ export const donateController = async (req, res) => {
       });
     }
 
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return res.status(400).json({ success: false, message: 'Payment transaction details missing' });
+    }
+
+    // 1. Verify Razorpay Signature
+    const isSignatureValid = verifyRazorpaySignature(razorpay_payment_id, razorpay_order_id, razorpay_signature);
+    if (!isSignatureValid) {
+      return res.status(400).json({ success: false, message: 'Invalid payment signature' });
+    }
+
+    // 2. Fetch Razorpay Order and Verify Amount
+    const orderDetails = await RazorpayService.fetchOrder(razorpay_order_id);
+    if (orderDetails.amount !== amount * 100) {
+      return res.status(400).json({ success: false, message: 'Payment amount verification failed' });
+    }
+
+    // 3. Prevent duplicate donations
+    const duplicateDonation = await Donation.findOne({ paymentId: razorpay_payment_id });
+    if (duplicateDonation) {
+      return res.status(400).json({ success: false, message: 'This donation transaction has already been recorded' });
+    }
+
+    const escapedFirstName = escapeHtml(firstName);
+    const escapedLastName = escapeHtml(lastName);
+    const escapedMessage = escapeHtml(message);
+
     // Save the donation
     const donation = await Donation.create({
-      firstName,
-      lastName,
+      firstName: escapedFirstName,
+      lastName: escapedLastName,
       email,
       phone,
       amount,
-      message,
+      message: escapedMessage,
       temple: templeId,
+      paymentId: razorpay_payment_id,
+      orderId: razorpay_order_id,
     });
 
     const formattedDate = donation.createdAt.toLocaleString('en-IN', {
@@ -48,17 +91,18 @@ export const donateController = async (req, res) => {
   <div style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); padding: 30px;">
     <h2 style="color: #fb923c; text-align: center;">Thank You for Your Donation!</h2>
 
-    <p style="font-size: 16px; color: #333;">Dear <strong>${firstName} ${lastName}</strong>,</p>
+    <p style="font-size: 16px; color: #333;">Dear <strong>${escapedFirstName} ${escapedLastName}</strong>,</p>
 
     <p style="font-size: 16px; color: #555;">
       We are truly grateful for your generous contribution to Kadasiddeshwar Temple. Your donation helps us continue our spiritual services and temple activities.
     </p>
 
-    <p style="font-size: 16px; color: #555;"><strong>Donor Name:</strong> ${firstName} ${lastName}</p>
-    <p style="font-size: 16px; color: #555;"><strong>Email:</strong> ${email}</p>
-    <p style="font-size: 16px; color: #555;"><strong>Phone:</strong> ${phone}</p>
+    <p style="font-size: 16px; color: #555;"><strong>Donor Name:</strong> ${escapedFirstName} ${escapedLastName}</p>
+    <p style="font-size: 16px; color: #555;"><strong>Email:</strong> ${escapeHtml(email)}</p>
+    <p style="font-size: 16px; color: #555;"><strong>Phone:</strong> ${escapeHtml(phone)}</p>
     <p style="font-size: 16px; color: #555;"><strong>Donation Amount:</strong> ₹${amount}</p>
-    <p style="font-size: 16px; color: #555;"><strong>Message:</strong> ${message || 'No message provided.'}</p>
+    <p style="font-size: 16px; color: #555;"><strong>Message:</strong> ${escapedMessage || 'No message provided.'}</p>
+    <p style="font-size: 16px; color: #555;"><strong>Payment ID:</strong> ${escapeHtml(razorpay_payment_id)}</p>
     <p style="font-size: 16px; color: #555;"><strong>Date & Time:</strong> ${formattedDate}</p>
 
     <p style="margin-top: 30px; font-size: 16px; color: #555;">
@@ -72,14 +116,13 @@ export const donateController = async (req, res) => {
     </p>
   </div>
 </div>
-
       `,
     });
 
     res.json({ success: true, message: 'Donation recorded & confirmation email sent.' });
   } catch (err) {
     console.error('Donation error:', err);
-    res.status(500).json({ success: false, message: 'Server error. Please try again.' });
+    res.status(500).json({ success: false, message: 'Server error. Failed to record donation.' });
   }
 };
 

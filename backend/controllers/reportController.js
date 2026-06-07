@@ -107,7 +107,7 @@ export const getDashboardSummary = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-        res.json({ success: false, message: error.message });
+        res.status(500).json({ success: false, message: "Server error. Failed to retrieve dashboard summary." });
     }
 };
 
@@ -156,7 +156,7 @@ export const getAnalyticsDetails = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-        res.json({ success: false, message: error.message });
+        res.status(500).json({ success: false, message: "Server error. Failed to retrieve analytics breakdown." });
     }
 };
 
@@ -212,7 +212,7 @@ export const getTrends = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-        res.json({ success: false, message: error.message });
+        res.status(500).json({ success: false, message: "Server error. Failed to retrieve trend analytics." });
     }
 };
 
@@ -265,7 +265,7 @@ export const getDashboardTransactions = async (req, res) => {
             donations: donations.map(d => ({
                 id: d._id,
                 date: d.createdAt,
-                donor: d.name || "Anonymous",
+                donor: `${d.firstName || ''} ${d.lastName || ''}`.trim() || "Anonymous",
                 temple: d.temple?.name || "Temple Trust",
                 amount: d.amount,
                 phone: d.phone || "N/A",
@@ -275,6 +275,6 @@ export const getDashboardTransactions = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-        res.json({ success: false, message: error.message });
+        res.status(500).json({ success: false, message: "Server error. Failed to retrieve dashboard transactions." });
     }
 };

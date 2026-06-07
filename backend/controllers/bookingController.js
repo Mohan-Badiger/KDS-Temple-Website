@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import BookingModel from "../models/bookingModel.js";
 import PoojaModel from "../models/poojaModel.js";
 import nodemailer from 'nodemailer';
+import verifyRazorpaySignature from '../utils/verifyPayment.js';
+import { escapeHtml } from '../utils/escapeHtml.js';
 
 // Setup nodemailer transporter
 const transporter = nodemailer.createTransport({
@@ -15,7 +17,16 @@ const transporter = nodemailer.createTransport({
 
 export const createBooking = async (req, res) => {
   try {
-    const { poojas, totalAmount, poojaInNameOf, poojaDate, templeId } = req.body;
+    const { 
+      poojas, 
+      totalAmount, 
+      poojaInNameOf, 
+      poojaDate, 
+      templeId,
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature 
+    } = req.body;
     const userId = req.user.id;
 
     if (!userId) {
@@ -30,11 +41,33 @@ export const createBooking = async (req, res) => {
       return res.status(400).json({ success: false, message: "Temple ID is required" });
     }
 
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return res.status(400).json({ success: false, message: "Payment transaction details missing" });
+    }
+
+    // 1. Verify Razorpay Signature
+    const isSignatureValid = verifyRazorpaySignature(razorpay_payment_id, razorpay_order_id, razorpay_signature);
+    if (!isSignatureValid) {
+      return res.status(400).json({ success: false, message: "Invalid payment signature" });
+    }
+
+    // 2. Fetch Razorpay Order and Verify Amount Matches
+    const orderDetails = await RazorpayService.fetchOrder(razorpay_order_id);
+    if (orderDetails.amount !== totalAmount * 100) {
+      return res.status(400).json({ success: false, message: "Payment amount verification failed" });
+    }
+
+    // 3. Prevent duplicate bookings by paymentId
+    const duplicateBooking = await BookingModel.findOne({ paymentId: razorpay_payment_id });
+    if (duplicateBooking) {
+      return res.status(400).json({ success: false, message: "This booking has already been recorded" });
+    }
+
     // Check availability (Server-side validation)
     const [day, month, year] = poojaDate.split("-");
     const isoDateStr = `${year}-${month}-${day}`; // YYYY-MM-DD
 
-    // 1. Check Temple-wide restrictions (Festival/Closure)
+    // Check Temple-wide restrictions (Festival/Closure)
     const temple = await mongoose.model("Temple").findById(templeId);
     if (temple?.unavailableDates?.includes(isoDateStr)) {
       return res.status(400).json({ 
@@ -43,7 +76,7 @@ export const createBooking = async (req, res) => {
       });
     }
 
-    // 2. Check Service-specific restrictions
+    // Check Service-specific restrictions
     const poojasData = await PoojaModel.find({ _id: { $in: poojas } });
     for (const pooja of poojasData) {
       const templeConfig = pooja.temples.find(t => (t.templeId?._id || t.templeId).toString() === templeId);
@@ -55,21 +88,19 @@ export const createBooking = async (req, res) => {
       }
     }
 
-    // Amount in paise for Razorpay
-    const razorpayOrder = await RazorpayService.createOrder(totalAmount * 100);
-
     const formattedDate = new Date(`${year}-${month}-${day}`);
+    const escapedDevoteeName = escapeHtml(poojaInNameOf);
 
     const booking = new BookingModel({
       user: userId,
       temple: templeId,
       poojas,
       totalAmount,
-      poojaInNameOf,
+      poojaInNameOf: escapedDevoteeName,
       poojaDate: formattedDate,
-      status: "confirmed", // Instant confirmation
-      receiptId: razorpayOrder.receipt,
-      paymentId: razorpayOrder.id,
+      status: "confirmed",
+      receiptId: orderDetails.receipt,
+      paymentId: razorpay_payment_id,
       paymentMethod: "Razorpay",
     });
 
@@ -82,7 +113,7 @@ export const createBooking = async (req, res) => {
       .populate("poojas", "name price");
 
     // Send confirmation email
-    const poojaList = populatedBooking.poojas.map((p) => `<li style="margin-bottom: 8px;"><strong>${p.name}</strong> <span style="color: #f97316;">(₹${p.price})</span></li>`).join("");
+    const poojaList = populatedBooking.poojas.map((p) => `<li style="margin-bottom: 8px;"><strong>${escapeHtml(p.name)}</strong> <span style="color: #f97316;">(₹${p.price})</span></li>`).join("");
     const mailOptions = {
       from: `"Banahatti Temples Trust" <${process.env.EMAIL_USER}>`,
       to: populatedBooking.user.email,
@@ -98,7 +129,7 @@ export const createBooking = async (req, res) => {
           <!-- Body -->
           <div style="padding: 40px 30px; background-color: #ffffff;">
             <p style="margin: 0 0 30px; font-size: 15px; color: #4b5563; text-align: center; line-height: 1.6;">
-              Namaskara <strong>${populatedBooking.user.name}</strong>,<br/> Your divine reservation has been successfully secured.
+              Namaskara <strong>${escapeHtml(populatedBooking.user.name)}</strong>,<br/> Your divine reservation has been successfully secured.
             </p>
             
             <div style="background-color: #f9fafb; border: 1px solid #f3f4f6; border-radius: 6px; padding: 25px; margin-bottom: 30px;">
@@ -106,7 +137,7 @@ export const createBooking = async (req, res) => {
                 <tr>
                   <td width="50%" valign="top">
                     <p style="margin: 0 0 5px; font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px;">Devotee Details</p>
-                    <p style="margin: 0; font-size: 15px; font-weight: 600;">${poojaInNameOf}</p>
+                    <p style="margin: 0; font-size: 15px; font-weight: 600;">${escapeHtml(booking.poojaInNameOf)}</p>
                     <p style="margin: 5px 0 0; font-size: 11px; color: #6b7280; font-style: italic;">Pooja in the name of</p>
                   </td>
                   <td width="50%" valign="top" style="text-align: right;">
@@ -115,18 +146,18 @@ export const createBooking = async (req, res) => {
                   </td>
                 </tr>
               </table>
-
+ 
               <div style="margin-bottom: 25px;">
                 <p style="margin: 0 0 5px; font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px;">Temple Destination</p>
-                <p style="margin: 0; font-size: 16px; font-weight: 600; color: #111827;">${populatedBooking.temple.name}</p>
-                <p style="margin: 4px 0 0; font-size: 13px; color: #6b7280;">${populatedBooking.temple.location}</p>
+                <p style="margin: 0; font-size: 16px; font-weight: 600; color: #111827;">${escapeHtml(populatedBooking.temple.name)}</p>
+                <p style="margin: 4px 0 0; font-size: 13px; color: #6b7280;">${escapeHtml(populatedBooking.temple.location)}</p>
               </div>
-
+ 
               <div style="margin-bottom: 5px;">
                 <p style="margin: 0 0 10px; font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px;">Selected Services</p>
                 <ul style="margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.6; color: #374151;">${poojaList}</ul>
               </div>
-
+ 
               <div style="border-top: 2px dashed #e5e7eb; margin: 25px 0 0; padding-top: 20px;">
                 <table width="100%" cellpadding="0" cellspacing="0">
                   <tr>
@@ -136,13 +167,13 @@ export const createBooking = async (req, res) => {
                 </table>
               </div>
             </div>
-
+ 
             <div style="background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 6px; padding: 15px; font-size: 12px; color: #6b7280; line-height: 1.8; margin-bottom: 35px; text-align: center;">
               <p style="margin: 0;"><strong>Payment ID:</strong> ${booking.paymentId || "rzp_verified"}</p>
               <p style="margin: 0;"><strong>Order ID:</strong> ${booking.receiptId || "N/A"}</p>
               <p style="margin: 0;"><strong>Booking Ref:</strong> #${populatedBooking._id}</p>
             </div>
-
+ 
             <p style="text-align: center; margin: 0; font-size: 16px; font-style: italic; color: #d97706; font-weight: 500; line-height: 1.5;">
               "May the continuous flow of divine grace illuminate your path and bring profound peace."
             </p>
@@ -161,12 +192,11 @@ export const createBooking = async (req, res) => {
     res.status(201).json({
       success: true,
       message: "Booking confirmed successfully",
-      booking,
-      razorpayOrder,
+      booking
     });
   } catch (error) {
     console.error("Create Booking Error:", error);
-    res.status(500).json({ success: false, message: "Server error", error: error.message });
+    res.status(500).json({ success: false, message: "Server error. Failed to confirm booking." });
   }
 };
 
@@ -180,7 +210,7 @@ export const getMyBookings = async (req, res) => {
 
     res.json({ success: true, bookings });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: "Server error. Failed to retrieve bookings." });
   }
 };
 
@@ -193,7 +223,7 @@ export const getAllBookings = async (req, res) => {
       .sort({ createdAt: -1 });
     res.json({ success: true, bookings });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: "Server error. Failed to retrieve bookings." });
   }
 };
 
@@ -206,7 +236,7 @@ export const getLatestBooking = async (req, res) => {
       .sort({ createdAt: -1 });
     res.json({ success: true, booking });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: "Server error. Failed to retrieve latest booking." });
   }
 };
 
@@ -230,7 +260,7 @@ export const getTodayBookings = async (req, res) => {
     res.json({ success: true, bookings });
   } catch (error) {
     console.error("Fetch Today Bookings Error:", error);
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: "Server error. Failed to retrieve today's bookings." });
   }
 };
 
@@ -252,6 +282,6 @@ export const updateBookingStatus = async (req, res) => {
     res.json({ success: true, message: "Status updated successfully", booking });
   } catch (error) {
     console.error("Update Booking Status Error:", error);
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: "Server error. Failed to update status." });
   }
 };
