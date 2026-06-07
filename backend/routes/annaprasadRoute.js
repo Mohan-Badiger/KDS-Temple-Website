@@ -1,13 +1,14 @@
 import express from 'express';
 import { donateAnnaprasad, getAllAnnaprasads } from '../controllers/annaprasadController.js';
 import authMiddleware from '../middleware/authMiddleware.js';
+import adminAuth from '../middleware/adminAuth.js';
 
 const router = express.Router();
 
-// Public route to donate (can be auth-protected if needed)
-router.post('/donate', donateAnnaprasad);
+// Protected route to donate
+router.post('/donate', authMiddleware, donateAnnaprasad);
 
 // Admin route to get all annaprasad records
-router.get('/annaprasads', getAllAnnaprasads);
+router.get('/annaprasads', adminAuth, getAllAnnaprasads);
 
 export default router;

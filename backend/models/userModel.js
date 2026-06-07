@@ -18,6 +18,12 @@ const userSchema = new mongoose.Schema({
   // For password reset
   resetOtp: { type: String },
   resetOtpExpiry: { type: Number },
+
+  // OTP brute-force protection
+  verifyOtpAttempts: { type: Number, default: 0 },
+  resetOtpAttempts: { type: Number, default: 0 },
+  otpLockoutUntil: { type: Date },
+
   // Admin Notes
   notes: { type: String, trim: true, default: '' },
 },
