@@ -57,7 +57,7 @@ const requestAdminOtp = async (req, res) => {
     return res.json({ success: true, message: "OTP sent to your admin email" });
   } catch (err) {
     console.error("Admin OTP Error:", err);
-    return res.json({ success: false, message: err.message });
+    return res.status(500).json({ success: false, message: "Server error. Failed to send OTP." });
   }
 };
 
@@ -103,13 +103,13 @@ const verifyAdminOtp = async (req, res) => {
     const token = jwt.sign(
       { email: admin.email, role: "admin" },
       process.env.JWT_SECRET,
-      { expiresIn: "1d" } // 1 day session
+      { expiresIn: "2h" } // 2 hours session
     );
 
     return res.json({ success: true, token, message: "Login successful" });
   } catch (err) {
     console.error("Admin Verify Error:", err);
-    return res.json({ success: false, message: err.message });
+    return res.status(500).json({ success: false, message: "Server error. Verification failed." });
   }
 };
 
@@ -122,7 +122,7 @@ const getNotifications = async (req, res) => {
     return res.json({ success: true, notifications });
   } catch (err) {
     console.error("Fetch Notifications Error:", err);
-    return res.json({ success: false, message: err.message });
+    return res.status(500).json({ success: false, message: "Server error. Failed to retrieve notifications." });
   }
 };
 
@@ -136,7 +136,7 @@ const clearNotification = async (req, res) => {
     return res.json({ success: true, message: "Notification cleared" });
   } catch (err) {
     console.error("Clear Notification Error:", err);
-    return res.json({ success: false, message: err.message });
+    return res.status(500).json({ success: false, message: "Server error. Failed to clear notification." });
   }
 };
 
