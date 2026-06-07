@@ -19,7 +19,7 @@ const DonationManage = () => {
       try {
         const [donationsRes, templesRes] = await Promise.all([
           axios.get(`${backendUrl}/api/donations/donations`),
-          axios.get(`${backendUrl}/api/temple/all`)
+          axios.get(`${backendUrl}/api/temple/list`)
         ]);
 
         if (donationsRes.data.success) {

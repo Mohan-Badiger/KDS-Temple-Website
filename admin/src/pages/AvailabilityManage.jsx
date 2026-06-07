@@ -16,7 +16,7 @@ const AvailabilityManage = () => {
 
     const fetchTemples = async () => {
         try {
-            const res = await axios.get(`${backendUrl}/api/temple/all`);
+            const res = await axios.get(`${backendUrl}/api/temple/list`);
             if (res.data.success) {
                 setTemples(res.data.temples);
                 // Sync selected temples if they were already selected

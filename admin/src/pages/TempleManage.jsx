@@ -14,7 +14,7 @@ const TempleManage = () => {
 
     const fetchTemples = async () => {
         try {
-            const response = await axios.get(`${backendUrl}/api/temple/all`);
+            const response = await axios.get(`${backendUrl}/api/temple/list`);
             if (response.data.success) {
                 setTemples(response.data.temples);
             }
