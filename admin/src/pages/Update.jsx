@@ -29,7 +29,7 @@ const Update = () => {
       try {
         const [poojaRes, templesRes] = await Promise.all([
           axios.get(`${backendUrl}/api/pooja/${id}`),
-          axios.get(`${backendUrl}/api/temple/all`)
+          axios.get(`${backendUrl}/api/temple/list`)
         ]);
 
         if (poojaRes.data.success) {

@@ -55,7 +55,7 @@ const Dashboard = () => {
         axios.get(`${backendUrl}/api/reports/summary`, { headers }),
         axios.get(`${backendUrl}/api/reports/analytics`, { headers }),
         axios.get(`${backendUrl}/api/reports/trend`, { headers }),
-        axios.get(`${backendUrl}/api/temple/all`, { headers }),
+        axios.get(`${backendUrl}/api/temple/list`, { headers }),
         axios.get(`${backendUrl}/api/user/admin/stats`, { headers })
       ]);
 
