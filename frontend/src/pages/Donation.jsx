@@ -200,6 +200,9 @@ const Donation = () => {
                 message: enrichedMessage,
                 date: new Date().toISOString(),
                 templeId,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
               };
 
               const donationEndpoint = purpose === 'Annadanam' ? '/api/annaprasads/donate' : '/api/donations/donate';
@@ -408,7 +411,7 @@ const Donation = () => {
                       className={`text-left px-4 py-3 border rounded-sm transition-colors text-base
                         ${templeId === t._id
                           ? 'border-primary bg-orange-50 text-primary font-medium'
-                          : 'border-gray-200 bg-transparent border-gray-300 text-gray-700'
+                          : 'border-gray-200 bg-transparent text-gray-700'
                         }`}
                     >
                       <div className="text-md font uppercase">{t.name}</div>
@@ -433,7 +436,7 @@ const Donation = () => {
                       className={`text-left px-4 py-3 border rounded-sm transition-colors text-base
                         ${purpose === cat
                           ? 'border-primary bg-orange-50 text-primary font-medium'
-                          : 'border-gray-200 bg-transparent border-gray-300 text-gray-700'
+                          : 'border-gray-200 bg-transparent text-gray-700'
                         }`}
                     >
                       {cat}

@@ -12,7 +12,6 @@ import {
   updateProfile,
   getAllUsersAdmin,
   getUserDetailsAdmin,
-  addUserManual,
   updateUserNote,
   getUserStats
 } from '../controllers/userController.js';
@@ -39,7 +38,6 @@ router.put('/update-profile', authMiddleware, upload.single('profileImage'), upd
 // ===== Admin User Management =====
 router.get('/admin/all', adminAuth, getAllUsersAdmin);
 router.get('/admin/details/:userId', adminAuth, getUserDetailsAdmin);
-router.post('/admin/add', adminAuth, addUserManual);
 router.post('/admin/update-note', adminAuth, updateUserNote);
 router.get('/admin/stats', adminAuth, getUserStats);
 

@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 import Contact from '../models/contactModel.js';
 import Notification from '../models/notificationModel.js';
+import { escapeHtml } from '../utils/escapeHtml.js';
 
 const contactMail = async (req, res) => {
     const { name, email, message } = req.body;
@@ -10,15 +11,18 @@ const contactMail = async (req, res) => {
     }
 
     try {
+        const escapedName = escapeHtml(name);
+        const escapedMessage = escapeHtml(message);
+
         // 1. Save Contact to DB
-        const newContact = new Contact({ name, email, message });
+        const newContact = new Contact({ name: escapedName, email, message: escapedMessage });
         await newContact.save();
 
         // 2. Create Notification for Admin
         const newNotification = new Notification({
             type: 'contact',
-            title: `New Contact Request from ${name}`,
-            message: message.substring(0, 100) + (message.length > 100 ? '...' : ''),
+            title: `New Contact Request from ${escapedName}`,
+            message: escapedMessage.substring(0, 100) + (escapedMessage.length > 100 ? '...' : ''),
             referenceId: newContact._id
         });
         await newNotification.save();
@@ -42,12 +46,12 @@ const contactMail = async (req, res) => {
             </tr>
             <tr>
               <td style="padding: 20px;">
-                <h2 style="color: #7a5230;">Dear ${name},</h2>
+                <h2 style="color: #7a5230;">Dear ${escapedName},</h2>
                 <p style="font-size: 16px; line-height: 1.6;">
                   Thank you for reaching out to us. Your message has been received, and we will respond to you soon.
                 </p>
                 <p style="background: #FFDBA2; padding: 15px; border-left: 5px solid #E38C00; font-style: italic;">
-                  "${message}"
+                  "${escapedMessage}"
                 </p>
                 <p>May divine blessings be with you always. 🙏</p>
                 <hr style="border: 1px solid #ddd;" />

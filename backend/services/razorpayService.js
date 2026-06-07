@@ -19,4 +19,11 @@ const createOrder = async (amount) => {
   return await razorpay.orders.create(options);
 };
 
-export default { createOrder };
+const fetchOrder = async (orderId) => {
+  if (!orderId) {
+    throw new Error("Order ID is required");
+  }
+  return await razorpay.orders.fetch(orderId);
+};
+
+export default { createOrder, fetchOrder };

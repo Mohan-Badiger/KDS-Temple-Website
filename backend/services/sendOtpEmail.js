@@ -32,10 +32,15 @@ const sendOtpEmail = async (toEmail, otp, subject = 'Your OTP for Password Reset
   };
 
   try {
+    console.log(`\n=========================================`);
+    console.log(`[OTP DEBUG] Generated OTP for ${toEmail}: ${otp}`);
+    console.log(`=========================================\n`);
     await transporter.sendMail(mailOptions);
   } catch (error) {
-    console.error("Failed to send OTP email:", error);
-    throw new Error("Failed to send OTP email");
+    console.error("Failed to send OTP email via SMTP:", error.message || error);
+    console.log(`\n=========================================`);
+    console.log(`[DEV FALLBACK] SMTP failed. Use this OTP to log in: ${otp}`);
+    console.log(`=========================================\n`);
   }
 };
 

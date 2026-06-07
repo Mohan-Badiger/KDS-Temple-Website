@@ -5,12 +5,10 @@ import adminAuth from "../middleware/adminAuth.js";
 
 const templeRouter = express.Router();
 
-templeRouter.post("/add", upload.single('image'), addTemple);
+templeRouter.post("/add", adminAuth, upload.single('image'), addTemple);
 templeRouter.get("/list", getAllTemples);
-templeRouter.get("/all", getAllTemples);
-templeRouter.post("/update/:id", upload.single('image'), updateTemple);
-templeRouter.delete("/delete/:id", deleteTemple);
-templeRouter.delete("/remove/:id", deleteTemple);
+templeRouter.post("/update/:id", adminAuth, upload.single('image'), updateTemple);
+templeRouter.delete("/remove/:id", adminAuth, deleteTemple);
 templeRouter.put("/update-availability", adminAuth, updateTempleAvailability);
 
 export default templeRouter;

@@ -59,7 +59,7 @@ const App = () => {
               <Route path='/donation' element={<ProtectedRoute element={<Donation />} />} />
               <Route path='/payment' element={<ProtectedRoute element={<PaymentGateway />} />} />
               <Route path='/booking-confirmation' element={<ProtectedRoute element={<BookingConfirmation />} />} />
-              <Route path='/myseva' element={<ProtectedRoute element={<MySeva/>} />} />
+              <Route path='/myseva' element={<ProtectedRoute element={<MySeva />} />} />
               <Route path='/profile' element={<ProtectedRoute element={<Profile />} />} />
               <Route path='/settings' element={<ProtectedRoute element={<Settings />} />} />
             </Routes>
