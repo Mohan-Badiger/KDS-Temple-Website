@@ -19,7 +19,6 @@ import TempleManage from './pages/TempleManage.jsx';
 import TodaySeva from './pages/TodaySeva.jsx';
 import UserManage from './pages/UserManage.jsx';
 import UsersList from './pages/UsersList.jsx';
-import AddUser from './pages/AddUser.jsx';
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -46,7 +45,21 @@ const App = () => {
   }, [token])
 
   useEffect(() => {
-    const interceptor = axios.interceptors.response.use(
+    const reqInterceptor = axios.interceptors.request.use(
+      (config) => {
+        const storedToken = localStorage.getItem('token');
+        if (storedToken) {
+          config.headers.token = storedToken;
+          config.headers.Authorization = `Bearer ${storedToken}`;
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    );
+
+    const resInterceptor = axios.interceptors.response.use(
       (response) => response,
       (error) => {
         if (error.response && (error.response.status === 401 || error.response.status === 403)) {
@@ -59,7 +72,8 @@ const App = () => {
     );
 
     return () => {
-      axios.interceptors.response.eject(interceptor);
+      axios.interceptors.request.eject(reqInterceptor);
+      axios.interceptors.response.eject(resInterceptor);
     };
   }, []);
 
@@ -131,7 +145,6 @@ const App = () => {
                 <Route path='/user-manage' element={<UserManage />}>
                   <Route index element={<Navigate to="users-list" replace />} />
                   <Route path='users-list' element={<UsersList />} />
-                  <Route path='add-user' element={<AddUser />} />
                 </Route>
 
               </Routes>
