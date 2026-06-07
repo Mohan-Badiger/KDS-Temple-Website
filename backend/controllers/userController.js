@@ -3,11 +3,10 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import validator from 'validator';
 import sendOtpEmail from '../services/sendOtpEmail.js';
-import cloudinary from '../config/cloudinary.js';
 import BookingModel from '../models/bookingModel.js';
 import DonationModel from '../models/donationModel.js';
 
-const createToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+const createToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '2h' });
 
 // ===============================
 // 1. Request OTP for Registration
@@ -27,18 +26,22 @@ const requestRegisterOtp = async (req, res) => {
     }
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otpHash = await bcrypt.hash(otp, 10);
     const otpExpiry = Date.now() + 10 * 60 * 1000;
 
     if (!user) {
       user = new userModel({
         email,
-        verifyOtp: otp,
+        verifyOtp: otpHash,
         verifyOtpExpiry: otpExpiry,
+        verifyOtpAttempts: 0,
         isVerified: false,
       });
     } else {
-      user.verifyOtp = otp;
+      user.verifyOtp = otpHash;
       user.verifyOtpExpiry = otpExpiry;
+      user.verifyOtpAttempts = 0;
+      user.otpLockoutUntil = null;
       user.isVerified = false;
     }
 
@@ -48,7 +51,7 @@ const requestRegisterOtp = async (req, res) => {
     return res.json({ success: true, message: 'OTP sent to your email for verification' });
   } catch (err) {
     console.error('OTP Error:', err);
-    return res.json({ success: false, message: err.message });
+    return res.status(500).json({ success: false, message: 'Server error. Please try again.' });
   }
 };
 
@@ -64,13 +67,33 @@ const verifyRegisterOtp = async (req, res) => {
       return res.json({ success: false, message: 'OTP not requested or user not found' });
     }
 
-    if (user.verifyOtp !== otp) {
-      return res.json({ success: false, message: 'Invalid OTP' });
+    // Check brute force lockout
+    if (user.otpLockoutUntil && user.otpLockoutUntil > Date.now()) {
+      const timeLeft = Math.ceil((user.otpLockoutUntil - Date.now()) / (60 * 1000));
+      return res.json({ success: false, message: `Too many failed attempts. Try again in ${timeLeft} minutes.` });
     }
 
+    // Verify OTP matching
+    const isMatch = await bcrypt.compare(otp, user.verifyOtp);
+    if (!isMatch) {
+      user.verifyOtpAttempts = (user.verifyOtpAttempts || 0) + 1;
+      if (user.verifyOtpAttempts >= 5) {
+        user.otpLockoutUntil = Date.now() + 15 * 60 * 1000; // 15 minutes lockout
+        user.verifyOtpAttempts = 0; // Reset counter for next cycle
+      }
+      await user.save();
+
+      const msg = user.otpLockoutUntil
+        ? 'Too many failed attempts. Verification locked for 15 minutes.'
+        : `Invalid OTP. ${5 - user.verifyOtpAttempts} attempts remaining.`;
+      return res.json({ success: false, message: msg });
+    }
+
+    // Check expiry
     if (Date.now() > user.verifyOtpExpiry) {
       user.verifyOtp = null;
       user.verifyOtpExpiry = null;
+      user.verifyOtpAttempts = 0;
       await user.save();
       return res.json({ success: false, message: 'OTP expired. Please request a new one.' });
     }
@@ -78,12 +101,14 @@ const verifyRegisterOtp = async (req, res) => {
     user.isVerified = true;
     user.verifyOtp = null;
     user.verifyOtpExpiry = null;
+    user.verifyOtpAttempts = 0;
+    user.otpLockoutUntil = null;
     await user.save();
 
     return res.json({ success: true, message: 'Email verified successfully' });
   } catch (err) {
     console.error('Verify OTP Error:', err);
-    return res.json({ success: false, message: err.message });
+    return res.status(500).json({ success: false, message: 'Server error. Please try again.' });
   }
 };
 
@@ -126,7 +151,7 @@ const registerUser = async (req, res) => {
     return res.json({ success: true, token, message: 'Account created successfully' });
   } catch (err) {
     console.error('Register Error:', err);
-    return res.json({ success: false, message: err.message });
+    return res.status(500).json({ success: false, message: 'Server error. Please try again.' });
   }
 };
 
@@ -153,14 +178,9 @@ const loginUser = async (req, res) => {
     return res.json({ success: true, token });
   } catch (err) {
     console.error('Login Error:', err);
-    return res.json({ success: false, message: err.message });
+    return res.status(500).json({ success: false, message: 'Server error. Please try again.' });
   }
 };
-
-// ===============================
-// 5. Admin Login
-// ===============================
-// Old adminLogin removed (replaced by admin OTP system)
 
 // ===============================
 // 6. Request OTP for Password Reset
@@ -173,17 +193,20 @@ const requestResetOtp = async (req, res) => {
     if (!user) return res.json({ success: false, message: 'Email not found' });
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otpHash = await bcrypt.hash(otp, 10);
     const otpExpiry = Date.now() + 10 * 60 * 1000;
 
-    user.resetOtp = otp;
+    user.resetOtp = otpHash;
     user.resetOtpExpiry = otpExpiry;
+    user.resetOtpAttempts = 0;
+    user.otpLockoutUntil = null;
     await user.save();
 
     await sendOtpEmail(email, otp);
     return res.json({ success: true, message: 'Reset OTP sent to your email' });
   } catch (err) {
     console.error('Reset OTP Error:', err);
-    return res.json({ success: false, message: err.message });
+    return res.status(500).json({ success: false, message: 'Server error. Please try again.' });
   }
 };
 
@@ -195,9 +218,39 @@ const verifyResetOtp = async (req, res) => {
     const { email, otp, password } = req.body;
 
     const user = await userModel.findOne({ email });
+    if (!user || !user.resetOtp || !user.resetOtpExpiry) {
+      return res.json({ success: false, message: 'Reset OTP not requested or user not found' });
+    }
 
-    if (!user || user.resetOtp !== otp || Date.now() > user.resetOtpExpiry) {
-      return res.json({ success: false, message: 'Invalid or expired OTP' });
+    // Check brute force lockout
+    if (user.otpLockoutUntil && user.otpLockoutUntil > Date.now()) {
+      const timeLeft = Math.ceil((user.otpLockoutUntil - Date.now()) / (60 * 1000));
+      return res.json({ success: false, message: `Too many failed attempts. Try again in ${timeLeft} minutes.` });
+    }
+
+    // Match reset OTP
+    const isMatch = await bcrypt.compare(otp, user.resetOtp);
+    if (!isMatch) {
+      user.resetOtpAttempts = (user.resetOtpAttempts || 0) + 1;
+      if (user.resetOtpAttempts >= 5) {
+        user.otpLockoutUntil = Date.now() + 15 * 60 * 1000; // 15 mins lockout
+        user.resetOtpAttempts = 0;
+      }
+      await user.save();
+
+      const msg = user.otpLockoutUntil
+        ? 'Too many failed attempts. Verification locked for 15 minutes.'
+        : `Invalid OTP. ${5 - user.resetOtpAttempts} attempts remaining.`;
+      return res.json({ success: false, message: msg });
+    }
+
+    // Check expiry
+    if (Date.now() > user.resetOtpExpiry) {
+      user.resetOtp = null;
+      user.resetOtpExpiry = null;
+      user.resetOtpAttempts = 0;
+      await user.save();
+      return res.json({ success: false, message: 'OTP expired. Please request a new one.' });
     }
 
     if (password.length < 6) {
@@ -209,12 +262,14 @@ const verifyResetOtp = async (req, res) => {
     user.password = hashedPassword;
     user.resetOtp = null;
     user.resetOtpExpiry = null;
+    user.resetOtpAttempts = 0;
+    user.otpLockoutUntil = null;
     await user.save();
 
     return res.json({ success: true, message: 'Password updated successfully' });
   } catch (err) {
     console.error('Reset Error:', err);
-    return res.json({ success: false, message: err.message });
+    return res.status(500).json({ success: false, message: 'Server error. Please try again.' });
   }
 };
 
@@ -223,11 +278,11 @@ const verifyResetOtp = async (req, res) => {
 // ===============================
 const getProfile = async (req, res) => {
   try {
-    const user = await userModel.findById(req.user.id).select('-password -verifyOtp -verifyOtpExpiry -resetOtp -resetOtpExpiry');
+    const user = await userModel.findById(req.user.id).select('-password -verifyOtp -verifyOtpExpiry -resetOtp -resetOtpExpiry -verifyOtpAttempts -resetOtpAttempts -otpLockoutUntil');
     if (!user) return res.json({ success: false, message: 'User not found' });
     res.json({ success: true, user });
   } catch (error) {
-    res.json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: 'Server error. Failed to retrieve profile.' });
   }
 };
 
@@ -282,12 +337,12 @@ const updateProfile = async (req, res) => {
       req.user.id,
       updatedData,
       { new: true, runValidators: true }
-    ).select('-password');
+    ).select('-password -verifyOtp -verifyOtpExpiry -resetOtp -resetOtpExpiry -verifyOtpAttempts -resetOtpAttempts -otpLockoutUntil');
 
     res.json({ success: true, message: 'Profile updated successfully', user: updatedUser });
   } catch (error) {
     console.error('Profile Update Error:', error);
-    res.json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: 'Server error. Failed to update profile.' });
   }
 };
 
@@ -298,27 +353,49 @@ const getAllUsersAdmin = async (req, res) => {
   try {
     const users = await userModel.find({}).select('-password').sort({ createdAt: -1 });
     
-    const userStats = await Promise.all(users.map(async (user) => {
-      const bookings = await BookingModel.find({ user: user._id });
-      const donations = await DonationModel.find({ 
-        $or: [{ email: user.email }, { phone: user.phone }] 
-      });
+    const userIds = users.map(u => u._id);
+    const emails = users.map(u => u.email).filter(Boolean);
+    const phones = users.map(u => u.phone).filter(Boolean);
 
-      const totalBookingsAmount = bookings.reduce((sum, b) => sum + b.totalAmount, 0);
-      const totalDonationsAmount = donations.reduce((sum, d) => sum + d.amount, 0);
+    const bookings = await BookingModel.find({ user: { $in: userIds } });
+    const donations = await DonationModel.find({ 
+      $or: [
+        { email: { $in: emails } },
+        { phone: { $in: phones } }
+      ] 
+    });
+
+    const bookingsByUser = {};
+    bookings.forEach(b => {
+      const uid = b.user.toString();
+      if (!bookingsByUser[uid]) bookingsByUser[uid] = [];
+      bookingsByUser[uid].push(b);
+    });
+
+    const userStats = users.map((user) => {
+      const uid = user._id.toString();
+      const userBookings = bookingsByUser[uid] || [];
+      
+      const userDonations = donations.filter(d => 
+        (d.email && d.email.toLowerCase() === user.email?.toLowerCase()) || 
+        (d.phone && d.phone === user.phone)
+      );
+
+      const totalBookingsAmount = userBookings.reduce((sum, b) => sum + b.totalAmount, 0);
+      const totalDonationsAmount = userDonations.reduce((sum, d) => sum + d.amount, 0);
 
       return {
         ...user._doc,
-        totalBookings: bookings.length,
-        totalDonations: donations.length,
+        totalBookings: userBookings.length,
+        totalDonations: userDonations.length,
         totalAmount: totalBookingsAmount + totalDonationsAmount
       };
-    }));
+    });
 
     res.json({ success: true, users: userStats });
   } catch (error) {
     console.error('GetAllUsersAdmin Error:', error);
-    res.json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: 'Server error. Failed to fetch user records.' });
   }
 };
 
@@ -345,34 +422,7 @@ const getUserDetailsAdmin = async (req, res) => {
       } 
     });
   } catch (error) {
-    res.json({ success: false, message: error.message });
-  }
-};
-
-// ===============================
-// 12. Admin: Add User Manually
-// ===============================
-const addUserManual = async (req, res) => {
-  try {
-    const { name, email, phone, notes } = req.body;
-
-    if (!email) return res.json({ success: false, message: 'Email is required' });
-
-    const existingUser = await userModel.findOne({ email });
-    if (existingUser) return res.json({ success: false, message: 'User with this email already exists' });
-
-    const newUser = new userModel({
-      name,
-      email,
-      phone,
-      notes,
-      isVerified: true // Admin added users are pre-verified
-    });
-
-    await newUser.save();
-    res.json({ success: true, message: 'User added successfully', user: newUser });
-  } catch (error) {
-    res.json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: 'Server error. Failed to fetch user details.' });
   }
 };
 
@@ -385,7 +435,7 @@ const updateUserNote = async (req, res) => {
     await userModel.findByIdAndUpdate(userId, { notes });
     res.json({ success: true, message: 'Note updated successfully' });
   } catch (error) {
-    res.json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: 'Server error. Failed to update user note.' });
   }
 };
 
@@ -402,7 +452,6 @@ const getUserStats = async (req, res) => {
     
     const newUsersMonth = await userModel.countDocuments({ createdAt: { $gte: startOfMonth } });
 
-    // For total amount, we need to sum all bookings and donations
     const allBookings = await BookingModel.find({});
     const allDonations = await DonationModel.find({});
 
@@ -418,13 +467,10 @@ const getUserStats = async (req, res) => {
       } 
     });
   } catch (error) {
-    res.json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: 'Server error. Failed to retrieve dashboard stats.' });
   }
 };
 
-// ===============================
-// Export All Controllers
-// ===============================
 export {
   requestRegisterOtp,
   verifyRegisterOtp,
@@ -436,7 +482,6 @@ export {
   updateProfile,
   getAllUsersAdmin,
   getUserDetailsAdmin,
-  addUserManual,
   updateUserNote,
   getUserStats
 };

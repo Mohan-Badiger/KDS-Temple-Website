@@ -8,6 +8,8 @@ const annaprasadSchema = new mongoose.Schema({
   amount: { type: Number, required: true, min: 1 },
   message: { type: String, default: '' },
   temple: { type: mongoose.Schema.Types.ObjectId, ref: 'Temple', required: true },
+  paymentId: { type: String },
+  orderId: { type: String },
 }, { timestamps: true });
 
 const Annaprasad = mongoose.models.Annaprasad || mongoose.model('Annaprasad', annaprasadSchema);
