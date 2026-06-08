@@ -10,11 +10,7 @@ const TempleSelection = () => {
         navigate("/pooja");
     };
 
-    const handleContinue = () => {
-        if (selectedTemple) {
-            navigate("/pooja");
-        }
-    };
+
 
     return (
         <motion.div
@@ -85,30 +81,7 @@ const TempleSelection = () => {
                 </div>
             )}
 
-            <div className="mt-16 border-t border-stone-200 pt-10 text-center max-w-5xl mx-auto flex flex-col sm:flex-row justify-between items-center bg-stone-50 p-6 rounded-sm">
-                <div className="text-left mb-6 sm:mb-0 hidden sm:block">
-                    <p className="text-[10px] text-stone-400 uppercase tracking-widest mb-1">Status</p>
-                    {selectedTemple ? (
-                        <p className="text-lg text-gray-900 tracking-tight">{selectedTemple.name}</p>
-                    ) : (
-                        <p className="text-sm text-stone-500">No temple selected</p>
-                    )}
-                </div>
-                
-                <button
-                    onClick={handleContinue}
-                    disabled={!selectedTemple}
-                    className={`
-                        w-full sm:w-auto text-[11px] uppercase tracking-[0.2em] px-10 py-5 rounded-sm transition-colors shadow-sm
-                        ${selectedTemple 
-                            ? 'bg-orange-400 text-white hover:bg-orange-500' 
-                            : 'bg-stone-200 text-stone-400 cursor-not-allowed shadow-none border border-stone-200'
-                        }
-                    `}
-                >
-                    Continue to Poojas
-                </button>
-            </div>
+
         </motion.div>
     );
 };
