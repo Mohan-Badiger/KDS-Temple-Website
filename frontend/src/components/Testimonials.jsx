@@ -28,7 +28,7 @@ const testimonials = [
 
 const Testimonials = () => {
   return (
-    <section className="pt-6 pb-12 md:pt-8 md:pb-16 bg-stone-50/50 font-primary border-t border-stone-100">
+    <section className="pt-10 pb-16 md:pt-14 md:pb-20 bg-stone-50/50 font-primary border-t border-stone-100">
       <div className="container mx-auto px-6 max-w-7xl">
         
         {/* Section Header */}

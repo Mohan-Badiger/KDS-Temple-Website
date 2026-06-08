@@ -10,30 +10,30 @@ const ServiceCard = () => {
     const { token, navigate } = useContext(TempleContext);
 
     const poojaClickHandler = () => {
-        if (token === localStorage.getItem('token')) {
+        if (token || localStorage.getItem('token')) {
             navigate('/temples');
         } else {
-            toast.error("Please Login to Book Pooja");
+            navigate('/login', { state: { from: '/temples' } });
         }
     };
     const donationClickHandler = () => {
-        if (token === localStorage.getItem('token')) {
+        if (token || localStorage.getItem('token')) {
             navigate('/donation');
         } else {
-            toast.error("Please Login For Donation");
+            navigate('/login', { state: { from: '/donation' } });
         }
     };
 
     const annaprasadClickHandler = () => {
-        if (token === localStorage.getItem('token')) {
+        if (token || localStorage.getItem('token')) {
             navigate('/myseva');
         } else {
-            toast.error("Please Login To Open MySeva");
+            navigate('/login', { state: { from: '/myseva' } });
         }
     };
 
     return (
-        <section className="w-full pt-6 pb-6 md:pt-8 md:pb-8 font-primary text-stone-900 border-t border-stone-100 bg-white">
+        <section className="w-full pt-10 pb-10 md:pt-14 md:pb-14 font-primary text-stone-900 border-t border-stone-100 bg-white">
             <div className="container mx-auto px-6 max-w-7xl">
                 
                 {/* Header */}
