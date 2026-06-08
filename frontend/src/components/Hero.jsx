@@ -58,7 +58,7 @@ const Hero = () => {
           </p>
 
           {/* Action CTAs */}
-          {token === localStorage.getItem('token') && (
+          {(token || localStorage.getItem('token')) && (
             <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-4 pt-4">
               <Link
                 to="/temples"
