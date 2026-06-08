@@ -1,4 +1,4 @@
-import React, { useContext, lazy, Suspense } from 'react';
+import React, { useContext, useState, useEffect, lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { TempleContext } from './context/TempleContext';
 import Navbar from './components/Navbar';
@@ -6,6 +6,8 @@ import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import DevotionalLoader from './components/Loader/DevotionalLoader';
+import OfflineScreen from './components/Offline/OfflineScreen';
 
 // Universal Lazy Loading for Performance
 import Home from './pages/Home';
@@ -21,16 +23,11 @@ const MySeva = lazy(() => import('./pages/MySeva'));
 const TempleSelection = lazy(() => import('./pages/TempleSelection'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Settings = lazy(() => import('./pages/Settings'));
-
-const SimpleLoader = () => (
-  <div className="flex items-center justify-center min-h-[60vh] font-primary text-stone-400 uppercase tracking-widest text-xs">
-    <div className="animate-pulse">Loading Sacred Heritage...</div>
-  </div>
-);
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 const ProtectedRoute = ({ element }) => {
   const { token } = useContext(TempleContext);
-  return token ? element : <Suspense fallback={<SimpleLoader />}><Login /></Suspense>;
+  return token ? element : <Suspense fallback={<DevotionalLoader />}><Login /></Suspense>;
 };
 
 const PoojaContent = () => {
@@ -39,8 +36,24 @@ const PoojaContent = () => {
 };
 
 const App = () => {
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
   return (
     <>
+      {!isOnline && <OfflineScreen />}
       <ToastContainer 
         autoClose={2000} 
         position="top-right" 
@@ -54,7 +67,7 @@ const App = () => {
         <Navbar />
         <ScrollToTop />
         <main className="flex-grow">
-          <Suspense fallback={<SimpleLoader />}>
+          <Suspense fallback={<DevotionalLoader />}>
             <Routes>
               <Route path='/' element={<Home />} />
               <Route path='/about' element={<About />} />
@@ -71,6 +84,7 @@ const App = () => {
               <Route path='/myseva' element={<ProtectedRoute element={<MySeva />} />} />
               <Route path='/profile' element={<ProtectedRoute element={<Profile />} />} />
               <Route path='/settings' element={<ProtectedRoute element={<Settings />} />} />
+              <Route path='*' element={<NotFound />} />
             </Routes>
           </Suspense>
         </main>
