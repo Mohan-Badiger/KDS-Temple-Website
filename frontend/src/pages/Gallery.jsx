@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Maximize2, X, ChevronLeft, ChevronRight, Image as ImageIcon } from 'lucide-react';
+import { Maximize2, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import ImageWithSkeleton from '../components/Loader/ImageWithSkeleton';
 
 // Image Imports
 import image1 from '../assets/Gallery-01.jpg'
@@ -61,8 +62,6 @@ const groupedImages = [
 const allPhotos = groupedImages.flatMap(group => group.photos);
 
 const GalleryImage = ({ image, onClick, index }) => {
-    const [isLoaded, setIsLoaded] = useState(false);
-
     return (
         <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -72,30 +71,18 @@ const GalleryImage = ({ image, onClick, index }) => {
             className={`relative group cursor-pointer overflow-hidden rounded-sm shadow-sm transition-all duration-500 bg-stone-100 ${image.span}`}
             onClick={() => onClick(image)}
         >
-            {/* Skeleton */}
-            <AnimatePresence mode='wait'>
-                {!isLoaded && (
-                    <motion.div
-                        exit={{ opacity: 0 }}
-                        className="absolute inset-0 bg-stone-200 animate-pulse flex items-center justify-center z-10"
-                    >
-                        <ImageIcon className="text-stone-300" size={32} />
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
-            <img
+            <ImageWithSkeleton
                 src={image.src}
                 alt={image.title}
                 loading="lazy"
                 width={400}
                 height={300}
-                onLoad={() => setIsLoaded(true)}
-                className={`w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+                className="w-full h-full"
+                imgClassName="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
             />
 
             {/* Corner Expand Button */}
-            <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
                 <div className="absolute top-4 right-4 bg-white/30 backdrop-blur-md p-2 rounded-sm text-white hover:bg-orange-500 transition-colors shadow-lg">
                     <Maximize2 size={16} />
                 </div>

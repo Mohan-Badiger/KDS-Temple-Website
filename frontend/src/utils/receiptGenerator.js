@@ -117,7 +117,7 @@ export const generateBookingReceipt = (booking) => {
   doc.setTextColor(156, 163, 175);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
-  doc.text("SYSTEM AUTO-GENERATED TICKET • KADASIDDESHWAR ASHRAM TRUST SERVICES", 105, 287, { align: "center" });
+  doc.text("SYSTEM AUTO-GENERATED TICKET • KADASIDDESHWAR TEMPLE TRUST SERVICES", 105, 287, { align: "center" });
 
   doc.save(`Temple_E_Ticket_${receiptId}.pdf`);
 };

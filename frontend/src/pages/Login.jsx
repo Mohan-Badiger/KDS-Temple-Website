@@ -251,12 +251,14 @@ import React, { useContext, useEffect, useState, useRef } from 'react';
 import { TempleContext } from '../context/TempleContext.jsx';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useLocation } from 'react-router-dom';
 import Hero_img from '../assets/Hero_img.jpg';
 import om from '../assets/om.png';
 
 const Login = () => {
   const [currentState, setCurrentState] = useState('Login'); // Login, Sign Up, Forgot Password, Verify OTP
   const { token, setToken, navigate, backendUrl } = useContext(TempleContext);
+  const location = useLocation();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -419,9 +421,12 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (token) navigate('/');
+    if (token) {
+      const destination = location.state?.from || '/';
+      navigate(destination);
+    }
     return () => clearInterval(timerRef.current);
-  }, [token, navigate]);
+  }, [token, navigate, location]);
 
   return (
     <div className="min-h-[85vh] flex items-center justify-center py-12 md:py-16 font-primary">
