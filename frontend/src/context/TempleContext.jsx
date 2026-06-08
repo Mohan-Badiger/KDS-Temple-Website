@@ -6,7 +6,7 @@ export const TempleContext = createContext();
 
 const TempleContextProvider = (props) => {
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
-    const [token, setToken] = useState('');
+    const [token, setToken] = useState(() => localStorage.getItem('token') || '');
     const navigate = useNavigate();
 
     // Multi-Temple State
@@ -62,6 +62,7 @@ const TempleContextProvider = (props) => {
         if (storedLastActivity && (now - parseInt(storedLastActivity, 10) >= tenMinutes)) {
             localStorage.removeItem('token');
             localStorage.removeItem('lastActivity');
+            setToken('');
         } else if (!token && localStorage.getItem('token')) {
             setToken(localStorage.getItem('token'));
         }

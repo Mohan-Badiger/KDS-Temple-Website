@@ -6,6 +6,8 @@ import Gallery1 from '../assets/Gallery-01.jpg';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import jsPDF from 'jspdf';
+import DevotionalLoader from '../components/Loader/DevotionalLoader';
+import ImageWithSkeleton from '../components/Loader/ImageWithSkeleton';
 
 const Donation = () => {
   const { token, temples } = useContext(TempleContext);
@@ -31,6 +33,18 @@ const Donation = () => {
   // Success state
   const [isSuccess, setIsSuccess] = useState(false);
   const [transactionData, setTransactionData] = useState(null);
+  const [isRazorpayOpen, setIsRazorpayOpen] = useState(false);
+
+  useEffect(() => {
+    if (isRazorpayOpen) {
+      document.body.classList.add('razorpay-active');
+    } else {
+      document.body.classList.remove('razorpay-active');
+    }
+    return () => {
+      document.body.classList.remove('razorpay-active');
+    };
+  }, [isRazorpayOpen]);
 
   // Constants
   const DONATION_PURPOSES = [
@@ -66,10 +80,9 @@ const Donation = () => {
         }
 
         // Fetch Total Donations for Progress Bar
-        const donationsRes = await axiosInstance.get('/api/donations/donations');
-        if (donationsRes.data.success) {
-          const total = donationsRes.data.donations.reduce((sum, d) => sum + (Number(d.amount) || 0), 0);
-          setTotalRaised(total);
+        const totalRes = await axiosInstance.get('/api/donations/total');
+        if (totalRes.data.success) {
+          setTotalRaised(totalRes.data.total);
         }
       } catch (error) {
         console.error("Error fetching donation pre-data:", error);
@@ -164,7 +177,7 @@ const Donation = () => {
       console.log("ORDER RECEIVED:", order);
 
       const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        key: (import.meta.env.VITE_RAZORPAY_KEY_ID || '').replace(/['"]/g, '').trim(),
         amount: order.amount,
         currency: order.currency,
         name: 'Temple Donation',
@@ -178,6 +191,7 @@ const Donation = () => {
         },
 
         handler: async function (response) {
+          setIsRazorpayOpen(false);
           try {
             const verifyRes = await axiosInstance.post(
               `/api/payment/verify-payment`,
@@ -238,6 +252,7 @@ const Donation = () => {
         modal: {
           ondismiss: () => {
             setLoading(false);
+            setIsRazorpayOpen(false);
             toast.info("Donation cancelled.");
           },
         },
@@ -248,7 +263,9 @@ const Donation = () => {
 
       const razorpay = new window.Razorpay(options);
       razorpay.open();
+      setIsRazorpayOpen(true);
     } catch (err) {
+      setIsRazorpayOpen(false);
       if (err.response && err.response.data && err.response.data.errorDetails) {
         toast.error(`Razorpay Error: ${err.response.data.errorDetails}`);
       } else {
@@ -334,17 +351,7 @@ const Donation = () => {
 
   return (
     <div className="font-primary relative pb-20 bg-transparent min-h-screen">
-      {loading && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-80">
-          <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            className="flex flex-col items-center"
-          >
-            <div className="w-10 h-10 border-2 border-gray-200 border-t-primary rounded-full animate-spin mb-4"></div>
-            <div className="text-base text-gray-600">Processing...</div>
-          </motion.div>
-        </div>
-      )}
+      {loading && <DevotionalLoader fullScreen={true} />}
 
       <div className="w-full max-w-5xl mx-auto px-4 py-8 sm:py-12 relative z-10">
 
@@ -362,13 +369,12 @@ const Donation = () => {
 
           {/* Left Column: Image & Progress */}
           <div className="w-full lg:w-5/12 flex flex-col gap-8">
-            <div className="overflow-hidden rounded-md border border-gray-200">
-              <img
-                src={Gallery1}
-                alt="Temple Donation"
-                className="w-full h-48 sm:h-64 lg:h-[350px] object-cover"
-              />
-            </div>
+            <ImageWithSkeleton
+              src={Gallery1}
+              alt="Temple Donation"
+              className="w-full h-48 sm:h-64 lg:h-[350px] rounded-md border border-gray-200"
+              imgClassName="w-full h-full object-cover"
+            />
 
             <div className="border bg-gray-100 border-gray-200 p-5 rounded-md">
               <h3 className="text-lg font-medium text-gray-900 mb-4">Temple Development Fund</h3>
