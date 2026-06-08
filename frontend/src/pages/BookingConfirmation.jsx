@@ -158,7 +158,7 @@ const BookingConfirmation = () => {
                     onClick={() => navigate("/")}
                     className="w-full sm:w-auto border border-stone-200 text-stone-600 text-[11px] uppercase tracking-widest px-10 py-4 rounded-md hover:bg-stone-50 transition-all active:scale-95"
                 >
-                    Return to Ashram
+                    Return to Home
                 </button>
             </div>
         </motion.div>

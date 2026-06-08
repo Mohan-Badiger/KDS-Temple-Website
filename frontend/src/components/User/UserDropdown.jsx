@@ -59,7 +59,7 @@ const UserDropdown = ({ isMobile, closeSideBar }) => {
     <div className={`relative ${isMobile ? 'mt-4 w-full' : ''}`} ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center justify-between gap-2 ${isMobile ? 'w-full px-6 py-3 border-t bg-white/50 text-gray-700 font-medium cursor-pointer' : 'font-primary text-gray-700 hover:text-orange-500 transition-colors'}`}
+        className={`flex items-center justify-between gap-2 ${isMobile ? 'w-full px-6 py-3 border-t bg-white/50 text-gray-700 font-medium cursor-pointer' : 'font-primary text-stone-300 hover:text-orange-400 transition-colors cursor-pointer'}`}
       >
         <span className={isMobile ? '' : 'font-medium'}>Namaste, {userName}</span>
         <svg className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
