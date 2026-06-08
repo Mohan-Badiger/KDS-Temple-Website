@@ -187,7 +187,11 @@ export const createBooking = async (req, res) => {
       `,
     };
 
-    await transporter.sendMail(mailOptions);
+    try {
+      await transporter.sendMail(mailOptions);
+    } catch (emailError) {
+      console.error("Failed to send booking confirmation email:", emailError);
+    }
 
     res.status(201).json({
       success: true,
