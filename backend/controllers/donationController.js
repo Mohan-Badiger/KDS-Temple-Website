@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+import sendDonationEmail from '../services/sendDonationEmail.js';
 import Donation from '../models/donationModel.js';
 import verifyRazorpaySignature from '../utils/verifyPayment.js';
 import RazorpayService from '../services/razorpayService.js';
@@ -72,52 +72,17 @@ export const donateController = async (req, res) => {
       timeStyle: 'short',
     });
 
-    // Set up email transporter
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
-    // Email content
+    // Send confirmation email
     try {
-      await transporter.sendMail({
-        from: `"Temple Donations" <${process.env.EMAIL_USER}>`,
-        to: email,
-        subject: 'Donation Confirmation – Thank You!',
-        html: `
-          <div style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px;">
-    <div style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); padding: 30px;">
-      <h2 style="color: #fb923c; text-align: center;">Thank You for Your Donation!</h2>
-  
-      <p style="font-size: 16px; color: #333;">Dear <strong>${escapedFirstName} ${escapedLastName}</strong>,</p>
-  
-      <p style="font-size: 16px; color: #555;">
-        We are truly grateful for your generous contribution to Kadasiddeshwar Temple. Your donation helps us continue our spiritual services and temple activities.
-      </p>
-  
-      <p style="font-size: 16px; color: #555;"><strong>Donor Name:</strong> ${escapedFirstName} ${escapedLastName}</p>
-      <p style="font-size: 16px; color: #555;"><strong>Email:</strong> ${escapeHtml(email)}</p>
-      <p style="font-size: 16px; color: #555;"><strong>Phone:</strong> ${escapeHtml(phone)}</p>
-      <p style="font-size: 16px; color: #555;"><strong>Donation Amount:</strong> ₹${amount}</p>
-      <p style="font-size: 16px; color: #555;"><strong>Message:</strong> ${escapedMessage || 'No message provided.'}</p>
-      <p style="font-size: 16px; color: #555;"><strong>Payment ID:</strong> ${escapeHtml(razorpay_payment_id)}</p>
-      <p style="font-size: 16px; color: #555;"><strong>Date & Time:</strong> ${formattedDate}</p>
-  
-      <p style="margin-top: 30px; font-size: 16px; color: #555;">
-        May you and your family be blessed with peace, health, and prosperity. We deeply appreciate your support and devotion.
-      </p>
-  
-      <p style="font-size: 14px; color: #999; text-align: center; margin-top: 40px;">
-         KADASIDDESHWAR TEMPLE, BANAHATTI 
-        <br/>
-        Thank you once again for your generosity.
-      </p>
-    </div>
-  </div>
-        `,
+      await sendDonationEmail({
+        email,
+        firstName: escapedFirstName,
+        lastName: escapedLastName,
+        phone,
+        amount,
+        message: escapedMessage,
+        paymentId: razorpay_payment_id,
+        formattedDate
       });
     } catch (emailError) {
       console.error('Failed to send donation confirmation email:', emailError);
