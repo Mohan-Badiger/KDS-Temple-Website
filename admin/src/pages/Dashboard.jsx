@@ -2,14 +2,14 @@ import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { backendUrl } from "../App";
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  LineChart, Line, PieChart, Pie, Cell, AreaChart, Area
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  PieChart, Pie, Cell, AreaChart, Area, BarChart, Bar
 } from "recharts";
 import {
   DollarSign, Landmark, Calendar, ShoppingBag, TrendingUp,
-  Filter, Download, FileText, ChevronRight, Search, Gift, User
+  Filter, Download, FileText, Gift, User
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -78,9 +78,6 @@ const Dashboard = () => {
       }
       if (templeRes.data.success) setTemples(templeRes.data.temples);
 
-      // Fetch initial transactions
-      await fetchTransactions();
-
     } catch (error) {
       console.error("Dashboard error:", error);
       toast.error("Failed to load divine analytics.");
@@ -104,14 +101,17 @@ const Dashboard = () => {
     }
   };
 
+  // Run full data fetch on initial mount
   useEffect(() => {
     fetchData();
   }, []);
 
-  // Update table when filters change with a small delay for better UX
+  // Optimized hook to fetch transaction logs only when filters change or initial load finishes
   useEffect(() => {
-    if (!loading) fetchTransactions();
-  }, [filters]);
+    if (!loading) {
+      fetchTransactions();
+    }
+  }, [filters, loading]);
 
   // Export to Excel
   const exportExcel = () => {
@@ -126,8 +126,7 @@ const Dashboard = () => {
 
     const worksheet = XLSX.utils.json_to_sheet(data);
 
-    // Add Donation Records Sheet section or separate sheet
-    // For simplicity while maintaining data integrity, we append it after a gap
+    // Append donation records details
     const donationData = donations.map(d => ({
       Date: new Date(d.date).toLocaleDateString(),
       Temple: d.temple,
@@ -140,7 +139,7 @@ const Dashboard = () => {
     XLSX.utils.sheet_add_aoa(worksheet, [[""], ["Donation Records"]], { origin: -1 });
     XLSX.utils.sheet_add_json(worksheet, donationData, { origin: -1, skipHeader: false });
 
-    // Add Overall Summary
+    // Financial Audit Totals summary
     XLSX.utils.sheet_add_aoa(worksheet, [
       [],
       ["FINANCIAL AUDIT SUMMARY"],
@@ -161,11 +160,11 @@ const Dashboard = () => {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
 
-    // 1. HEADER - TRUST BRANDING
+    // Header Branding
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(22);
+    doc.setFontSize(20);
     doc.setTextColor(249, 115, 22); // Orange-500
-    doc.text("KDS TEMPLE TRUST", pageWidth / 2, 25, { align: "center" });
+    doc.text("KADASIDDESHWAR TEMPLE TRUST", pageWidth / 2, 25, { align: "center" });
 
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
@@ -175,12 +174,12 @@ const Dashboard = () => {
     doc.setDrawColor(245, 245, 245);
     doc.line(14, 38, pageWidth - 14, 38);
 
-    // 2. METADATA
+    // Metadata
     doc.setFontSize(9);
     doc.text(`Generated On: ${new Date().toLocaleString()}`, 14, 45);
     doc.text(`Audit Period: ${filters.startDate || "Earliest"} - ${filters.endDate || "Latest"}`, 14, 50);
 
-    // 3. TABLE 1 - POOJA TRANSACTIONS
+    // Pooja Transactions Table
     doc.setFontSize(12);
     doc.setTextColor(0, 0, 0);
     doc.text("Seva & Pooja Collections", 14, 60);
@@ -197,11 +196,11 @@ const Dashboard = () => {
         t.paymentId
       ]),
       theme: 'grid',
-      headStyles: { fillColor: [249, 115, 22] }, // Orange-500
+      headStyles: { fillColor: [249, 115, 22] },
       styles: { fontSize: 8, font: "helvetica" }
     });
 
-    // 4. TABLE 2 - DONATION RECORDS
+    // Donation Records Table
     let nextY = doc.lastAutoTable.finalY + 15;
     doc.setFontSize(12);
     doc.text("Donated People Details", 14, nextY);
@@ -218,11 +217,11 @@ const Dashboard = () => {
         d.paymentId
       ]),
       theme: 'grid',
-      headStyles: { fillColor: [31, 41, 55] }, // Dark Gray
+      headStyles: { fillColor: [31, 41, 55] },
       styles: { fontSize: 8, font: "helvetica" }
     });
 
-    // 5. SUMMARY BOX
+    // Summary Box
     nextY = doc.lastAutoTable.finalY + 15;
     if (nextY + 40 > doc.internal.pageSize.getHeight()) {
       doc.addPage();
@@ -236,13 +235,13 @@ const Dashboard = () => {
     doc.setTextColor(0, 0, 0);
     doc.text("FINANCIAL SUMMARY", 20, nextY + 10);
     doc.text(`Total Pooja Revenue: Rs. ${summary.poojaRevenue.toLocaleString()}`, 20, nextY + 18);
-    doc.text(`Total Donation Revenue: Rs. ${summary.donationRevenue.toLocaleString()}`, 20, nextY + 25);
+    doc.text(`Total Donation/Annaprasad Revenue: Rs. ${summary.donationRevenue.toLocaleString()}`, 20, nextY + 25);
 
     doc.setFontSize(11);
     doc.setTextColor(249, 115, 22);
     doc.text(`GRAND TOTAL COLLECTION: Rs. ${summary.totalRevenue.toLocaleString()}`, 20, nextY + 33);
 
-    // 6. FOOTER - DIGITAL SIGNATURE
+    // Signature line
     const footerY = doc.internal.pageSize.getHeight() - 40;
     doc.setDrawColor(229, 229, 229);
     doc.line(pageWidth - 70, footerY, pageWidth - 14, footerY);
@@ -274,11 +273,11 @@ const Dashboard = () => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       className="pb-20 space-y-10 font-primary"
     >
-      {/* Header & Main Export */}
+      {/* Header & Main Export actions */}
       <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-stone-100 pb-8 gap-6">
         <div>
           <h1 className="text-3xl tracking-tight text-gray-900 uppercase font-normal">Dashboard</h1>
@@ -300,46 +299,57 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* 1. Summary Cards Grid */}
+      {/* 1. Standardized Financial & Devotee Summary Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[
-          { label: "Daily Revenue", val: summary.todayRevenue, icon: DollarSign, color: "bg-orange-50 border-orange-200 text-gray-800" },
-          { label: "Monthly Revenue", val: summary.thisMonthRevenue, icon: Landmark, color: "bg-white border-stone-200" },
-          { label: "Total Divine Collections", val: summary.totalUserAmount, icon: TrendingUp, color: "bg-white border-stone-200" },
-          { label: "Total Registered Devotees", val: summary.totalUsers, icon: User, color: "bg-white border-stone-200", prefix: "" },
-          { label: "New Devotees (This Month)", val: summary.newUsersMonth, icon: User, color: "bg-white border-stone-200", prefix: "" },
-          { label: "Donation/Pooja Split", val: summary.poojaRevenue, icon: Gift, color: "bg-white border-stone-200" },
+          { label: "Total Collections", val: summary.totalRevenue, icon: TrendingUp, color: "bg-orange-50 border-orange-200 text-gray-800" },
+          { label: "Pooja Revenue", val: summary.poojaRevenue, icon: ShoppingBag, color: "bg-white border-stone-200" },
+          { label: "Donation Revenue", val: summary.donationRevenue, icon: Gift, color: "bg-white border-stone-200" },
+          { label: "Today's Revenue", val: summary.todayRevenue, icon: DollarSign, color: "bg-white border-stone-200" },
+          { label: "This Month's Revenue", val: summary.thisMonthRevenue, icon: Calendar, color: "bg-white border-stone-200" },
+          { label: "Registered Devotees", val: summary.totalUsers, icon: User, color: "bg-white border-stone-200", prefix: "", suffix: `+${summary.newUsersMonth} new this month` },
         ].map((card, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -15 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: i * 0.1 }}
+            transition={{ delay: i * 0.05 }}
             className={`p-6 rounded-sm flex flex-col justify-between h-40 group border transition-all ${card.color} ${card.color.includes('bg-white') ? 'hover:border-orange-200' : ''}`}
           >
             <div className="flex justify-between items-start">
-              <span className={`text-[9px] uppercase tracking-[0.3em] ${card.color === 'bg-gray-900 text-white' ? 'text-stone-400' : 'text-stone-400'}`}>{card.label}</span>
-              <card.icon size={18} className={card.color === 'bg-gray-900 text-white' ? 'text-orange-400' : 'text-orange-400'} />
+              <span className="text-[9px] uppercase tracking-[0.3em] text-stone-400">{card.label}</span>
+              <card.icon size={18} className="text-orange-400" />
             </div>
-            <div className="flex items-baseline gap-1">
-              <span className="text-3xl font-normal tabular-nums">{card.prefix !== undefined ? card.prefix : '₹'}{card.val.toLocaleString('en-IN')}</span>
-              <span className="text-[10px] uppercase tracking-widest opacity-40 ml-1">{card.prefix === "" ? "Users" : "INR"}</span>
+            <div className="flex flex-col">
+              <div className="flex items-baseline gap-1">
+                <span className="text-3xl font-normal tabular-nums">{card.prefix !== undefined ? card.prefix : '₹'}{card.val.toLocaleString('en-IN')}</span>
+                <span className="text-[10px] uppercase tracking-widest opacity-40 ml-1">{card.prefix === "" ? "Devotees" : "INR"}</span>
+              </div>
+              {card.suffix && (
+                <span className="text-[10px] text-green-600 font-medium mt-1">{card.suffix}</span>
+              )}
             </div>
           </motion.div>
         ))}
       </div>
 
-      {/* 2. Charts Section */}
+      {/* 2. Charts Section - Saffron Gradient-Filled Area Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Daily Revenue Line Chart */}
+        {/* Daily Revenue Growth Area Chart */}
         <div className="bg-white border border-stone-100 p-8 rounded-sm space-y-6 shadow-sm">
           <div className="flex justify-between items-center">
             <h3 className="text-xs uppercase tracking-widest text-stone-400">Daily Revenue Growth</h3>
-            <span className="text-[10px] bg-green-50 text-green-600 px-2 py-1 uppercase font">Daily Stream</span>
+            <span className="text-[10px] bg-green-50 text-green-600 px-2 py-1 uppercase font-medium rounded-sm">Daily Stream</span>
           </div>
           <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={dailyTrend}>
+              <AreaChart data={dailyTrend}>
+                <defs>
+                  <linearGradient id="colorDaily" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#f97316" stopOpacity={0.35}/>
+                    <stop offset="95%" stopColor="#f97316" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f5f5f5" />
                 <XAxis dataKey="name" fontSize={10} axisLine={false} tickLine={false} tick={{ fill: '#a8a29e' }} />
                 <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: '#a8a29e' }} tickFormatter={(v) => `₹${v / 1000}k`} />
@@ -347,36 +357,42 @@ const Dashboard = () => {
                   contentStyle={{ border: 'none', borderRadius: '4px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px' }}
                   formatter={(v) => [`₹${v.toLocaleString()}`, 'Daily Income']}
                 />
-                <Line type="monotone" dataKey="revenue" stroke="#f97316" strokeWidth={2} dot={{ r: 3, fill: '#f97316' }} />
-              </LineChart>
+                <Area type="monotone" dataKey="revenue" stroke="#f97316" strokeWidth={2} fillOpacity={1} fill="url(#colorDaily)" />
+              </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Monthly Revenue Line Chart */}
+        {/* Monthly Revenue Area Chart */}
         <div className="bg-white border border-stone-100 p-8 rounded-sm space-y-6 shadow-sm">
           <div className="flex justify-between items-center">
             <h3 className="text-xs uppercase tracking-widest text-stone-400">Monthly Revenue Comparison</h3>
-            <span className="text-[10px] bg-orange-50 text-orange-600 px-2 py-1 uppercase font">MoM Insights</span>
+            <span className="text-[10px] bg-orange-50 text-orange-600 px-2 py-1 uppercase font-medium rounded-sm">MoM Insights</span>
           </div>
           <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={monthlyTrend}>
+              <AreaChart data={monthlyTrend}>
+                <defs>
+                  <linearGradient id="colorMonthly" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#f97316" stopOpacity={0.35}/>
+                    <stop offset="95%" stopColor="#f97316" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f5f5f5" />
                 <XAxis dataKey="name" fontSize={10} axisLine={false} tickLine={false} tick={{ fill: '#a8a29e' }} />
                 <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: '#a8a29e' }} tickFormatter={(v) => `₹${v / 1000}k`} />
                 <Tooltip
                   contentStyle={{ border: 'none', borderRadius: '4px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px' }}
-                  formatter={(v) => [`₹${v.toLocaleString()}`, 'Monthly Revenue']}
+                  formatter={(v) => [`₹${v.toLocaleString()}`, 'Monthly Income']}
                 />
-                <Line type="monotone" dataKey="revenue" stroke="#f97316" strokeWidth={2} dot={{ r: 4, fill: '#f97316' }} />
-              </LineChart>
+                <Area type="monotone" dataKey="revenue" stroke="#f97316" strokeWidth={2} fillOpacity={1} fill="url(#colorMonthly)" />
+              </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
       </div>
 
-      {/* 3. Breakdown Grid */}
+      {/* 3. Breakdown Analytics */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Temple Breakdown Pie Chart */}
         <div className="bg-white border border-stone-100 p-8 rounded-sm space-y-6 shadow-sm">
@@ -411,7 +427,7 @@ const Dashboard = () => {
                   <div className="flex flex-col items-end">
                     <span className="text-[10px] font-bold tabular-nums text-gray-900 leading-none">₹{entry.value.toLocaleString()}</span>
                     <span className="text-[8px] opacity-40 tabular-nums">
-                      {((entry.value / summary.totalRevenue) * 100).toFixed(1)}%
+                      {summary.totalRevenue > 0 ? ((entry.value / summary.totalRevenue) * 100).toFixed(1) : 0}%
                     </span>
                   </div>
                 </div>
@@ -441,10 +457,10 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* 4. Controls & Transactions */}
+      {/* 4. Controls & Transactions Stream */}
       <div className="space-y-6">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-6 bg-stone-50/50 p-6 rounded-sm border border-stone-100">
-          <div className="flex items-center gap-4 text-[10px] uppercase tracking-widest text-stone-400">
+          <div className="flex items-center gap-4 text-[10px] uppercase tracking-widest text-stone-400 font-medium">
             <Filter size={14} /> Global Filters
           </div>
           <div className="flex flex-wrap items-center gap-4 w-full lg:w-auto">
@@ -453,7 +469,7 @@ const Dashboard = () => {
               <select
                 value={filters.templeId}
                 onChange={(e) => setFilters({ ...filters, templeId: e.target.value })}
-                className="bg-white border border-stone-100 px-4 py-2.5 text-xs outline-none focus:border-orange-400 transition-all rounded-sm cursor-pointer"
+                className="bg-white border border-stone-200 px-4 py-2.5 text-xs outline-none focus:border-orange-500 rounded-sm cursor-pointer text-gray-700 shadow-sm"
               >
                 <option value="">All Temples</option>
                 {temples.map(t => <option key={t._id} value={t._id}>{t.name}</option>)}
@@ -465,7 +481,7 @@ const Dashboard = () => {
                 type="date"
                 value={filters.startDate}
                 onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
-                className="bg-white border border-stone-100 px-4 py-2 text-xs outline-none focus:border-orange-400 transition-all rounded-sm"
+                className="bg-white border border-stone-200 px-4 py-2 text-xs outline-none focus:border-orange-500 rounded-sm text-gray-700 shadow-sm"
               />
             </div>
             <div className="flex flex-col gap-1.5 flex-1 min-w-[150px]">
@@ -474,12 +490,12 @@ const Dashboard = () => {
                 type="date"
                 value={filters.endDate}
                 onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
-                className="bg-white border border-stone-100 px-4 py-2 text-xs outline-none focus:border-orange-400 transition-all rounded-sm"
+                className="bg-white border border-stone-200 px-4 py-2 text-xs outline-none focus:border-orange-500 rounded-sm text-gray-700 shadow-sm"
               />
             </div>
             <button
               onClick={() => setFilters({ templeId: "", startDate: "", endDate: "" })}
-              className="mt-5 px-4 py-2 text-[9px] uppercase tracking-widest text-orange-500 hover:text-orange-600"
+              className="mt-5 px-4 py-2 text-[9px] uppercase tracking-widest text-orange-500 hover:text-orange-600 cursor-pointer font-medium"
             >
               Clear All
             </button>

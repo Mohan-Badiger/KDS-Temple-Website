@@ -18,15 +18,15 @@ const getStartOfThisMonth = () => {
     return today;
 };
 
-// 1. Dashboard Summary Stats
+// 1. Dashboard Summary Stats (including Confirmed/Approved bookings as valid paid revenue)
 export const getDashboardSummary = async (req, res) => {
     try {
         const startOfToday = getStartOfToday();
         const startOfThisMonth = getStartOfThisMonth();
 
-        // 💰 Pooja Revenue (Completed Only)
+        // 💰 Pooja Revenue (Confirmed, Approved, or Completed status matches paid bookings)
         const poojaSummary = await BookingModel.aggregate([
-            { $match: { status: "completed" } },
+            { $match: { status: { $in: ["confirmed", "approved", "completed"] } } },
             {
                 $group: {
                     _id: null,
@@ -116,7 +116,7 @@ export const getAnalyticsDetails = async (req, res) => {
     try {
         // Temple-wise Revenue (Pooja + Donation)
         const templePoojaAgg = await BookingModel.aggregate([
-            { $match: { status: "completed" } },
+            { $match: { status: { $in: ["confirmed", "approved", "completed"] } } },
             { $group: { _id: "$temple", revenue: { $sum: "$totalAmount" } } },
             { $lookup: { from: "temples", localField: "_id", foreignField: "_id", as: "templeInfo" } },
             { $unwind: "$templeInfo" },
@@ -139,7 +139,7 @@ export const getAnalyticsDetails = async (req, res) => {
 
         // Pooja-wise Revenue Breakdown
         const poojaAnalytics = await BookingModel.aggregate([
-            { $match: { status: "completed" } },
+            { $match: { status: { $in: ["confirmed", "approved", "completed"] } } },
             { $unwind: "$poojas" },
             { $lookup: { from: "poojas", localField: "poojas", foreignField: "_id", as: "poojaInfo" } },
             { $unwind: "$poojaInfo" },
@@ -169,7 +169,7 @@ export const getTrends = async (req, res) => {
         thirtyDaysAgo.setHours(0, 0, 0, 0);
 
         const dailyTrend = await BookingModel.aggregate([
-            { $match: { status: "completed", createdAt: { $gte: thirtyDaysAgo } } },
+            { $match: { status: { $in: ["confirmed", "approved", "completed"] }, createdAt: { $gte: thirtyDaysAgo } } },
             {
                 $group: {
                     _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
@@ -186,7 +186,7 @@ export const getTrends = async (req, res) => {
         twelveMonthsAgo.setHours(0, 0, 0, 0);
 
         const monthlyTrend = await BookingModel.aggregate([
-            { $match: { status: "completed", createdAt: { $gte: twelveMonthsAgo } } },
+            { $match: { status: { $in: ["confirmed", "approved", "completed"] }, createdAt: { $gte: twelveMonthsAgo } } },
             {
                 $group: {
                     _id: {
@@ -219,9 +219,9 @@ export const getTrends = async (req, res) => {
 // 4. Filtered Transactions for Dashboard Table
 export const getDashboardTransactions = async (req, res) => {
     try {
-        const { templeId, poojaType, startDate, endDate } = req.query;
+        const { templeId, startDate, endDate } = req.query;
 
-        let query = { status: "completed" };
+        let query = { status: { $in: ["confirmed", "approved", "completed"] } };
 
         if (templeId) query.temple = new mongoose.Types.ObjectId(templeId);
         if (startDate || endDate) {
