@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import validator from 'validator';
 import sendOtpEmail from '../services/sendOtpEmail.js';
+import sendWelcomeEmail from '../services/sendWelcomeEmail.js';
 import BookingModel from '../models/bookingModel.js';
 import DonationModel from '../models/donationModel.js';
 
@@ -146,6 +147,11 @@ const registerUser = async (req, res) => {
     user.name = name;
     user.password = hashedPassword;
     await user.save();
+
+    // Trigger welcome email asynchronously
+    sendWelcomeEmail(email, name).catch((err) => {
+      console.error('Welcome email error:', err);
+    });
 
     const token = createToken(user._id);
     return res.json({ success: true, token, message: 'Account created successfully' });

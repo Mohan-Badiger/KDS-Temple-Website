@@ -1,6 +1,66 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
+// Reusable custom dropdown to replace native OS select lists
+const CustomSelect = ({ value, onChange, options, placeholder }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const selectedOption = options.find(opt => opt.value === value);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleClose = () => setIsOpen(false);
+    window.addEventListener('click', handleClose);
+    return () => window.removeEventListener('click', handleClose);
+  }, [isOpen]);
+
+  return (
+    <div className="relative w-full select-none" onClick={(e) => e.stopPropagation()}>
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center justify-between w-full text-xs px-3 py-2 border border-stone-200 rounded-sm bg-white text-gray-700 shadow-sm hover:border-stone-300 focus:border-orange-500 focus:outline-none transition-all duration-200 cursor-pointer text-left"
+      >
+        <span className="truncate">{selectedOption ? selectedOption.label : placeholder}</span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#78716c"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className={`transition-transform duration-200 shrink-0 ml-2 ${isOpen ? 'rotate-180' : ''}`}
+        >
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </button>
+
+      {isOpen && (
+        <div className="absolute z-50 mt-1 w-full bg-white border border-stone-200 rounded-sm shadow-lg max-h-60 overflow-y-auto py-1 animate-in fade-in duration-100">
+          {options.map((opt, index) => (
+            <button
+              key={`${opt.value || ''}-${index}`}
+              type="button"
+              onClick={() => {
+                onChange(opt.value);
+                setIsOpen(false);
+              }}
+              className={`w-full text-left text-xs px-3 py-2 transition-colors duration-150 cursor-pointer ${opt.value === value
+                  ? 'bg-orange-50 text-orange-600 font-medium'
+                  : 'text-gray-700 hover:bg-stone-50'
+                }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const DonationManage = () => {
   const [donations, setDonations] = useState([]);
   const [filteredDonations, setFilteredDonations] = useState([]);
@@ -67,6 +127,22 @@ const DonationManage = () => {
     { value: '10', label: 'Oct' }, { value: '11', label: 'Nov' }, { value: '12', label: 'Dec' },
   ];
 
+  // Map options for custom select components
+  const templeOptions = [
+    { value: '', label: 'All Temples' },
+    ...temples.map(t => ({ value: t._id, label: t.name }))
+  ];
+
+  const yearOptions = [
+    { value: '', label: 'All Years' },
+    ...years.map(y => ({ value: String(y), label: String(y) }))
+  ];
+
+  const monthOptions = [
+    { value: '', label: 'All Months' },
+    ...months.map(m => ({ value: m.value, label: m.label }))
+  ];
+
   if (loading) return (
     <div className="flex items-center justify-center py-20 font-primary">
       <div className="w-8 h-8 border-2 border-stone-200 border-t-orange-400 rounded-full animate-spin"></div>
@@ -78,44 +154,37 @@ const DonationManage = () => {
       <div className="flex flex-col lg:flex-row justify-between lg:items-end mb-10 pb-6 border-b border-stone-100 gap-6">
         <div>
           <h2 className="text-2xl uppercase tracking-tight text-gray-900">Donation</h2>
-          <p className="text-[10px] text-stone-400 uppercase tracking-widest mt-1">Registry of spiritual contributions</p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 items-end">
-          <div className="space-y-1">
-            <label className="text-[9px] text-stone-400 uppercase tracking-widest ml-1">Temple</label>
-            <select
+        <div className="grid grid-cols-2 md:flex md:flex-row gap-3 items-end w-full lg:w-auto md:justify-end">
+          <div className="space-y-1 w-full md:w-56">
+            <label className="text-[9px] text-stone-400 uppercase tracking-widest ml-1 block">Temple</label>
+            <CustomSelect
               value={selectedTemple}
-              onChange={(e) => setSelectedTemple(e.target.value)}
-              className="w-full text-xs p-2 border border-stone-200 outline-0 bg-white rounded-sm text-gray-700"
-            >
-              <option value="">All Temples</option>
-              {temples.map(t => <option key={t._id} value={t._id}>{t.name}</option>)}
-            </select>
+              onChange={setSelectedTemple}
+              options={templeOptions}
+              placeholder="All Temples"
+            />
           </div>
 
-          <div className="space-y-1">
-            <label className="text-[9px] text-stone-400 uppercase tracking-widest ml-1">Year</label>
-            <select
+          <div className="space-y-1 w-full md:w-36">
+            <label className="text-[9px] text-stone-400 uppercase tracking-widest ml-1 block">Year</label>
+            <CustomSelect
               value={selectedYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
-              className="w-full text-xs p-2 border border-stone-200 outline-0 bg-white rounded-sm text-gray-700"
-            >
-              <option value="">All Years</option>
-              {years.map(y => <option key={y} value={y}>{y}</option>)}
-            </select>
+              onChange={setSelectedYear}
+              options={yearOptions}
+              placeholder="All Years"
+            />
           </div>
 
-          <div className="space-y-1 hidden md:block">
-            <label className="text-[9px] text-stone-400 uppercase tracking-widest ml-1">Month</label>
-            <select
+          <div className="space-y-1 hidden md:block md:w-36">
+            <label className="text-[9px] text-stone-400 uppercase tracking-widest ml-1 block">Month</label>
+            <CustomSelect
               value={selectedMonth}
-              onChange={(e) => setSelectedMonth(e.target.value)}
-              className="w-full text-xs p-2 border border-stone-200 outline-0 bg-white rounded-sm text-gray-700"
-            >
-              <option value="">All Months</option>
-              {months.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
-            </select>
+              onChange={setSelectedMonth}
+              options={monthOptions}
+              placeholder="All Months"
+            />
           </div>
         </div>
       </div>
