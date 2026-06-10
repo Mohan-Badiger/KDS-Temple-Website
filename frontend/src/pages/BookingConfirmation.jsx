@@ -12,7 +12,7 @@ const BookingConfirmation = () => {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const userToken = localStorage.getItem("token");
-    const { backendUrl } = useContext(TempleContext);
+    const { backendUrl, settings } = useContext(TempleContext);
 
     useEffect(() => {
         const fetchBookingDetails = async () => {
@@ -146,7 +146,7 @@ const BookingConfirmation = () => {
 
             <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
                 <button
-                    onClick={() => generateBookingReceipt(bookingDetails)}
+                    onClick={() => generateBookingReceipt(bookingDetails, settings)}
                     className="w-full sm:w-auto bg-stone-900 text-white text-[11px] uppercase tracking-widest px-10 py-4 rounded-md hover:bg-black transition-all shadow-md shadow-stone-200 active:scale-95 flex items-center justify-center gap-2"
                 >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

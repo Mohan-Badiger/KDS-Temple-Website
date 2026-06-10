@@ -7,7 +7,7 @@ import { MessageSquare, Bug, Send, Mail, MapPin, Phone } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Contact = () => {
-    const { token, backendUrl } = useContext(TempleContext);
+    const { token, backendUrl, settings } = useContext(TempleContext);
     const [activeTab, setActiveTab] = useState('contact'); // 'contact' or 'feedback'
 
     // Form States
@@ -106,7 +106,7 @@ const Contact = () => {
                                     </div>
                                     <div>
                                         <p className="font-medium text-gray-900">Address</p>
-                                        <p className="text-stone-500 text-sm">Kadasiddheshwar Temple, Banahatti, Karnataka 587311</p>
+                                        <p className="text-stone-500 text-sm">{settings?.address || "Kadasiddheshwar Temple, Banahatti, Karnataka 587311"}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-4">
@@ -115,7 +115,7 @@ const Contact = () => {
                                     </div>
                                     <div>
                                         <p className="font-medium text-gray-900">Phone</p>
-                                        <p className="text-stone-500 text-sm">+91 98450 00000</p>
+                                        <p className="text-stone-500 text-sm">{settings?.phone || "+91 98450 00000"}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-4">
@@ -124,7 +124,7 @@ const Contact = () => {
                                     </div>
                                     <div>
                                         <p className="font-medium text-gray-900">Email</p>
-                                        <p className="text-stone-500 text-sm">contact@banahattitemples.com</p>
+                                        <p className="text-stone-500 text-sm">{settings?.email || "contact@banahattitemples.com"}</p>
                                     </div>
                                 </div>
                             </div>
