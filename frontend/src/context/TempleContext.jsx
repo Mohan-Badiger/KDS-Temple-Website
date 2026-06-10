@@ -21,6 +21,20 @@ const TempleContextProvider = (props) => {
     const [totalAmount, setTotalAmount] = useState(0);
     const [selectedDate, setSelectedDate] = useState(""); // Shared date for booking
 
+    // Global Settings State
+    const [settings, setSettings] = useState(null);
+
+    const fetchSettings = async () => {
+        try {
+            const res = await axiosInstance.get('/api/settings');
+            if (res.data.success) {
+                setSettings(res.data.settings);
+            }
+        } catch (error) {
+            console.error("Error fetching settings:", error);
+        }
+    };
+
     // Sync selectedTemple to localStorage
     useEffect(() => {
         if (selectedTemple) {
@@ -67,6 +81,7 @@ const TempleContextProvider = (props) => {
             setToken(localStorage.getItem('token'));
         }
         fetchTemples();
+        fetchSettings();
     }, []);
 
     useEffect(() => {
@@ -88,7 +103,8 @@ const TempleContextProvider = (props) => {
         selectedTemple, setSelectedTemple,
         selectedPoojas, setSelectedPoojas,
         totalAmount, handleCheckboxChange,
-        selectedDate, setSelectedDate
+        selectedDate, setSelectedDate,
+        settings, fetchSettings
     };
 
     return (
