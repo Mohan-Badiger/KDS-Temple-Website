@@ -15,6 +15,7 @@ import annaprasadRouter from './routes/annaprasadRoute.js';
 import reportRouter from './routes/reportRoute.js';
 import adminRouter from './routes/adminRoute.js';
 import feedbackRouter from './routes/feedbackRoute.js';
+import settingsRouter from './routes/settingsRoute.js';
 
 // Environment variables validation
 const requiredEnvVars = [
@@ -61,7 +62,7 @@ const allowedOrigins = [
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.includes('*')) {
+    if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -81,6 +82,7 @@ app.use('/api/payment', paymentRoutes);
 app.use('/api/temple', templeRouter);
 app.use('/api/annaprasads', annaprasadRouter);
 app.use('/api/reports', reportRouter);
+app.use('/api/settings', settingsRouter);
 
 app.post('/api/contact', contactLimiter, contactMail)
 

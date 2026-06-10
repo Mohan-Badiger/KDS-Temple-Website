@@ -16,20 +16,39 @@ import {
   getUserStats
 } from '../controllers/userController.js';
 import adminAuth from '../middleware/adminAuth.js';
+import rateLimit from 'express-rate-limit';
 
 const router = express.Router();
 
+// 1. Limiter for requesting OTPs (to protect mail servers from spam)
+const otpRequestLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 3, // limit each IP to 3 requests per windowMs
+  message: { success: false, message: 'Too many OTP requests from this IP. Please try again after 15 minutes.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// 2. Limiter for verification and login attempts (to protect against brute-force)
+const authAttemptsLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // limit each IP to 5 attempts per windowMs
+  message: { success: false, message: 'Too many authentication attempts from this IP. Please try again after 15 minutes.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 // ===== User Registration & Verification =====
-router.post('/request-register-otp', requestRegisterOtp);
-router.post('/verify-register-otp', verifyRegisterOtp);
-router.post('/register', registerUser);
+router.post('/request-register-otp', otpRequestLimiter, requestRegisterOtp);
+router.post('/verify-register-otp', authAttemptsLimiter, verifyRegisterOtp);
+router.post('/register', authAttemptsLimiter, registerUser);
 
 // ===== Login =====
-router.post('/login', loginUser);
+router.post('/login', authAttemptsLimiter, loginUser);
 
 // ===== Password Reset =====
-router.post('/request-reset-otp', requestResetOtp);
-router.post('/verify-reset-otp', verifyResetOtp);
+router.post('/request-reset-otp', otpRequestLimiter, requestResetOtp);
+router.post('/verify-reset-otp', authAttemptsLimiter, verifyResetOtp);
 
 // ===== Profile =====
 router.get('/profile', authMiddleware, getProfile);
