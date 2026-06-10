@@ -19,6 +19,7 @@ import TempleManage from './pages/TempleManage.jsx';
 import TodaySeva from './pages/TodaySeva.jsx';
 import UserManage from './pages/UserManage.jsx';
 import UsersList from './pages/UsersList.jsx';
+import Settings from './pages/Settings.jsx';
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -146,6 +147,7 @@ const App = () => {
                   <Route index element={<Navigate to="users-list" replace />} />
                   <Route path='users-list' element={<UsersList />} />
                 </Route>
+                <Route path='/settings' element={<Settings />} />
 
               </Routes>
             </div>

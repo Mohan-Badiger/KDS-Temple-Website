@@ -1,5 +1,6 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
+import { Settings } from 'lucide-react'
 import dashboard_img from '../assets/dashboard.png'
 import seva from '../assets/seva.svg'
 import food from '../assets/food.png'
@@ -35,6 +36,10 @@ const Sidebar = () => {
                 <NavLink to='/donation-manage' className='flex items-center border border-gray-300 px-3 py-2 border-r-0 rounded-l'>
                     <img className='w-4 block sm:hidden' src={donate} alt="" />
                     <p className='text-md sm:block hidden'>Donation</p>
+                </NavLink>
+                <NavLink to='/settings' className='flex items-center border border-gray-300 px-3 py-2 border-r-0 rounded-l'>
+                    <Settings className='w-4 block sm:hidden text-gray-500' />
+                    <p className='text-md sm:block hidden'>Settings</p>
                 </NavLink>
             </div>
         </div>
