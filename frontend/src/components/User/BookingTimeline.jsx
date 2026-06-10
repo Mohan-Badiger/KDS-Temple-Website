@@ -9,7 +9,7 @@ const BookingTimeline = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const { token, backendUrl } = useContext(TempleContext);
+  const { token, backendUrl, settings } = useContext(TempleContext);
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -32,7 +32,7 @@ const BookingTimeline = () => {
   }, [token, backendUrl]);
 
   const handleDownloadReceipt = (booking) => {
-    generateBookingReceipt(booking);
+    generateBookingReceipt(booking, settings);
   };
 
   if (loading) {

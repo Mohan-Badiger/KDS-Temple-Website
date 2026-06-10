@@ -5,12 +5,12 @@ import axiosInstance from '../utils/axiosInstance.js';
 import Gallery1 from '../assets/Gallery-01.jpg';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import jsPDF from 'jspdf';
+import { generateDonationReceipt } from '../utils/receiptGenerator';
 import DevotionalLoader from '../components/Loader/DevotionalLoader';
 import ImageWithSkeleton from '../components/Loader/ImageWithSkeleton';
 
 const Donation = () => {
-  const { token, temples } = useContext(TempleContext);
+  const { token, temples, settings } = useContext(TempleContext);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
 
@@ -111,45 +111,15 @@ const Donation = () => {
   };
 
   const generatePDF = (txData) => {
-    const doc = new jsPDF();
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(22);
-    doc.setTextColor(249, 115, 22); // Orange primary
-    doc.text("KADASIDDESHWAR TEMPLE, BANAHATTI", 105, 20, null, null, "center");
-
-    doc.setFontSize(16);
-    doc.setTextColor(50, 50, 50);
-    doc.text("Official Donation Certificate", 105, 30, null, null, "center");
-
-    doc.setLineWidth(0.5);
-    doc.line(20, 35, 190, 35);
-
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(12);
-    doc.text(`Date: ${new Date().toLocaleDateString('en-IN')}`, 20, 45);
-    doc.text(`Receipt No: ${txData.paymentId || 'TXN-' + Math.floor(Math.random() * 1000000)}`, 130, 45);
-
-    doc.setFont("helvetica", "italic");
-    doc.setFontSize(14);
-    doc.text(`"Heartfelt gratitude for your generous support."`, 105, 60, null, null, "center");
-
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(12);
-    doc.text("Donor Information:", 20, 75);
-    doc.text(`Name: ${isAnonymous ? 'Anonymous Devotee' : `${firstName} ${lastName}`}`, 25, 85);
-    doc.text(`Purpose: ${purpose}`, 25, 95);
-    if (!isAnonymous && phone) doc.text(`Phone: ${phone}`, 25, 105);
-
-    doc.setFont("helvetica", "bold");
-    doc.text(`Donation Amount: INR ${txData.amount}/-`, 20, 120);
-
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(10);
-    doc.setTextColor(100, 100, 100);
-    doc.text("May you and your family be blessed with peace and prosperity.", 105, 150, null, null, "center");
-    doc.text("This is a computer-generated receipt and requires no signature.", 105, 160, null, null, "center");
-
-    doc.save(`Temple_Donation_Receipt_${new Date().getTime()}.pdf`);
+    generateDonationReceipt({
+      amount: txData.amount,
+      purpose: txData.purpose,
+      paymentId: txData.paymentId,
+      date: txData.date,
+      donorName: isAnonymous ? 'Anonymous Devotee' : `${firstName} ${lastName}`,
+      phone: isAnonymous ? '' : phone,
+      email: isAnonymous ? '' : email
+    }, settings);
   };
 
   const handlePayment = async () => {
