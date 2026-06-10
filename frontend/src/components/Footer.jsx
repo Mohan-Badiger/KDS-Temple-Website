@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Phone, Mail, Landmark, Heart, Compass } from 'lucide-react';
+import { TempleContext } from '../context/TempleContext';
 import om_logo from '../assets/om.png';
 
 const Footer = () => {
+    const { settings } = useContext(TempleContext);
     const handleScrollTop = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
@@ -76,17 +78,21 @@ const Footer = () => {
                                 <div className="flex gap-3.5 items-start">
                                     <MapPin size={14} className="text-orange-400 shrink-0 mt-0.5" aria-hidden="true" />
                                     <p className="leading-relaxed text-stone-300">
-                                        SH 53, Rabkavi Banhatti, <br />
-                                        Bagalkot, Karnataka 587311.
+                                        {settings?.address || (
+                                            <>
+                                                SH 53, Rabkavi Banhatti, <br />
+                                                Bagalkot, Karnataka 587311.
+                                            </>
+                                        )}
                                     </p>
                                 </div>
                                 <div className="flex items-center gap-3.5 text-stone-300">
                                     <Phone size={14} className="text-orange-400 shrink-0" aria-hidden="true" />
-                                    <p>+91 91234 56789</p>
+                                    <p>{settings?.phone || "+91 91234 56789"}</p>
                                 </div>
                                 <div className="flex items-center gap-3.5 text-stone-300">
                                     <Mail size={14} className="text-orange-400 shrink-0" aria-hidden="true" />
-                                    <p className="truncate">info@banahattitemple.com</p>
+                                    <p className="truncate">{settings?.email || "info@banahattitemple.com"}</p>
                                 </div>
                             </div>
                         </div>

@@ -208,6 +208,7 @@ export const getMyBookings = async (req, res) => {
   try {
     const userId = req.user.id;
     const bookings = await BookingModel.find({ user: userId })
+      .populate("user", "name email phone")
       .populate("temple", "name location")
       .populate("poojas", "name price description")
       .sort({ createdAt: -1 });
@@ -235,6 +236,7 @@ export const getLatestBooking = async (req, res) => {
   try {
     const userId = req.user.id;
     const booking = await BookingModel.findOne({ user: userId })
+      .populate("user", "name email phone")
       .populate("temple", "name location")
       .populate("poojas", "name price description")
       .sort({ createdAt: -1 });

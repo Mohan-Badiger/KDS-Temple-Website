@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import validator from "validator";
 import sendOtpEmail from "../services/sendOtpEmail.js";
 import Notification from "../models/notificationModel.js";
+import settingsModel from "../models/settingsModel.js";
 
 // ===============================
 // 1. Request OTP for Admin Login
@@ -16,8 +17,11 @@ const requestAdminOtp = async (req, res) => {
       return res.json({ success: false, message: "Invalid email address" });
     }
 
-    // Only allow specific admin email
-    if (email !== process.env.ADMIN_EMAIL) {
+    // Only allow specific admin email (fallback to env variable if database settings not set)
+    const settings = await settingsModel.findOne();
+    const adminEmail = settings?.adminEmail || process.env.ADMIN_EMAIL;
+
+    if (email !== adminEmail) {
       return res.json({ success: false, message: "Unauthorized access attempt" });
     }
 
