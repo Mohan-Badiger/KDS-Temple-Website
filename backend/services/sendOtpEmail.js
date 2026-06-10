@@ -1,34 +1,39 @@
-import nodemailer from 'nodemailer';
+import transporter from './emailTransporter.js';
+import { getDevotionalEmailTemplate } from './emailTemplates.js';
 
-const sendOtpEmail = async (toEmail, otp, subject = 'Your OTP for Password Reset', title = 'Password Reset OTP') => {
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
-
-  const otpHtml = `
-    <div style="font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6; padding: 20px; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 5px; background: #ffffff;">
-      <h2 style="color: #E38C00;">${title}</h2>
-      <p>Hello,</p>
-      <p>Your OTP is:</p>
-      <p style="font-size: 24px; font-weight: bold; background: #FFDBA2; padding: 10px; border-left: 5px solid #E38C00;">${otp}</p>
-      <p>This OTP is valid for the next <strong>10 minutes</strong>.</p>
-      <p>If you didn’t request this, please ignore this email.</p>
-
-      <div style="font-size: 14px; color: #666; margin-top: 20px; text-align: center; border-top: 1px solid #ddd; padding-top: 10px;">
-        This is an automated email from the temple website.
-      </div>
+/**
+ * Sends a secure OTP verification email.
+ * Includes console debugging and fallback for local development environments.
+ */
+const sendOtpEmail = async (toEmail, otp, subject = 'Your OTP for Verification', title = 'Verification OTP') => {
+  const mainContentHtml = `
+    <h3 style="color: #b45309; margin-top: 0; margin-bottom: 15px; font-size: 16px; border-bottom: 1px solid #ebdcc5; padding-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Security Code</h3>
+    
+    <p style="font-size: 14px; line-height: 1.6; color: #4a3b32; margin-bottom: 15px;">
+      Your verification code is:
+    </p>
+    
+    <div style="font-size: 28px; font-weight: bold; background-color: #faf0e6; color: #d97706; padding: 15px; border-left: 5px solid #d97706; text-align: center; letter-spacing: 4px; border-radius: 4px; margin-bottom: 15px;">
+      ${otp}
     </div>
+    
+    <p style="font-size: 12px; line-height: 1.6; color: #8c7365; margin: 0;">
+      This OTP is valid for the next <strong>10 minutes</strong>. For security reasons, please do not share this code with anyone. If you didn’t request this code, you can safely ignore this email.
+    </p>
   `;
 
+  const emailHtml = getDevotionalEmailTemplate({
+    title,
+    blessingText: 'Namaste, please verify your identity to proceed securely on the Kadasiddeshwar Temple portal. 🙏',
+    mainContentHtml,
+    quoteText: '"Truth is pathless, and security is the companion of a peaceful mind."'
+  });
+
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: `"Kadasiddeshwar Temple" <${process.env.EMAIL_USER}>`,
     to: toEmail,
     subject: subject,
-    html: otpHtml,
+    html: emailHtml,
   };
 
   try {
