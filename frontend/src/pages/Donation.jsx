@@ -11,7 +11,7 @@ import ImageWithSkeleton from '../components/Loader/ImageWithSkeleton';
 
 const Donation = () => {
   const { token, temples, settings } = useContext(TempleContext);
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
   const navigate = useNavigate();
 
   const [templeId, setTempleId] = useState('');
