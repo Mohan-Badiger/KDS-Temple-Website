@@ -430,10 +430,10 @@ const Login = () => {
 
   return (
     <div className="min-h-[85vh] flex items-center justify-center py-12 md:py-16 font-primary">
-      <div className="bg-white border border-stone-200/60 shadow-xl rounded-xl overflow-hidden max-w-4xl w-full grid grid-cols-1 md:grid-cols-12 min-h-[550px] transition-all duration-300">
+      <div className="bg-liquid-glass-card shadow-2xl rounded-2xl overflow-hidden max-w-4xl w-full grid grid-cols-1 md:grid-cols-12 min-h-[550px] transition-all duration-300">
         
         {/* Left Column - Form */}
-        <div className="md:col-span-7 p-8 sm:p-12 flex flex-col justify-center bg-white">
+        <div className="md:col-span-7 p-8 sm:p-12 flex flex-col justify-center bg-white/10">
           {/* Logo & Trust Header */}
           <div className="flex items-center gap-2 mb-6 select-none">
             <img src={om} className="w-8 h-8 object-contain" alt="Om Logo" />
@@ -462,7 +462,7 @@ const Login = () => {
                     placeholder="email@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-3 border border-stone-200 focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 rounded-md outline-none bg-stone-50/50 text-stone-800 transition-all duration-300 font-primary text-sm placeholder:text-stone-300"
+                    className="w-full px-4 py-3 rounded-md outline-none transition-all duration-300 font-primary text-sm input-liquid-glass"
                     required
                   />
                 </div>
@@ -473,7 +473,7 @@ const Login = () => {
                     placeholder="••••••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-4 py-3 border border-stone-200 focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 rounded-md outline-none bg-stone-50/50 text-stone-800 transition-all duration-300 font-primary text-sm placeholder:text-stone-300"
+                    className="w-full px-4 py-3 rounded-md outline-none transition-all duration-300 font-primary text-sm input-liquid-glass"
                     required
                   />
                 </div>
@@ -490,7 +490,7 @@ const Login = () => {
                     placeholder="Full Name"
                     value={name}
                     onChange={(e) => setName(e.target.value.replace(/[^a-zA-Z\s]/g, ''))}
-                    className="w-full px-4 py-3 border border-stone-200 focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 rounded-md outline-none bg-stone-50/50 text-stone-800 transition-all duration-300 font-primary text-sm placeholder:text-stone-300"
+                    className="w-full px-4 py-3 rounded-md outline-none transition-all duration-300 font-primary text-sm input-liquid-glass"
                     required
                   />
                 </div>
@@ -507,7 +507,7 @@ const Login = () => {
                         setEmailVerified(false);
                         setResendTimer(0);
                       }}
-                      className="flex-grow px-4 py-3 border border-stone-200 focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 rounded-md outline-none bg-stone-50/50 text-stone-800 transition-all duration-300 font-primary text-sm placeholder:text-stone-300"
+                      className="flex-grow px-4 py-3 rounded-md outline-none transition-all duration-300 font-primary text-sm input-liquid-glass"
                       required
                     />
                     <button
@@ -530,7 +530,7 @@ const Login = () => {
                         placeholder="Enter 6-digit OTP"
                         value={emailOtp}
                         onChange={(e) => setEmailOtp(e.target.value)}
-                        className="w-full px-4 py-3 border border-stone-200 focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 rounded-md outline-none bg-stone-50/50 text-stone-800 transition-all duration-300 font-primary text-sm placeholder:text-stone-300"
+                        className="w-full px-4 py-3 rounded-md outline-none transition-all duration-300 font-primary text-sm input-liquid-glass"
                       />
                     </div>
                     <button
@@ -553,9 +553,9 @@ const Login = () => {
                         placeholder="••••••••••••"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="w-full px-4 py-3 border border-stone-200 focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 rounded-md outline-none bg-stone-50/50 text-stone-800 transition-all duration-300 font-primary text-sm placeholder:text-stone-300"
+                        className="w-full px-4 py-3 rounded-md outline-none transition-all duration-300 font-primary text-sm input-liquid-glass"
                         required
-                      />
+                  />
                     </div>
                     <div className="space-y-1">
                       <label className="text-[10px] uppercase tracking-wider text-stone-400 font-bold">Confirm Password</label>
@@ -564,7 +564,7 @@ const Login = () => {
                         placeholder="••••••••••••"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="w-full px-4 py-3 border border-stone-200 focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 rounded-md outline-none bg-stone-50/50 text-stone-800 transition-all duration-300 font-primary text-sm placeholder:text-stone-300"
+                        className="w-full px-4 py-3 rounded-md outline-none transition-all duration-300 font-primary text-sm input-liquid-glass"
                         required
                       />
                     </div>
@@ -583,7 +583,7 @@ const Login = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="w-full px-4 py-3 border border-stone-200 focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 rounded-md outline-none bg-stone-50/50 text-stone-800 transition-all duration-300 font-primary text-sm placeholder:text-stone-300"
+                  className="w-full px-4 py-3 rounded-md outline-none transition-all duration-300 font-primary text-sm input-liquid-glass"
                   required
                 />
               </div>
@@ -600,7 +600,7 @@ const Login = () => {
                     value={otp}
                     onChange={(e) => setOtp(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    className="w-full px-4 py-3 border border-stone-200 focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 rounded-md outline-none bg-stone-50/50 text-stone-800 transition-all duration-300 font-primary text-sm placeholder:text-stone-300"
+                    className="w-full px-4 py-3 rounded-md outline-none transition-all duration-300 font-primary text-sm input-liquid-glass"
                     required
                   />
                 </div>
@@ -612,7 +612,7 @@ const Login = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    className="w-full px-4 py-3 border border-stone-200 focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 rounded-md outline-none bg-stone-50/50 text-stone-800 transition-all duration-300 font-primary text-sm placeholder:text-stone-300"
+                    className="w-full px-4 py-3 rounded-md outline-none transition-all duration-300 font-primary text-sm input-liquid-glass"
                     required
                   />
                 </div>
@@ -624,7 +624,7 @@ const Login = () => {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    className="w-full px-4 py-3 border border-stone-200 focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 rounded-md outline-none bg-stone-50/50 text-stone-800 transition-all duration-300 font-primary text-sm placeholder:text-stone-300"
+                    className="w-full px-4 py-3 rounded-md outline-none transition-all duration-300 font-primary text-sm input-liquid-glass"
                     required
                   />
                 </div>

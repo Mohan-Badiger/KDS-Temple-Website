@@ -346,7 +346,7 @@ const Donation = () => {
               imgClassName="w-full h-full object-cover"
             />
 
-            <div className="border bg-gray-100 border-gray-200 p-5 rounded-md">
+            <div className="bg-liquid-glass-card p-5 rounded-md">
               <h3 className="text-lg font-medium text-gray-900 mb-4">Temple Development Fund</h3>
 
               <div className="flex justify-between items-center mb-2">
@@ -384,10 +384,10 @@ const Donation = () => {
                       key={t._id}
                       type="button"
                       onClick={() => setTempleId(t._id)}
-                      className={`text-left px-4 py-3 border rounded-sm transition-colors text-base
+                      className={`text-left px-4 py-3 border rounded-md transition-all duration-300 text-base hover:scale-[1.02] active:scale-[0.98]
                         ${templeId === t._id
-                          ? 'border-primary bg-orange-50 text-primary font-medium'
-                          : 'border-gray-200 bg-transparent text-gray-700'
+                          ? 'border-orange-500 bg-orange-500/10 text-orange-600 font-semibold shadow-sm'
+                          : 'border-white/50 bg-white/40 hover:bg-white/60 text-stone-700'
                         }`}
                     >
                       <div className="text-md font uppercase">{t.name}</div>
@@ -409,10 +409,10 @@ const Donation = () => {
                       key={cat}
                       type="button"
                       onClick={() => setPurpose(cat)}
-                      className={`text-left px-4 py-3 border rounded-sm transition-colors text-base
+                      className={`text-left px-4 py-3 border rounded-md transition-all duration-300 text-base hover:scale-[1.02] active:scale-[0.98]
                         ${purpose === cat
-                          ? 'border-primary bg-orange-50 text-primary font-medium'
-                          : 'border-gray-200 bg-transparent text-gray-700'
+                          ? 'border-orange-500 bg-orange-500/10 text-orange-600 font-semibold shadow-sm'
+                          : 'border-white/50 bg-white/40 hover:bg-white/60 text-stone-700'
                         }`}
                     >
                       {cat}
@@ -432,10 +432,10 @@ const Donation = () => {
                       key={preset}
                       type="button"
                       onClick={() => setAmount(preset)}
-                      className={`py-3 border rounded-sm text-base font-medium flex items-center justify-center gap-1 transition-all duration-150
+                      className={`py-3 border rounded-md text-base font-medium flex items-center justify-center gap-1 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]
                         ${Number(amount) === preset
-                          ? 'border-primary bg-primary text-white'
-                          : 'border-gray-300 text-gray-700 hover:border-primary'
+                          ? 'border-orange-500 bg-orange-500 text-white shadow-md'
+                          : 'border-white/50 bg-white/40 hover:bg-white/60 text-stone-700'
                         }`}
                     >
                       <span className="text-sm leading-none -mt-[1px]">₹</span>
@@ -447,21 +447,19 @@ const Donation = () => {
                 </div>
 
                 <div className="relative">
-                  <div className="flex items-center border border-gray-300 rounded-sm px-3">
-                    <span className="text-gray-600 text-sm leading-none mr-1">
-                      ₹
-                    </span>
-
-                    <input
-                      type="number"
-                      placeholder="Enter custom amount"
-                      value={amount}
-                      onChange={(e) => setAmount(e.target.value)}
-                      className="w-full py-3 text-base text-gray-900 bg-transparent outline-none leading-none tabular-nums"
-                      min="1"
-                      required
-                    />
-                  </div>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-500 text-base leading-none">
+                    ₹
+                  </span>
+                  <input
+                    type="number"
+                    placeholder="Enter custom amount"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    className="w-full py-3 pl-9 pr-4 rounded-md outline-none transition-all duration-300 font-primary text-sm input-liquid-glass"
+                    min="1"
+                    required
+                  />
+                </div>
 
                   <AnimatePresence>
                     {getImpactMessage(amount) && (
@@ -475,7 +473,6 @@ const Donation = () => {
                       </motion.p>
                     )}
                   </AnimatePresence>
-                </div>
               </div>
 
               <div className="border-t border-gray-200"></div>
@@ -509,7 +506,7 @@ const Donation = () => {
                           placeholder="First Name"
                           value={firstName}
                           onChange={e => setFirstName(e.target.value.replace(/[^a-zA-Z\s]/g, ''))}
-                          className="w-full text-base text-gray-900 py-3 px-4 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary bg-transparent"
+                          className="w-full text-base py-3 px-4 rounded-md outline-none transition-all duration-300 font-primary input-liquid-glass"
                           required={!isAnonymous}
                         />
                         <input
@@ -517,7 +514,7 @@ const Donation = () => {
                           placeholder="Last Name"
                           value={lastName}
                           onChange={e => setLastName(e.target.value.replace(/[^a-zA-Z\s]/g, ''))}
-                          className="w-full text-base text-gray-900 py-3 px-4 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary bg-transparent"
+                          className="w-full text-base py-3 px-4 rounded-md outline-none transition-all duration-300 font-primary input-liquid-glass"
                           required={!isAnonymous}
                         />
                       </div>
@@ -541,7 +538,7 @@ const Donation = () => {
 
                       setPhone(val);
                     }}
-                    className="w-full text-base text-gray-900 py-3 px-4 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary bg-transparent"
+                    className="w-full text-base py-3 px-4 rounded-md outline-none transition-all duration-300 font-primary input-liquid-glass"
                     maxLength={10}
                     required
                   />
@@ -549,7 +546,7 @@ const Donation = () => {
                     placeholder="Message (Optional)"
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    className="w-full text-base text-gray-900 py-3 px-4 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary bg-transparent h-24 resize-none"
+                    className="w-full text-base py-3 px-4 rounded-md outline-none transition-all duration-300 font-primary input-liquid-glass h-24 resize-none"
                   />
                 </div>
               </div>

@@ -35,8 +35,8 @@ const TempleSelection = () => {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: index * 0.05 }}
                             onClick={() => handleSelect(temple)}
-                            className={`group cursor-pointer bg-white border rounded-sm transition-colors duration-300 flex flex-col ${
-                                isSelected ? "border-orange-400 shadow-md" : "border-stone-200 hover:border-orange-500"
+                            className={`group cursor-pointer bg-liquid-glass-card hover:scale-[1.01] rounded-md transition-all duration-300 flex flex-col ${
+                                isSelected ? "border-orange-500 shadow-lg ring-1 ring-orange-500/20" : "border-white/50 hover:border-orange-500/35"
                             }`}
                         >
                             <div className="relative h-48 w-full p-2 pb-0">
@@ -47,13 +47,13 @@ const TempleSelection = () => {
                                         className="w-full h-full object-cover rounded-sm"
                                     />
                                 ) : (
-                                    <div className="w-full h-full bg-stone-50 flex items-center justify-center rounded-sm">
+                                    <div className="w-full h-full bg-white/10 flex items-center justify-center rounded-sm">
                                         <span className="text-stone-400 text-xs uppercase tracking-widest">No Image</span>
                                     </div>
                                 )}
                             </div>
 
-                            <div className="py-6 px-6 flex-grow flex flex-col bg-white">
+                            <div className="py-6 px-6 flex-grow flex flex-col bg-transparent">
                                 <h3 className={`text-xl mb-2 tracking-tight uppercase transition-colors ${isSelected ? 'text-orange-500' : 'text-gray-900'}`}>
                                     {temple.name}
                                 </h3>
@@ -62,7 +62,7 @@ const TempleSelection = () => {
                                     {temple.location}
                                 </p>
 
-                                <div className="mt-auto pt-4 border-t border-stone-100 flex items-center justify-between">
+                                <div className="mt-auto pt-4 border-t border-white/20 flex items-center justify-between">
                                     <span className={`text-[10px] uppercase tracking-[0.2em] transition-colors ${
                                         isSelected ? 'text-orange-500' : 'text-stone-400'
                                     }`}>
@@ -76,8 +76,8 @@ const TempleSelection = () => {
             </div>
 
             {temples.length === 0 && (
-                <div className="text-center py-20 bg-stone-50 rounded-sm border border-dashed border-stone-300 max-w-5xl mx-auto mt-6">
-                    <p className="text-stone-400 uppercase tracking-widest text-xs">Loading Temples...</p>
+                <div className="text-center py-20 bg-white/30 backdrop-blur-md rounded-md border border-dashed border-white/60 max-w-5xl mx-auto mt-6">
+                    <p className="text-stone-500 uppercase tracking-widest text-xs font-semibold">Loading Temples...</p>
                 </div>
             )}
 

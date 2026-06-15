@@ -362,8 +362,8 @@ const PaymentGateway = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           {/* Left Side: Summary */}
           <div className="lg:col-span-7 space-y-8">
-            <div className="bg-white border border-stone-200 rounded-md p-8 shadow-sm relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-stone-50 -mr-16 -mt-16 rounded-full opacity-50 pointer-events-none"></div>
+            <div className="bg-liquid-glass-card rounded-md p-8 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 -mr-16 -mt-16 rounded-full opacity-50 pointer-events-none"></div>
 
               <h3 className="text-sm text-stone-900 uppercase tracking-widest mb-6 flex items-center gap-3 relative z-10">
                 <span className="w-2 h-2 bg-orange-400 rounded-sm"></span>
@@ -372,7 +372,7 @@ const PaymentGateway = () => {
 
               <div className="space-y-4 relative z-10">
                 {selectedPoojas && selectedPoojas.map((pooja) => (
-                  <div key={pooja._id} className="flex justify-between items-start border-b border-stone-100 pb-4 last:border-0 last:pb-0">
+                  <div key={pooja._id} className="flex justify-between items-start border-b border-white/20 pb-4 last:border-0 last:pb-0">
                     <div>
                       <h4 className="text-gray-800 uppercase text-sm tracking-wide">{pooja.name}</h4>
                       <p className="text-[11px] text-stone-400 uppercase tracking-widest mt-1">{selectedTemple?.name}</p>
@@ -380,14 +380,14 @@ const PaymentGateway = () => {
                     <p className="text-gray-900 text-sm tabular-nums">₹{pooja.price}</p>
                   </div>
                 ))}
-                <div className="pt-6 mt-6 border-t-2 border-dashed border-stone-200 flex justify-between items-center">
+                <div className="pt-6 mt-6 border-t-2 border-dashed border-white/20 flex justify-between items-center">
                   <span className="text-xs text-stone-500 uppercase tracking-widest">Total Offering</span>
                   <span className="text-3xl text-orange-500 tabular-nums">₹{totalAmount}</span>
                 </div>
               </div>
             </div>
 
-            <div className="bg-orange-50/50 border border-orange-100 rounded-md p-6 flex items-start gap-4 shadow-sm">
+            <div className="bg-orange-500/10 border border-orange-500/20 text-orange-600 rounded-md p-6 flex items-start gap-4 shadow-sm">
               <div className="w-10 h-10 bg-orange-100 text-orange-500 rounded-md flex items-center justify-center shrink-0">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -405,14 +405,14 @@ const PaymentGateway = () => {
 
           {/* Right Side: Inputs & Checkout */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="bg-white border border-stone-200 p-6 rounded-md shadow-sm space-y-6">
+            <div className="bg-liquid-glass-card p-6 rounded-md space-y-6">
               <div className="space-y-2">
                 <label className="text-xs text-stone-500 uppercase tracking-widest">Pooja in the name of</label>
                 <input
                   type="text"
                   value={poojaInNameOf}
                   onChange={(e) => setPoojaInNameOf(e.target.value.replace(/[^a-zA-Z\s]/g, ''))}
-                  className="w-full px-4 py-3 border border-stone-200 rounded-md outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-50 transition-all text-gray-800 placeholder:text-stone-300"
+                  className="w-full px-4 py-3 rounded-md outline-none transition-all text-gray-800 placeholder:text-stone-300 input-liquid-glass"
                   placeholder="Enter devotee name"
                 />
               </div>
@@ -445,7 +445,7 @@ const PaymentGateway = () => {
                         <button
                           type="button"
                           onClick={handlePrevMonth}
-                          className="p-1.5 hover:bg-stone-100 rounded-full transition-colors text-stone-600 hover:text-orange-500 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-stone-600"
+                          className="p-1.5 hover:bg-stone-100 rounded-full transition-colors text-stone-600 hover:text-orange-500 disabled:opacity-30 disabled:hover:bg-transparent"
                           disabled={isPrevMonthDisabled()}
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -492,11 +492,11 @@ const PaymentGateway = () => {
 
                           let buttonClass = "h-8 w-8 mx-auto flex items-center justify-center text-[11px] font-semibold rounded-full transition-all duration-150 ";
                           if (isDisabled) {
-                            buttonClass += "text-stone-300 line-through bg-stone-50/30 cursor-not-allowed ";
+                            buttonClass += "text-stone-400/50 line-through bg-transparent cursor-not-allowed ";
                           } else if (isSelected) {
                             buttonClass += "bg-orange-500 text-white shadow-sm font-bold ";
                           } else {
-                            buttonClass += "text-stone-700 hover:bg-orange-50 hover:text-orange-500 cursor-pointer ";
+                            buttonClass += "text-stone-700 hover:bg-orange-500/10 hover:text-orange-600 cursor-pointer ";
                           }
 
                           return (
@@ -579,12 +579,12 @@ const PaymentGateway = () => {
               </button>
 
               {/* Secure Payment Badges section */}
-              <div className="bg-stone-50 border border-stone-200 rounded-md p-5 flex flex-col gap-4">
+              <div className="bg-white/10 border border-white/20 rounded-md p-5 flex flex-col gap-4">
                 <div className="flex items-center justify-center gap-2 text-stone-600">
                   <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                  <span className="text-xs font-medium uppercase tracking-widest">100% Secure Checkout</span>
+                  <span className="text-xs font-medium uppercase tracking-widest text-stone-700">100% Secure Checkout</span>
                 </div>
-                <div className="flex items-center justify-center gap-5 text-stone-400">
+                <div className="flex items-center justify-center gap-5 text-stone-500">
                   <div className="flex items-center gap-1.5 text-[10px] tracking-wider uppercase"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg> Cards</div>
                   <div className="flex items-center gap-1.5 text-[10px] tracking-wider uppercase"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg> UPI</div>
                   <div className="flex items-center gap-1.5 text-[10px] tracking-wider uppercase"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" /></svg> NetBanking</div>

@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import { TempleContext } from './context/TempleContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import Breadcrumb from './components/Breadcrumb';
 import ScrollToTop from './components/ScrollToTop';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -67,6 +68,7 @@ const App = () => {
         <Navbar />
         <ScrollToTop />
         <main className="flex-grow">
+          <Breadcrumb />
           <Suspense fallback={<DevotionalLoader />}>
             <Routes>
               <Route path='/' element={<Home />} />

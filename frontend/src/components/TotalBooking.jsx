@@ -6,7 +6,7 @@ const TotalBooking = ({ total }) => {
     //const grandTotal = total + extraFee;
 
     return (
-        <div className='w-full bg-white p-6 shadow-sm font-primary'>
+        <div className='w-full bg-transparent font-primary'>
             <h2 className='text-lg mb-4'>Booking Summary</h2>
             <div className='flex flex-col gap-2 text-sm'>
                 <div className='flex justify-between'>

@@ -6,7 +6,7 @@ import Testimonials from '../components/Testimonials';
 
 const Home = () => {
     return (
-        <div className="font-primary flex flex-col gap-0 pb-12 pt-6 sm:pt-8">
+        <div className="font-primary flex flex-col gap-6 pb-12 pt-2 sm:pt-3">
             <Hero />
             <AboutCard />
             <ServiceCard />

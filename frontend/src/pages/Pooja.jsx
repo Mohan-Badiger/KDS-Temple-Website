@@ -66,11 +66,11 @@ const PoojaCard = () => {
       ) : (
         <div className="w-full">
           {poojaList.length === 0 ? (
-            <div className="text-center py-20 bg-stone-50 rounded-sm border border-dashed border-stone-200">
+            <div className="text-center py-20 bg-white/30 backdrop-blur-md rounded-md border border-dashed border-white/60 max-w-5xl mx-auto">
               <p className="text-stone-400 uppercase tracking-widest text-xs">No poojas available for this temple yet.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
               {poojaList.map((pooja, index) => {
                 const isSelected = selectedPoojas.some(p => p._id === pooja._id);
 
@@ -80,24 +80,19 @@ const PoojaCard = () => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}
-                    className={`bg-white border rounded-sm transition-all duration-300 group flex flex-col ${isSelected ? "border-orange-400 shadow-md" : "border-stone-200 hover:shadow-sm"
+                    onClick={() => handleCheckboxChange(pooja)}
+                    className={`group bg-liquid-glass-card hover:scale-[1.01] rounded-md transition-all duration-300 flex flex-col cursor-pointer select-none ${isSelected ? "border-orange-500 shadow-lg ring-1 ring-orange-500/20" : "border-white/50 hover:border-orange-500/35"
                       }`}
                   >
                     <div className="relative h-48 w-full p-2 pb-0">
                       <img className="rounded-sm w-full h-full object-cover" src={pooja.image} alt={pooja.name} />
                     </div>
-                    <div className="py-6 px-6 flex-grow flex flex-col bg-white">
+                    <div className="py-6 px-6 flex-grow flex flex-col bg-transparent">
                       <h3 className={`text-xl mb-2 tracking-tight uppercase transition-colors ${isSelected ? 'text-orange-500' : 'text-gray-900'}`}>{pooja.name}</h3>
                       <p className="text-stone-500 text-sm leading-relaxed mb-6 line-clamp-2">{pooja.description}</p>
 
-                      <div className="mt-auto pt-4 border-t border-stone-100 flex items-center justify-between">
-                        <label className="flex items-center cursor-pointer group/check">
-                          <input
-                            type="checkbox"
-                            className="hidden"
-                            checked={isSelected}
-                            onChange={() => handleCheckboxChange(pooja)}
-                          />
+                      <div className="mt-auto pt-4 border-t border-white/20 flex items-center justify-between">
+                        <div className="flex items-center group/check">
                           <div className={`w-4 h-4 mr-2.5 border rounded-[2px] flex flex-shrink-0 items-center justify-center transition-all duration-200 ${isSelected ? 'bg-orange-400 border-orange-400' : 'bg-transparent border-stone-300 group-hover/check:border-orange-400'
                             }`}>
                             {isSelected && (
@@ -110,7 +105,7 @@ const PoojaCard = () => {
                             }`}>
                             {isSelected ? 'Selected' : 'Select Pooja'}
                           </span>
-                        </label>
+                        </div>
                         <span className="text-lg text-gray-900 tracking-tight">₹{pooja.price}</span>
                       </div>
                     </div>
@@ -123,7 +118,7 @@ const PoojaCard = () => {
       )}
 
       <div className='flex justify-end my-20'>
-        <div className='w-full sm:w-[450px] p-6 rounded-sm'>
+        <div className='w-full sm:w-[450px] p-6 bg-liquid-glass-card rounded-md'>
           <TotalBooking total={totalAmount} />
           <div className='w-full text-end mt-6'>
             <button

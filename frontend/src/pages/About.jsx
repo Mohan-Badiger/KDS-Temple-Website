@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 const About = () => {
   return (
-    <div className="font-primary min-h-screen pt-6 sm:pt-8 flex flex-col gap-0 pb-12">
+    <div className="font-primary min-h-screen pt-2 sm:pt-3 flex flex-col gap-0 pb-12">
       {/* Hero Section - Immersive & Premium */}
       <section className="relative rounded-sm overflow-hidden bg-stone-900 min-h-[16rem] sm:min-h-[20rem] lg:min-h-[24rem] flex items-center justify-center w-full px-6 sm:px-10 lg:px-14">
         {/* Background Image Layer */}

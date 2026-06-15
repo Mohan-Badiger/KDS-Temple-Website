@@ -11,9 +11,9 @@ const Footer = () => {
     };
 
     return (
-        <footer className="bg-stone-950 text-white font-primary pt-24 pb-12 border-t border-orange-500/20 px-4 -mx-4 sm:-mx-[5vw] md:-mx-[7vw] lg:-mx-[9vw] sm:px-[5vw] md:px-[7vw] lg:px-[9vw] relative overflow-hidden">
+        <footer className="bg-liquid-glass-footer text-stone-800 font-primary pt-24 pb-12 px-4 -mx-4 sm:-mx-[3vw] md:-mx-[4vw] lg:-mx-[5vw] sm:px-[3vw] md:px-[4vw] lg:px-[5vw] relative overflow-hidden">
             {/* Background Subtle Divine Mandalas / Elements */}
-            <div className="absolute -left-24 -bottom-24 text-white/[0.01] pointer-events-none" aria-hidden="true">
+            <div className="absolute -left-24 -bottom-24 text-stone-300/10 pointer-events-none" aria-hidden="true">
                 <Landmark size={300} />
             </div>
 
@@ -24,15 +24,15 @@ const Footer = () => {
                     {/* Brand & Mission (Structured Left) */}
                     <div className="lg:w-5/12 space-y-6">
                         <div className="flex items-center gap-3">
-                            <img src={om_logo} alt="Om" className="h-9 w-9 object-contain filter brightness-110 drop-shadow-[0_0_8px_rgba(212,175,55,0.4)]" />
+                            <img src={om_logo} alt="Om" className="h-9 w-9 object-contain filter drop-shadow-[0_0_8px_rgba(249,115,22,0.2)]" />
                             <div className="flex flex-col">
-                                <h2 className="text-lg sm:text-xl font-bold tracking-widest text-gold font-cinzel leading-tight uppercase">
-                                    BNT TEMPLES
+                                <h2 className="text-lg sm:text-xl font-semibold tracking-widest text-stone-850 font-cinzel leading-none uppercase">
+                                    BNT TEMPLES <span className='text-orange-500'>.</span>
                                 </h2>
-                                <span className="text-[7px] uppercase tracking-[0.3em] text-orange-400 font-bold">Trust Committee</span>
+                                <span className="text-[7px] uppercase tracking-[0.3em] text-orange-600 font-bold mt-1">Trust Committee</span>
                             </div>
                         </div>
-                        <p className="text-stone-400 text-xs sm:text-sm leading-relaxed font-light max-w-md">
+                        <p className="text-stone-600 text-xs sm:text-sm leading-relaxed font-light max-w-md">
                             Preserving the 150-year-old architectural and spiritual heritage of Banahatti through dedicated governance, gaushala support, daily Annaprasad sevas, and global devotee engagement.
                         </p>
                     </div>
@@ -41,43 +41,43 @@ const Footer = () => {
                     <div className="lg:w-7/12 grid grid-cols-1 sm:grid-cols-3 gap-12 sm:gap-8">
                         {/* Sacred Services */}
                         <div className="space-y-6">
-                            <h4 className="text-[10px] uppercase tracking-[0.35em] text-orange-400 font-bold">Sacred Services</h4>
+                            <h4 className="text-[10px] uppercase tracking-[0.35em] text-orange-600 font-bold">Sacred Services</h4>
                             <ul className="space-y-4 text-xs font-semibold">
                                 <li>
-                                    <Link to="/temples" onClick={handleScrollTop} className="text-stone-300 hover:text-orange-400 transition-colors duration-300 tracking-wider">E-Pooja Booking</Link>
+                                    <Link to="/temples" onClick={handleScrollTop} className="text-stone-600 hover:text-orange-600 transition-colors duration-300 tracking-wider">E-Pooja Booking</Link>
                                 </li>
                                 <li>
-                                    <Link to="/donation" onClick={handleScrollTop} className="text-stone-300 hover:text-orange-400 transition-colors duration-300 tracking-wider">Dana Offering</Link>
+                                    <Link to="/donation" onClick={handleScrollTop} className="text-stone-600 hover:text-orange-600 transition-colors duration-300 tracking-wider">Dana Offering</Link>
                                 </li>
                                 <li>
-                                    <Link to="/gallery" onClick={handleScrollTop} className="text-stone-300 hover:text-orange-400 transition-colors duration-300 tracking-wider">Divine Gallery</Link>
+                                    <Link to="/gallery" onClick={handleScrollTop} className="text-stone-600 hover:text-orange-600 transition-colors duration-300 tracking-wider">Divine Gallery</Link>
                                 </li>
                             </ul>
                         </div>
 
                         {/* The Heritage */}
                         <div className="space-y-6">
-                            <h4 className="text-[10px] uppercase tracking-[0.35em] text-orange-400 font-bold">The Heritage</h4>
+                            <h4 className="text-[10px] uppercase tracking-[0.35em] text-orange-600 font-bold">The Heritage</h4>
                             <ul className="space-y-4 text-xs font-semibold">
                                 <li>
-                                    <Link to="/about" onClick={handleScrollTop} className="text-stone-300 hover:text-orange-400 transition-colors duration-300 tracking-wider">About Trust</Link>
+                                    <Link to="/about" onClick={handleScrollTop} className="text-stone-600 hover:text-orange-600 transition-colors duration-300 tracking-wider">About Trust</Link>
                                 </li>
                                 <li>
-                                    <Link to="/contact" onClick={handleScrollTop} className="text-stone-300 hover:text-orange-400 transition-colors duration-300 tracking-wider">Contact Us</Link>
+                                    <Link to="/contact" onClick={handleScrollTop} className="text-stone-600 hover:text-orange-600 transition-colors duration-300 tracking-wider">Contact Us</Link>
                                 </li>
                                 <li>
-                                    <Link to="/profile" onClick={handleScrollTop} className="text-orange-400 hover:text-orange-300 transition-colors duration-300 tracking-wider font-bold decoration-orange-400/20 underline-offset-4">My Dashboard</Link>
+                                    <Link to="/profile" onClick={handleScrollTop} className="text-orange-600 hover:text-orange-700 transition-colors duration-300 tracking-wider font-bold decoration-orange-600/20 underline-offset-4">My Dashboard</Link>
                                 </li>
                             </ul>
                         </div>
 
                         {/* Connectivity */}
                         <div className="space-y-6">
-                            <h4 className="text-[10px] uppercase tracking-[0.35em] text-orange-400 font-bold">Connectivity</h4>
+                            <h4 className="text-[10px] uppercase tracking-[0.35em] text-orange-600 font-bold">Connectivity</h4>
                             <div className="space-y-5 text-xs font-semibold">
                                 <div className="flex gap-3.5 items-start">
-                                    <MapPin size={14} className="text-orange-400 shrink-0 mt-0.5" aria-hidden="true" />
-                                    <p className="leading-relaxed text-stone-300">
+                                    <MapPin size={14} className="text-orange-600 shrink-0 mt-0.5" aria-hidden="true" />
+                                    <p className="leading-relaxed text-stone-600">
                                         {settings?.address || (
                                             <>
                                                 SH 53, Rabkavi Banhatti, <br />
@@ -86,12 +86,12 @@ const Footer = () => {
                                         )}
                                     </p>
                                 </div>
-                                <div className="flex items-center gap-3.5 text-stone-300">
-                                    <Phone size={14} className="text-orange-400 shrink-0" aria-hidden="true" />
+                                <div className="flex items-center gap-3.5 text-stone-600">
+                                    <Phone size={14} className="text-orange-600 shrink-0" aria-hidden="true" />
                                     <p>{settings?.phone || "+91 91234 56789"}</p>
                                 </div>
-                                <div className="flex items-center gap-3.5 text-stone-300">
-                                    <Mail size={14} className="text-orange-400 shrink-0" aria-hidden="true" />
+                                <div className="flex items-center gap-3.5 text-stone-600">
+                                    <Mail size={14} className="text-orange-600 shrink-0" aria-hidden="true" />
                                     <p className="truncate">{settings?.email || "info@banahattitemple.com"}</p>
                                 </div>
                             </div>
@@ -101,7 +101,7 @@ const Footer = () => {
                 </div>
 
                 {/* Footer Bottom Bar */}
-                <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div className="pt-10 border-t border-black/[0.06] flex flex-col md:flex-row justify-between items-center gap-6">
                     <p className="text-[9px] uppercase tracking-[0.2em] text-stone-500 font-medium">
                         © {new Date().getFullYear()} Shri Kadasiddheshwar Temple Trust • Banahatti. All Rights Reserved.
                     </p>

@@ -50,8 +50,8 @@ const ServiceCard = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 lg:gap-12">
 
                     {/* Pooja Card */}
-                    <div className="flex flex-col items-center text-center md:items-start md:text-left space-y-4 p-6 bg-stone-50/40 border border-stone-100 rounded-sm hover:shadow-md hover:border-orange-500/15 transition-all duration-300">
-                        <div className="bg-indigo-100 rounded-full w-14 h-14 flex justify-center items-center text-indigo-500 shadow-lg shrink-0">
+                    <div className="flex flex-col items-center text-center md:items-start md:text-left space-y-4 p-6 bg-liquid-glass-card rounded-md hover:scale-[1.01] transition-all duration-300">
+                        <div className="bg-indigo-100 rounded-full w-14 h-14 flex justify-center items-center text-indigo-500 shadow-md shrink-0">
                             <img src={seva} alt="Seva Pooja" className="w-8 h-8 object-contain" />
                         </div>
                         <h3 className="uppercase text-lg font-semibold font-cinzel text-stone-900 tracking-wider">
@@ -70,8 +70,8 @@ const ServiceCard = () => {
                     </div>
 
                     {/* Donation Card */}
-                    <div className="flex flex-col items-center text-center md:items-start md:text-left space-y-4 p-6 bg-stone-50/40 border border-stone-100 rounded-sm hover:shadow-md hover:border-orange-500/15 transition-all duration-300">
-                        <div className="bg-red-100 rounded-full w-14 h-14 flex justify-center items-center text-red-500 shadow-lg shrink-0">
+                    <div className="flex flex-col items-center text-center md:items-start md:text-left space-y-4 p-6 bg-liquid-glass-card rounded-md hover:scale-[1.01] transition-all duration-300">
+                        <div className="bg-red-100 rounded-full w-14 h-14 flex justify-center items-center text-red-500 shadow-md shrink-0">
                             <img src={donate} alt="Donation" className="w-8 h-8 object-contain" />
                         </div>
                         <h3 className="uppercase text-lg font-semibold font-cinzel text-stone-900 tracking-wider">
@@ -90,8 +90,8 @@ const ServiceCard = () => {
                     </div>
 
                     {/* My Seva Card */}
-                    <div className="flex flex-col items-center text-center md:items-start md:text-left space-y-4 p-6 bg-stone-50/40 border border-stone-100 rounded-sm hover:shadow-md hover:border-orange-500/15 transition-all duration-300">
-                        <div className="bg-green-100 rounded-full w-14 h-14 flex justify-center items-center text-green-500 shadow-lg shrink-0">
+                    <div className="flex flex-col items-center text-center md:items-start md:text-left space-y-4 p-6 bg-liquid-glass-card rounded-md hover:scale-[1.01] transition-all duration-300">
+                        <div className="bg-green-100 rounded-full w-14 h-14 flex justify-center items-center text-green-500 shadow-md shrink-0">
                             <img src={myseva} alt="My Seva" className="w-8 h-8 object-contain" />
                         </div>
                         <h3 className="uppercase text-lg font-semibold font-cinzel text-stone-900 tracking-wider">

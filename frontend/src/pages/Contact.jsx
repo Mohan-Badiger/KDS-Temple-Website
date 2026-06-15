@@ -97,11 +97,11 @@ const Contact = () => {
                 <div className="flex flex-col lg:flex-row gap-12">
                     {/* Left Side: Info & Map */}
                     <div className="lg:w-1/2 space-y-8">
-                        <div className="bg-white p-8 rounded-sm shadow-sm border border-stone-100">
+                        <div className="bg-liquid-glass-card p-8 rounded-md">
                             <h2 className="text-xl font-normal text-gray-900 mb-6 uppercase tracking-wider">Temple Information</h2>
                             <div className="space-y-6">
                                 <div className="flex items-start gap-4">
-                                    <div className="p-3 bg-orange-50 text-orange-600 rounded-sm">
+                                    <div className="p-3 bg-orange-500/10 text-orange-600 rounded-md border border-orange-500/20 shadow-sm">
                                         <MapPin size={20} />
                                     </div>
                                     <div>
@@ -110,7 +110,7 @@ const Contact = () => {
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-4">
-                                    <div className="p-3 bg-orange-50 text-orange-600 rounded-sm">
+                                    <div className="p-3 bg-orange-500/10 text-orange-600 rounded-md border border-orange-500/20 shadow-sm">
                                         <Phone size={20} />
                                     </div>
                                     <div>
@@ -119,7 +119,7 @@ const Contact = () => {
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-4">
-                                    <div className="p-3 bg-orange-50 text-orange-600 rounded-sm">
+                                    <div className="p-3 bg-orange-500/10 text-orange-600 rounded-md border border-orange-500/20 shadow-sm">
                                         <Mail size={20} />
                                     </div>
                                     <div>
@@ -131,9 +131,9 @@ const Contact = () => {
                         </div>
 
                         {/* Map */}
-                        <div className="h-80 bg-stone-200 rounded-sm overflow-hidden relative shadow-sm border border-stone-100">
+                        <div className="h-80 bg-stone-200/40 rounded-md overflow-hidden relative border border-white/50 shadow-md">
                             {mapLoading && (
-                                <div className="absolute inset-0 z-10 bg-white/80 flex items-center justify-center">
+                                <div className="absolute inset-0 z-10 bg-white/50 backdrop-blur-sm flex items-center justify-center">
                                     <div className="w-6 h-6 border-2 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
                                 </div>
                             )}
@@ -147,18 +147,18 @@ const Contact = () => {
 
                     {/* Right Side: Tabbed Form */}
                     <div className="lg:w-1/2">
-                        <div className="bg-white rounded-sm shadow-sm border border-stone-100 overflow-hidden">
+                        <div className="bg-liquid-glass-card rounded-md overflow-hidden">
                             {/* Tabs */}
-                            <div className="flex border-b border-stone-100">
+                            <div className="flex border-b border-white/45 bg-white/10">
                                 <button
                                     onClick={() => setActiveTab('contact')}
-                                    className={`flex-1 py-4 text-sm uppercase tracking-widest font-medium transition-all flex items-center justify-center gap-2 ${activeTab === 'contact' ? 'bg-orange-500 text-white' : 'text-stone-400 hover:text-orange-500 hover:bg-orange-50/30'}`}
+                                    className={`flex-1 py-4 text-sm uppercase tracking-widest font-medium transition-all flex items-center justify-center gap-2 ${activeTab === 'contact' ? 'bg-orange-500 text-white font-semibold' : 'text-stone-600 hover:text-orange-600 hover:bg-white/10'}`}
                                 >
                                     <MessageSquare size={16} /> Contact Us
                                 </button>
                                 <button
                                     onClick={() => setActiveTab('feedback')}
-                                    className={`flex-1 py-4 text-sm uppercase tracking-widest font-medium transition-all flex items-center justify-center gap-2 ${activeTab === 'feedback' ? 'bg-orange-500 text-white' : 'text-stone-400 hover:text-orange-500 hover:bg-orange-50/30'}`}
+                                    className={`flex-1 py-4 text-sm uppercase tracking-widest font-medium transition-all flex items-center justify-center gap-2 ${activeTab === 'feedback' ? 'bg-orange-500 text-white font-semibold' : 'text-stone-600 hover:text-orange-600 hover:bg-white/10'}`}
                                 >
                                     <Bug size={16} /> Improvements
                                 </button>
@@ -174,27 +174,27 @@ const Contact = () => {
                                         >
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                                 <div className="space-y-2">
-                                                    <label className="block text-xs uppercase tracking-widest text-stone-500">Your Name</label>
+                                                    <label className="block text-xs uppercase tracking-widest text-stone-500 font-medium">Your Name</label>
                                                     <input
                                                         type="text" value={name} onChange={(e) => setName(e.target.value)} required
-                                                        className="w-full px-4 py-3 bg-stone-50 border border-stone-100 focus:border-orange-500 outline-none transition-all text-sm rounded-sm"
+                                                        className="w-full px-4 py-3 input-liquid-glass outline-none transition-all text-sm rounded-md"
                                                         placeholder="John Doe"
                                                     />
                                                 </div>
                                                 <div className="space-y-2">
-                                                    <label className="block text-xs uppercase tracking-widest text-stone-500">Email Address</label>
+                                                    <label className="block text-xs uppercase tracking-widest text-stone-500 font-medium">Email Address</label>
                                                     <input
                                                         type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
-                                                        className="w-full px-4 py-3 bg-stone-50 border border-stone-100 focus:border-orange-500 outline-none transition-all text-sm rounded-sm"
+                                                        className="w-full px-4 py-3 input-liquid-glass outline-none transition-all text-sm rounded-md"
                                                         placeholder="john@example.com"
                                                     />
                                                 </div>
                                             </div>
                                             <div className="space-y-2">
-                                                <label className="block text-xs uppercase tracking-widest text-stone-500">Message</label>
+                                                <label className="block text-xs uppercase tracking-widest text-stone-500 font-medium">Message</label>
                                                 <textarea
                                                     rows="5" value={message} onChange={(e) => setMessage(e.target.value)} required
-                                                    className="w-full px-4 py-3 bg-stone-50 border border-stone-100 focus:border-orange-500 outline-none transition-all text-sm rounded-sm resize-none"
+                                                    className="w-full px-4 py-3 input-liquid-glass outline-none transition-all text-sm rounded-md resize-none"
                                                     placeholder="How can we help you?"
                                                 ></textarea>
                                             </div>
@@ -213,37 +213,37 @@ const Contact = () => {
                                         >
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                                 <div className="space-y-2">
-                                                    <label className="block text-xs uppercase tracking-widest text-stone-500">Your Name</label>
+                                                    <label className="block text-xs uppercase tracking-widest text-stone-500 font-medium">Your Name</label>
                                                     <input
                                                         type="text" value={name} onChange={(e) => setName(e.target.value)} required
-                                                        className="w-full px-4 py-3 bg-stone-50 border border-stone-100 focus:border-orange-500 outline-none transition-all text-sm rounded-sm"
+                                                        className="w-full px-4 py-3 input-liquid-glass outline-none transition-all text-sm rounded-md"
                                                         placeholder="John Doe"
                                                     />
                                                 </div>
                                                 <div className="space-y-2">
-                                                    <label className="block text-xs uppercase tracking-widest text-stone-500">Email Address</label>
+                                                    <label className="block text-xs uppercase tracking-widest text-stone-500 font-medium">Email Address</label>
                                                     <input
                                                         type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
-                                                        className="w-full px-4 py-3 bg-stone-50 border border-stone-100 focus:border-orange-500 outline-none transition-all text-sm rounded-sm"
+                                                        className="w-full px-4 py-3 input-liquid-glass outline-none transition-all text-sm rounded-md"
                                                         placeholder="john@example.com"
                                                     />
                                                 </div>
                                             </div>
                                             <div className="space-y-2">
-                                                <label className="block text-xs uppercase tracking-widest text-stone-500">Feedback Type</label>
+                                                <label className="block text-xs uppercase tracking-widest text-stone-500 font-medium">Feedback Type</label>
                                                 <select
                                                     value={feedbackType} onChange={(e) => setFeedbackType(e.target.value)}
-                                                    className="w-full px-4 py-3 bg-stone-50 border border-stone-100 focus:border-orange-500 outline-none transition-all text-sm rounded-sm"
+                                                    className="w-full px-4 py-3 input-liquid-glass outline-none transition-all text-sm rounded-md appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7%209l3%203%203-3%22%20stroke%3D%22%2378716c%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem] bg-[right_1rem_center] bg-no-repeat pr-10 cursor-pointer"
                                                 >
-                                                    <option value="Improvement">Improvement Suggestion</option>
-                                                    <option value="Technical Issue">Technical Issue/Bug</option>
+                                                    <option value="Improvement" className="bg-white text-stone-900">Improvement Suggestion</option>
+                                                    <option value="Technical Issue" className="bg-white text-stone-900">Technical Issue/Bug</option>
                                                 </select>
                                             </div>
                                             <div className="space-y-2">
-                                                <label className="block text-xs uppercase tracking-widest text-stone-500">Details</label>
+                                                <label className="block text-xs uppercase tracking-widest text-stone-500 font-medium">Details</label>
                                                 <textarea
                                                     rows="5" value={feedbackMsg} onChange={(e) => setFeedbackMsg(e.target.value)} required
-                                                    className="w-full px-4 py-3 bg-stone-50 border border-stone-100 focus:border-orange-500 outline-none transition-all text-sm rounded-sm resize-none"
+                                                    className="w-full px-4 py-3 input-liquid-glass outline-none transition-all text-sm rounded-md resize-none"
                                                     placeholder="Please describe the improvement or issue..."
                                                 ></textarea>
                                             </div>

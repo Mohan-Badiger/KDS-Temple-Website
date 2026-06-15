@@ -28,7 +28,7 @@ const testimonials = [
 
 const Testimonials = () => {
   return (
-    <section className="pt-10 pb-16 md:pt-14 md:pb-20 bg-stone-50/50 font-primary border-t border-stone-100">
+    <section className="pt-10 pb-16 md:pt-14 md:pb-20 bg-transparent font-primary border-t border-stone-100">
       <div className="container mx-auto px-6 max-w-7xl">
         
         {/* Section Header */}
@@ -59,7 +59,7 @@ const Testimonials = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1, duration: 0.6 }}
-              className="bg-white p-8 border border-stone-200/60 rounded-sm hover:border-orange-500/20 hover:shadow-md transition-all duration-300 group relative overflow-hidden flex flex-col justify-between"
+              className="bg-liquid-glass-card p-8 rounded-md hover:scale-[1.01] transition-all duration-300 group relative overflow-hidden flex flex-col justify-between"
             >
               {/* Decorative Quote Icon */}
               <div className="absolute top-[-15px] right-[-10px] text-stone-100/50 pointer-events-none" aria-hidden="true">
