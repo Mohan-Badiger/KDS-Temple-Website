@@ -109,21 +109,16 @@ const Navbar = () => {
     } after:content-[""] after:absolute after:left-0 after:bottom-0 after:h-[1px] after:bg-orange-400 after:transition-all after:duration-300 hover:after:w-full`;
 
   return (
-    <nav className="sticky top-0 z-[100] backdrop-blur-md bg-stone-950/95 border-b border-orange-500/20 px-4 -mx-4 sm:-mx-[3vw] md:-mx-[4vw] lg:-mx-[5vw] sm:px-[3vw] md:px-[4vw] lg:px-[5vw] transition-all duration-300">
+    <nav className="sticky top-0 z-[100] backdrop-blur-md px-4 -mx-4 sm:-mx-[3vw] md:-mx-[4vw] lg:-mx-[5vw] sm:px-[3vw] md:px-[4vw] lg:px-[5vw] transition-all duration-300">
       <div className="flex items-center justify-between py-4 font-primary">
 
         {/* Sacred Branding Logo */}
         <Link to='/' className="flex items-center gap-2.5 group">
-          <img
-            src={om_logo}
-            alt="Om"
-            className="h-8 w-8 object-contain filter brightness-105"
-          />
           <div className="flex flex-col">
-            <h1 className="font-cinzel text-lg sm:text-xl tracking-wide text-white group-hover:text-gold transition-colors">
-              BNT TEMPLES
+            <h1 className="font-cinzel text-lg sm:text-xl lg:text-3xl tracking-wide text-gray-800 group-hover:text-gold transition-colors">
+              BNT TEMPLES <span className='text-orange-500'>.</span>
             </h1>
-            <span className="text-[7px] uppercase tracking-[0.25em] text-orange-400 -mt-0.5">Trust Committee</span>
+
           </div>
         </Link>
 
