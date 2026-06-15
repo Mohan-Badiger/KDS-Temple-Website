@@ -21,7 +21,7 @@ import UserManage from './pages/UserManage.jsx';
 import UsersList from './pages/UsersList.jsx';
 import Settings from './pages/Settings.jsx';
 
-export const backendUrl = import.meta.env.VITE_BACKEND_URL;
+export const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
 
 const App = () => {
   const [token, setToken] = useState(() => {
