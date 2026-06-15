@@ -55,16 +55,24 @@ app.use(express.json({ limit: '10kb' }))
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:5174',
+  'http://localhost:5175',
+  'http://localhost:5176',
   process.env.FRONTEND_URL,
   process.env.ADMIN_URL
-].filter(Boolean);
+]
+  .filter(Boolean)
+  .map(url => url.replace(/\/$/, ''));
 
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    const normalizedOrigin = origin.replace(/\/$/, '');
+    const isLocalhost = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(normalizedOrigin);
+    
+    if (isLocalhost || allowedOrigins.includes(normalizedOrigin)) {
       callback(null, true);
     } else {
+      console.warn(`CORS blocked request from origin: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },

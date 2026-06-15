@@ -72,7 +72,7 @@ const DonationManage = () => {
   const [selectedMonth, setSelectedMonth] = useState('');
   const [selectedTemple, setSelectedTemple] = useState('');
 
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
 
   useEffect(() => {
     const fetchData = async () => {
