@@ -5,7 +5,7 @@ import axiosInstance from "../utils/axiosInstance";
 export const TempleContext = createContext();
 
 const TempleContextProvider = (props) => {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
     const [token, setToken] = useState(() => localStorage.getItem('token') || '');
     const navigate = useNavigate();
 
