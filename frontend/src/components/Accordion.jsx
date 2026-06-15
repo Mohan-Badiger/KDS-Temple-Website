@@ -7,17 +7,17 @@ const Accordion = ({ title, content }) => {
   const [language, setLanguage] = useState("english");
 
   return (
-    <div className="w-full bg-white mb-4 border border-stone-200/60 rounded-sm hover:border-orange-500/20 hover:shadow-md transition-all duration-300">
+    <div className="w-full bg-liquid-glass-card mb-4 rounded-md transition-all duration-300">
       <div className="w-full">
         {/* Accordion header - Premium & Clean */}
         <div
           onClick={() => setIsOpen(!isOpen)}
           className={`flex justify-between items-center py-6 cursor-pointer transition-all ${
-            isOpen ? "text-orange-600 bg-stone-50/40" : "text-stone-800 hover:text-orange-600"
-          } px-6 rounded-t-sm group`}
+            isOpen ? "text-orange-600 bg-white/20" : "text-stone-800 hover:text-orange-600"
+          } px-6 rounded-t-md group`}
         >
           <div className="flex items-center gap-6">
-             <div className={`p-2 rounded-full transition-colors ${isOpen ? 'bg-orange-100 text-orange-600' : 'bg-stone-50 text-stone-400 group-hover:bg-orange-500 group-hover:text-orange-600'}`}>
+             <div className={`p-2 rounded-full transition-colors ${isOpen ? 'bg-orange-500/10 text-orange-600' : 'bg-white/30 border border-white/40 text-stone-400 group-hover:bg-orange-500/10 group-hover:text-orange-600 group-hover:border-orange-500/20'}`}>
                 <Globe size={18} />
              </div>
             <h2 className="text-lg sm:text-2xl font-semibold font-cinzel text-stone-900 tracking-wide">
@@ -41,24 +41,24 @@ const Accordion = ({ title, content }) => {
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.5, ease: [0.04, 0.62, 0.23, 0.98] }}
-              className="overflow-hidden bg-white"
+              className="overflow-hidden bg-transparent"
             >
               <div className="px-6 py-8">
                 {/* Fixed Premium Language Toggle */}
                 <div className="flex justify-end mb-8">
-                  <div className="inline-flex p-1 bg-stone-100 rounded-sm">
+                  <div className="inline-flex p-1 bg-white/30 backdrop-blur-md rounded-md border border-white/45">
                     <button
                       onClick={() => setLanguage("english")}
-                      className={`px-6 py-2 text-[10px] uppercase tracking-widest font-bold transition-all rounded-sm ${
-                        language === "english" ? "bg-white text-orange-600 shadow-sm" : "text-stone-400 hover:text-stone-600"
+                      className={`px-6 py-2 text-[10px] uppercase tracking-widest font-bold transition-all rounded-md ${
+                        language === "english" ? "bg-white/90 text-orange-600 shadow-sm border border-white/60" : "text-stone-600 hover:text-orange-600"
                       }`}
                     >
                       English
                     </button>
                     <button
                       onClick={() => setLanguage("kannada")}
-                      className={`px-6 py-2 text-[10px] uppercase tracking-widest font-bold transition-all rounded-sm font-kan ${
-                        language === "kannada" ? "bg-white text-orange-600 shadow-sm" : "text-stone-400 hover:text-stone-600"
+                      className={`px-6 py-2 text-[10px] uppercase tracking-widest font-bold transition-all rounded-md font-kan ${
+                        language === "kannada" ? "bg-white/90 text-orange-600 shadow-sm border border-white/60" : "text-stone-600 hover:text-orange-600"
                       }`}
                     >
                       ಕನ್ನಡ
@@ -74,7 +74,7 @@ const Accordion = ({ title, content }) => {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: idx * 0.1 }}
-                        className="relative pl-8 border-l border-stone-200"
+                        className="relative pl-8 border-l border-stone-300/40"
                     >
                       {section.heading && (
                         <h3 className="text-base sm:text-xl font-semibold font-cinzel text-stone-900 mb-4 tracking-wide">
