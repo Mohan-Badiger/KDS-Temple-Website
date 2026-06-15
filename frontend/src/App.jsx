@@ -3,12 +3,12 @@ import { Routes, Route } from 'react-router-dom';
 import { TempleContext } from './context/TempleContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import Breadcrumb from './components/Breadcrumb';
 import ScrollToTop from './components/ScrollToTop';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DevotionalLoader from './components/Loader/DevotionalLoader';
 import OfflineScreen from './components/Offline/OfflineScreen';
+import Breadcrumb from './components/Breadcrumb';
 
 // Universal Lazy Loading for Performance
 import Home from './pages/Home';
