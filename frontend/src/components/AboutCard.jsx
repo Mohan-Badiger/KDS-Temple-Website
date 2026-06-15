@@ -84,9 +84,9 @@ const AboutCard = () => {
                                     whileInView={{ opacity: 1, scale: 1 }}
                                     viewport={{ once: true }}
                                     transition={{ delay: idx * 0.1 }}
-                                    className="p-6 bg-stone-50/50 border border-stone-200/60 rounded-sm hover:shadow-md hover:border-orange-500/20 transition-all duration-300 group"
+                                    className="p-6 bg-liquid-glass-card rounded-md hover:scale-[1.01] transition-all duration-300 group"
                                 >
-                                    <div className="mb-4 p-3 bg-stone-100 rounded-sm w-fit group-hover:bg-orange-50 transition-colors">
+                                    <div className="mb-4 p-3 bg-white/40 rounded-md w-fit group-hover:bg-orange-50/50 transition-colors">
                                         {shrine.icon}
                                     </div>
                                     <h4 className="text-md font-semibold font-cinzel text-stone-900 mb-2 tracking-wide group-hover:text-orange-600 transition-colors">{shrine.name}</h4>
@@ -98,7 +98,7 @@ const AboutCard = () => {
 
                     {/* Right Side: Pillars of Service (4 cols on lg) */}
                     <div className="lg:col-span-4">
-                        <div className="bg-stone-50 border border-stone-200/60 p-6 sm:p-8 rounded-sm space-y-6">
+                        <div className="bg-liquid-glass-card p-6 sm:p-8 rounded-md space-y-6">
                             <h3 className="text-[10px] uppercase tracking-[0.25em] font-bold text-stone-400">Our Pillars of Service</h3>
                             <div className="space-y-6">
                                 {pillars.map((pillar, idx) => (
@@ -138,19 +138,19 @@ const AboutCard = () => {
                     viewport={{ once: true }}
                     className="grid grid-cols-2 md:grid-cols-4 gap-4 border-t border-stone-100 pt-8"
                 >
-                    <div className="bg-stone-50/50 border border-stone-100 p-4 rounded-sm text-center md:text-left">
+                    <div className="bg-liquid-glass-card p-4 rounded-md text-center md:text-left">
                         <p className="text-[9px] uppercase tracking-widest text-stone-400 mb-1">Caretaker</p>
                         <p className="text-xs font-bold text-stone-900 uppercase font-cinzel tracking-wider">Trust Board</p>
                     </div>
-                    <div className="bg-stone-50/50 border border-stone-100 p-4 rounded-sm text-center md:text-left">
+                    <div className="bg-liquid-glass-card p-4 rounded-md text-center md:text-left">
                         <p className="text-[9px] uppercase tracking-widest text-stone-400 mb-1">Legacy</p>
                         <p className="text-xs font-bold text-stone-900 uppercase font-cinzel tracking-wider">150+ Years of Service</p>
                     </div>
-                    <div className="bg-stone-50/50 border border-stone-100 p-4 rounded-sm text-center md:text-left">
+                    <div className="bg-liquid-glass-card p-4 rounded-md text-center md:text-left">
                         <p className="text-[9px] uppercase tracking-widest text-stone-400 mb-1">Status</p>
                         <p className="text-xs font-bold text-stone-900 uppercase font-cinzel tracking-wider">Registered Muzrai Trust</p>
                     </div>
-                    <div className="bg-stone-50/50 border border-stone-100 p-4 rounded-sm text-center md:text-left">
+                    <div className="bg-liquid-glass-card p-4 rounded-md text-center md:text-left">
                         <p className="text-[9px] uppercase tracking-widest text-stone-400 mb-1">Area</p>
                         <p className="text-xs font-bold text-stone-900 uppercase font-cinzel tracking-wider">Rabkavi-Banahatti</p>
                     </div>
