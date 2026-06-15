@@ -54,16 +54,16 @@ const App = () => {
   return (
     <>
       {!isOnline && <OfflineScreen />}
-      <ToastContainer 
-        autoClose={2000} 
-        position="top-right" 
-        hideProgressBar={true} 
-        newestOnTop={true} 
-        closeOnClick 
-        pauseOnHover 
+      <ToastContainer
+        autoClose={2000}
+        position="top-right"
+        hideProgressBar={true}
+        newestOnTop={true}
+        closeOnClick
+        pauseOnHover
         theme="light"
       />
-      <div className='px-4 sm:px-[3vw] md:px-[4vw] lg:px-[5vw] bg-gradient-to-br from-amber-50/30 via-stone-100 to-stone-50 min-h-screen flex flex-col'>
+      <div className='px-4 sm:px-[3vw] md:px-[4vw] lg:px-[5vw] bg-gradient-to-br from-yellow-100 via-gray-200 to-yellow-100 min-h-screen flex flex-col'>
         <Navbar />
         <ScrollToTop />
         <main className="flex-grow">

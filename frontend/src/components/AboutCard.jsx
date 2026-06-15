@@ -52,17 +52,16 @@ const AboutCard = () => {
     ];
 
     return (
-        <section className="w-full pt-16 pb-10 md:pt-20 md:pb-14 font-primary text-stone-900 border-t border-stone-100 bg-white">
+        <section className="w-full pt-16 pb-10 md:pt-20 md:pb-14 font-primary text-stone-900 border-t border-stone-100">
             <div className="container mx-auto px-6 max-w-7xl">
-                
+
                 {/* Header Section */}
-                <motion.div 
+                <motion.div
                     initial={{ opacity: 0, y: 15 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     className="mb-12 text-center md:text-left"
                 >
-                    <span className="text-[10px] uppercase tracking-[0.3em] text-orange-600 font-bold mb-2.5 block">Sacred Legacy</span>
                     <h2 className="text-3xl md:text-5xl font-light tracking-tight text-stone-950 font-cinzel leading-tight">
                         Banahatti Temples Trust
                     </h2>
@@ -73,13 +72,13 @@ const AboutCard = () => {
 
                 {/* Main Content Grid: Left (Shrines) 2/3, Right (Pillars) 1/3 */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16">
-                    
+
                     {/* Left Side: Shrines (8 cols on lg) */}
                     <div className="lg:col-span-8 space-y-6">
                         <h3 className="text-[10px] uppercase tracking-[0.25em] font-bold text-stone-400 mb-2">Sacred Shrines Under Our Care</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {shrines.map((shrine, idx) => (
-                                <motion.div 
+                                <motion.div
                                     key={idx}
                                     initial={{ opacity: 0, scale: 0.98 }}
                                     whileInView={{ opacity: 1, scale: 1 }}
@@ -96,14 +95,14 @@ const AboutCard = () => {
                             ))}
                         </div>
                     </div>
-    
+
                     {/* Right Side: Pillars of Service (4 cols on lg) */}
                     <div className="lg:col-span-4">
                         <div className="bg-stone-50 border border-stone-200/60 p-6 sm:p-8 rounded-sm space-y-6">
                             <h3 className="text-[10px] uppercase tracking-[0.25em] font-bold text-stone-400">Our Pillars of Service</h3>
                             <div className="space-y-6">
                                 {pillars.map((pillar, idx) => (
-                                    <motion.div 
+                                    <motion.div
                                         key={idx}
                                         initial={{ opacity: 0, x: 15 }}
                                         whileInView={{ opacity: 1, x: 0 }}
@@ -121,7 +120,7 @@ const AboutCard = () => {
                                     </motion.div>
                                 ))}
                             </div>
-                            
+
                             <div className="pt-6 border-t border-stone-200 flex items-start gap-2.5">
                                 <ShieldCheck className="text-green-600 mt-0.5 shrink-0" size={14} />
                                 <p className="text-[10px] text-stone-500 leading-normal font-light">
@@ -133,7 +132,7 @@ const AboutCard = () => {
                 </div>
 
                 {/* Governance Summary Footer row */}
-                <motion.div 
+                <motion.div
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
