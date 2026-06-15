@@ -377,21 +377,29 @@ const Donation = () => {
 
               {/* 0. Temple Selection */}
               <div>
-                <h3 className="text-lg font-medium text-gray-900 mb-4">1. Select Temple</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <h3 className="text-lg font-medium text-gray-900 mb-4 font-primary">1. Select Temple</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {temples.map(t => (
                     <button
                       key={t._id}
                       type="button"
                       onClick={() => setTempleId(t._id)}
-                      className={`text-left px-4 py-3 border rounded-md transition-all duration-300 text-base hover:scale-[1.02] active:scale-[0.98]
+                      className={`text-left px-5 py-4 border rounded-md transition-all duration-355 hover:scale-[1.01] active:scale-[0.99] flex flex-col justify-center cursor-pointer select-none
                         ${templeId === t._id
-                          ? 'border-orange-500 bg-orange-500/10 text-orange-600 font-semibold shadow-sm'
-                          : 'border-white/50 bg-white/40 hover:bg-white/60 text-stone-700'
+                          ? 'border-orange-500 bg-orange-500/10 shadow-sm font-medium'
+                          : 'border-white/50 bg-white/40 hover:bg-white/60 font-medium'
                         }`}
                     >
-                      <div className="text-md font uppercase">{t.name}</div>
-                      <div className="text-[14px] opacity-70">{t.location}</div>
+                      <span className={`text-[11px] sm:text-xs uppercase tracking-widest font-medium leading-normal transition-colors duration-300 ${
+                        templeId === t._id ? 'text-orange-600' : 'text-stone-850'
+                      }`}>
+                        {t.name}
+                      </span>
+                      <span className={`text-[11px] mt-1 font-light tracking-wide leading-relaxed transition-colors duration-300 ${
+                        templeId === t._id ? 'text-orange-800/80' : 'text-stone-500'
+                      }`}>
+                        {t.location}
+                      </span>
                     </button>
                   ))}
                 </div>
@@ -402,17 +410,17 @@ const Donation = () => {
 
               {/* 1. Purpose Cards */}
               <div>
-                <h3 className="text-lg font-medium text-gray-900 mb-4">2. Select Purpose</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <h3 className="text-lg font-medium text-gray-900 mb-4 font-primary">2. Select Purpose</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {DONATION_PURPOSES.map(cat => (
                     <button
                       key={cat}
                       type="button"
                       onClick={() => setPurpose(cat)}
-                      className={`text-left px-4 py-3 border rounded-md transition-all duration-300 text-base hover:scale-[1.02] active:scale-[0.98]
+                      className={`text-left px-5 py-4.5 border rounded-md transition-all duration-355 hover:scale-[1.01] active:scale-[0.99] text-xs uppercase tracking-widest font-medium cursor-pointer select-none
                         ${purpose === cat
-                          ? 'border-orange-500 bg-orange-500/10 text-orange-600 font-semibold shadow-sm'
-                          : 'border-white/50 bg-white/40 hover:bg-white/60 text-stone-700'
+                          ? 'border-orange-500 bg-orange-500/10 text-orange-600 shadow-sm'
+                          : 'border-white/50 bg-white/40 hover:bg-white/60 text-stone-850'
                         }`}
                     >
                       {cat}

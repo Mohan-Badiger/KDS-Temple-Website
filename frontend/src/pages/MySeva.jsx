@@ -90,9 +90,9 @@ const MySeva = () => {
         </div>
 
         {bookings.length === 0 ? (
-          <div className="text-center py-20 bg-stone-50 border border-stone-200 rounded-md">
-            <p className="text-stone-500 uppercase tracking-widest text-xs mb-6">No poojas booked yet.</p>
-            <button onClick={() => navigate("/temples")} className="text-xs text-orange-500 hover:text-orange-600 uppercase tracking-widest border border-orange-200 px-6 py-3 rounded-md transition-colors">Book Now →</button>
+          <div className="text-center py-20 bg-white/30 backdrop-blur-md rounded-md border border-dashed border-white/60">
+            <p className="text-stone-550 uppercase tracking-widest text-xs mb-6 font-semibold">No poojas booked yet.</p>
+            <button onClick={() => navigate("/temples")} className="text-xs text-orange-600 hover:text-orange-700 uppercase tracking-widest border border-orange-200 bg-white/30 hover:bg-white/50 px-6 py-3 rounded-md transition-colors cursor-pointer font-bold">Book Now →</button>
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -102,7 +102,7 @@ const MySeva = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
-                className="bg-white border border-stone-200 rounded-md p-6 shadow-sm hover:shadow-md transition-all border-l-4 border-l-orange-400"
+                className="bg-liquid-glass-card rounded-md p-6 shadow-sm hover:scale-[1.01] transition-all duration-300 border-l-4 border-l-orange-400"
               >
                 <div className="flex justify-between items-start mb-6">
                   <div>
@@ -116,7 +116,7 @@ const MySeva = () => {
                   <StatusBadge status={booking.status} />
                 </div>
 
-                <div className="grid grid-cols-2 gap-6 pt-6 border-t border-stone-100">
+                <div className="grid grid-cols-2 gap-6 pt-6 border-t border-white/20">
                   <div>
                     <p className="text-[10px] text-stone-400 uppercase tracking-widest mb-1">Devotee</p>
                     <p className="text-sm text-gray-800 uppercase tracking-wide truncate">{booking.poojaInNameOf || "Devotee"}</p>
@@ -153,9 +153,9 @@ const MySeva = () => {
         </div>
 
         {donations.length === 0 ? (
-          <div className="text-center py-20 bg-stone-50 border border-stone-200 rounded-md">
-            <p className="text-stone-500 uppercase tracking-widest text-xs mb-6">No donations recorded yet.</p>
-            <button onClick={() => navigate("/donation")} className="text-xs text-green-500 hover:text-green-600 uppercase tracking-widest border border-green-200 px-6 py-3 rounded-md transition-colors">Donate Now ❤️</button>
+          <div className="text-center py-20 bg-white/30 backdrop-blur-md rounded-md border border-dashed border-white/60">
+            <p className="text-stone-555 uppercase tracking-widest text-xs mb-6 font-semibold">No donations recorded yet.</p>
+            <button onClick={() => navigate("/donation")} className="text-xs text-green-600 hover:text-green-700 uppercase tracking-widest border border-green-200 bg-white/30 hover:bg-white/50 px-6 py-3 rounded-md transition-colors cursor-pointer font-bold">Donate Now ❤️</button>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -165,10 +165,10 @@ const MySeva = () => {
                 initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: index * 0.05 }}
-                className="bg-white border border-stone-200 rounded-md p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow"
+                className="bg-liquid-glass-card rounded-md p-6 flex flex-col justify-between shadow-sm hover:scale-[1.01] transition-all duration-300"
               >
                 <div className="flex justify-between items-start mb-6">
-                  <div className="w-10 h-10 bg-green-50 text-green-500 rounded-md flex items-center justify-center">
+                  <div className="w-10 h-10 bg-green-500/10 text-green-600 border border-green-500/20 rounded-md flex items-center justify-center">
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
                     </svg>
@@ -181,7 +181,7 @@ const MySeva = () => {
                   <p className="text-3xl text-gray-900 tabular-nums">₹{donation.amount}</p>
                 </div>
 
-                <div className="pt-4 border-t border-stone-100 flex items-center justify-between">
+                <div className="pt-4 border-t border-white/20 flex items-center justify-between">
                   <span className="text-[10px] text-stone-500 uppercase tracking-widest">Verified Contribution</span>
                   <div className="w-2 h-2 bg-green-400 rounded-md"></div>
                 </div>

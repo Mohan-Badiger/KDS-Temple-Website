@@ -37,7 +37,7 @@ const PoojaCard = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className='font-primary px-2'
+      className='font-primary max-w-5xl mx-auto px-4 py-6'
     >
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 mt-10 gap-4 border-b border-stone-200 pb-8">
         <div className="flex items-center gap-4">
@@ -47,15 +47,25 @@ const PoojaCard = () => {
             <h1 className="text-2xl sm:text-3xl text-gray-900 tracking-tight uppercase">{selectedTemple?.name}</h1>
           </div>
         </div>
-        <button
-          onClick={() => {
-            setSelectedTemple(null);
-            navigate("/temples");
-          }}
-          className="text-[12px] text-white uppercase tracking-[0.1em] transition-all duration-300 border bg-orange-400 px-5 py-2.5 rounded-sm hover:border-orange-500 active:scale-95"
-        >
-          Change Temple
-        </button>
+        <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+          <button
+            onClick={() => {
+              setSelectedTemple(null);
+              navigate("/temples");
+            }}
+            className="text-[12px] text-stone-700 uppercase tracking-[0.1em] transition-all duration-300 border border-white/60 bg-white/40 px-5 py-2.5 rounded-sm hover:bg-white/60 active:scale-95"
+          >
+            Change Temple
+          </button>
+          {selectedPoojas.length > 0 && (
+            <button
+              onClick={() => navigate('/payment')}
+              className="text-[12px] text-white uppercase tracking-[0.1em] transition-all duration-300 bg-gradient-to-r from-orange-500 to-amber-500 px-5 py-2.5 rounded-sm hover:shadow-md active:scale-95 font-bold"
+            >
+              Proceed to Book (₹{totalAmount})
+            </button>
+          )}
+        </div>
       </div>
 
       {loading ? (
@@ -116,13 +126,13 @@ const PoojaCard = () => {
           )}
         </div>
       )}
-
-      <div className='flex justify-end my-20'>
-        <div className='w-full sm:w-[450px] p-6 bg-liquid-glass-card rounded-md'>
+      {/* Static Booking Summary Card at Bottom */}
+      <div className='flex justify-end my-16'>
+        <div className='w-full sm:w-[450px] p-6 bg-liquid-glass-card rounded-md border border-white/50 shadow-sm'>
           <TotalBooking total={totalAmount} />
           <div className='w-full text-end mt-6'>
             <button
-              className='w-full bg-orange-400 text-white text-[11px] uppercase tracking-[0.2em] px-10 py-5 rounded-sm hover:bg-orange-500 transition-colors shadow-sm active:scale-95'
+              className='w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-[11px] uppercase tracking-[0.2em] font-bold py-4 rounded-sm transition-all duration-300 shadow-sm hover:shadow active:scale-95 cursor-pointer'
               onClick={() => {
                 if (selectedPoojas.length === 0) {
                   toast.error("Please select pooja before proceeding.");

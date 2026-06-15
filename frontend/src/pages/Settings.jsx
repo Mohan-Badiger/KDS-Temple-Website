@@ -35,7 +35,7 @@ const Settings = () => {
       transition={{ duration: 0.5 }}
       className="container mx-auto px-4 py-8 sm:py-12 min-h-[70vh]"
     >
-      <div className="max-w-4xl mx-auto bg-white rounded-md shadow-sm border border-gray-100 p-6 sm:p-10">
+      <div className="max-w-4xl mx-auto bg-liquid-glass-card rounded-md p-6 sm:p-10 border border-white/50">
         <h1 className="text-3xl font-primary text-gray-800 mb-2 border-l-4 border-orange-500 pl-4 font-medium">Account Settings</h1>
         <p className="text-gray-500 mb-8 ml-5 font-primary">Manage your profile information and preferences.</p>
 

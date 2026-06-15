@@ -48,8 +48,8 @@ const BookingTimeline = () => {
     return (
       <div className="w-full max-w-3xl mx-auto mt-8 font-primary text-center pb-8 px-4">
         <h3 className="text-2xl text-gray-900 tracking-tight uppercase mb-8 border-b border-stone-100 pb-4 inline-block">Your Seva / Booking History</h3>
-        <div className="bg-stone-50 border border-dashed border-stone-200 rounded-md py-12">
-            <p className="text-stone-400 uppercase tracking-widest text-xs">{error || "No divine services found."}</p>
+        <div className="bg-white/30 backdrop-blur-md border border-dashed border-white/60 rounded-md py-12">
+            <p className="text-stone-550 uppercase tracking-widest text-xs font-semibold">{error || "No divine services found."}</p>
         </div>
       </div>
     );
@@ -82,7 +82,7 @@ const BookingTimeline = () => {
               {/* Timeline Indicator */}
               <div className={`absolute w-3.5 h-3.5 rounded-full -left-[33px] sm:-left-[41px] top-1.5 border-2 border-white shadow-sm ring-1 ring-stone-100 ${isCompleted ? 'bg-green-500' : 'bg-orange-400'}`}></div>
 
-              <div className="bg-white p-6 rounded-md shadow-sm border border-stone-100 hover:shadow-md transition-shadow group flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+              <div className="bg-liquid-glass-card p-6 rounded-md shadow-sm hover:scale-[1.01] transition-all duration-300 group flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                 <div className="flex-1 space-y-3">
                   <div className="flex flex-wrap items-center gap-3">
                     <h4 className="text-lg text-gray-900 uppercase tracking-tight leading-none">{poojaNames}</h4>
@@ -104,7 +104,7 @@ const BookingTimeline = () => {
                   </div>
                 </div>
 
-                <div className="shrink-0 flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-4 border-t sm:border-t-0 sm:border-l border-stone-50 pt-4 sm:pt-0 sm:pl-6">
+                <div className="shrink-0 flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-4 border-t sm:border-t-0 sm:border-l border-white/20 pt-4 sm:pt-0 sm:pl-6">
                    <div className="text-right hidden sm:block">
                       <p className="text-[10px] text-stone-400 uppercase tracking-widest">Offering</p>
                       <p className="text-xl text-gray-900 tabular-nums leading-tight">₹{booking.totalAmount}</p>

@@ -13,7 +13,7 @@ const ProfileCard = ({ user }) => {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="bg-white rounded-md shadow-sm p-6 sm:p-8 w-full max-w-3xl mx-auto border border-stone-100 relative font-primary text-gray-800"
+      className="bg-liquid-glass-card rounded-md p-6 sm:p-8 w-full max-w-3xl mx-auto relative font-primary text-gray-800 border border-white/50"
     >
       <div className="absolute top-6 right-6">
         <Link
@@ -41,12 +41,12 @@ const ProfileCard = ({ user }) => {
           <p className="text-stone-400 text-sm mb-6">{user.email}</p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-xs">
-            <div className="bg-stone-50 p-4 rounded-md border border-stone-100">
-              <p className="text-[10px] text-stone-400 uppercase tracking-widest mb-1">Phone Number</p>
+            <div className="bg-white/30 p-4 rounded-md border border-white/40 shadow-sm">
+              <p className="text-[10px] text-stone-500 uppercase tracking-widest mb-1">Phone Number</p>
               <p className="text-gray-800 tracking-wide">{user.phone || 'Not provided'}</p>
             </div>
-            <div className="bg-stone-50 p-4 rounded-md border border-stone-100 sm:col-span-2">
-              <p className="text-[10px] text-stone-400 uppercase tracking-widest mb-1">Permanent Address</p>
+            <div className="bg-white/30 p-4 rounded-md border border-white/40 shadow-sm sm:col-span-2">
+              <p className="text-[10px] text-stone-500 uppercase tracking-widest mb-1">Permanent Address</p>
               <p className="text-gray-800 tracking-wide">{user.profile?.address || 'Not provided'}</p>
             </div>
           </div>

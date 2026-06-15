@@ -91,7 +91,7 @@ const SettingsForm = ({ initialData }) => {
   return (
     <form onSubmit={handleSubmit} className="font-primary text-gray-800 pb-10">
       {/* Profile Image Section */}
-      <div className="flex flex-col sm:flex-row items-center gap-6 mb-8 p-6 bg-gray-50 rounded-xl border border-gray-100">
+      <div className="flex flex-col sm:flex-row items-center gap-6 mb-8 p-6 bg-white/30 backdrop-blur-md rounded-xl border border-white/45 shadow-sm">
         <div className="relative group w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-white shadow-sm">
           <img
             src={displayImage}
@@ -131,8 +131,8 @@ const SettingsForm = ({ initialData }) => {
       </div>
 
       {/* SECTION 1: Basic Info */}
-      <div className="mb-8 p-6 bg-gray-50 rounded-xl border border-gray-100">
-        <h3 className="text-xl font-medium mb-4 text-orange-600 border-b border-gray-200 pb-2">Basic Information</h3>
+      <div className="mb-8 p-6 bg-white/30 backdrop-blur-md rounded-xl border border-white/45 shadow-sm">
+        <h3 className="text-xl font-medium mb-4 text-orange-650 border-b border-white/20 pb-2">Basic Information</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
@@ -141,7 +141,7 @@ const SettingsForm = ({ initialData }) => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
+              className="w-full px-4 py-2 rounded-md outline-none transition-all duration-300 font-primary text-sm input-liquid-glass"
               required
             />
           </div>
@@ -152,7 +152,7 @@ const SettingsForm = ({ initialData }) => {
               name="email"
               value={formData.email}
               readOnly
-              className="w-full px-4 py-2 border border-gray-200 bg-gray-100 text-gray-500 rounded-md cursor-not-allowed"
+              className="w-full px-4 py-2 rounded-md outline-none font-primary text-sm border border-white/30 bg-white/10 text-stone-500 cursor-not-allowed opacity-75"
             />
           </div>
           <div>
@@ -162,7 +162,7 @@ const SettingsForm = ({ initialData }) => {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
+              className="w-full px-4 py-2 rounded-md outline-none transition-all duration-300 font-primary text-sm input-liquid-glass"
               placeholder="+91"
             />
           </div>
@@ -173,7 +173,7 @@ const SettingsForm = ({ initialData }) => {
               value={formData.address}
               onChange={handleChange}
               rows="3"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500 resize-none"
+              className="w-full px-4 py-2 rounded-md outline-none transition-all duration-300 font-primary text-sm input-liquid-glass resize-none"
               placeholder="Enter your complete postal address"
             ></textarea>
           </div>
@@ -181,8 +181,8 @@ const SettingsForm = ({ initialData }) => {
       </div>
 
       {/* SECTION 3: Security */}
-      <div className="mb-8 p-6 bg-gray-50 rounded-xl border border-gray-100">
-        <h3 className="text-xl font-medium mb-4 text-orange-600 border-b border-gray-200 pb-2">Security</h3>
+      <div className="mb-8 p-6 bg-white/30 backdrop-blur-md rounded-xl border border-white/45 shadow-sm">
+        <h3 className="text-xl font-medium mb-4 text-orange-655 border-b border-white/20 pb-2">Security</h3>
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h4 className="text-sm font-medium text-gray-800">Account Password</h4>
@@ -196,7 +196,7 @@ const SettingsForm = ({ initialData }) => {
                 window.location.href = '/login';
               }
             }}
-            className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition text-sm font-medium"
+            className="px-4 py-2 bg-white/40 border border-white/50 text-stone-700 rounded-md hover:bg-white/60 transition text-sm font-medium cursor-pointer"
           >
             Change Password
           </button>
@@ -207,14 +207,14 @@ const SettingsForm = ({ initialData }) => {
         <button
           type="button"
           onClick={() => window.history.back()}
-          className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition"
+          className="px-6 py-2 border border-white/65 bg-white/20 text-stone-700 rounded-md hover:bg-white/45 transition cursor-pointer"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={loading}
-          className="px-8 py-2 bg-primary text-white rounded-md hover:bg-amber-600 transition disabled:opacity-70 disabled:cursor-not-allowed shadow-md"
+          className="px-8 py-2 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white rounded-md transition disabled:opacity-70 disabled:cursor-not-allowed shadow-md cursor-pointer font-bold border-none"
         >
           {loading ? 'Saving Changes...' : 'Save Profile'}
         </button>
