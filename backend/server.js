@@ -49,7 +49,11 @@ const contactLimiter = rateLimit({
 });
 
 //middlewares
-app.use(helmet());
+app.use(
+  helmet({
+    crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },
+  })
+);
 app.use(express.json({ limit: '10kb' }))
 
 const allowedOrigins = [
