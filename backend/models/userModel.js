@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema({
   resetOtpAttempts: { type: Number, default: 0 },
   otpLockoutUntil: { type: Date },
 
+  // OAuth 2.0 Google Auth
+  googleId: { type: String, unique: true, sparse: true },
+  authProvider: { type: String, enum: ['local', 'google'], default: 'local' },
+
   // Admin Notes
   notes: { type: String, trim: true, default: '' },
 },
