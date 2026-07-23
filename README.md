@@ -166,8 +166,8 @@ node server.js
 ## 👨‍💻 Developed By
 
 Mohan Badiger  
-Full Stack Developer  
-
+Full Stack Developer
+portfolio: mohanbadiger.site
 📍 Karnataka, India  
 📧 mohanbadiger250@gmail.com  
 
