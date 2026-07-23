@@ -2,6 +2,7 @@ import userModel from '../models/userModel.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import validator from 'validator';
+import { OAuth2Client } from 'google-auth-library';
 import sendOtpEmail from '../services/sendOtpEmail.js';
 import sendWelcomeEmail from '../services/sendWelcomeEmail.js';
 import BookingModel from '../models/bookingModel.js';
@@ -477,11 +478,132 @@ const getUserStats = async (req, res) => {
   }
 };
 
+// ===============================
+// 13. Google OAuth 2.0 Authentication
+// ===============================
+const googleAuth = async (req, res) => {
+  try {
+    const { credential, accessToken } = req.body;
+
+    if (!credential && !accessToken) {
+      return res.json({ success: false, message: 'Google authentication token is required' });
+    }
+
+    let email, name, picture, googleId;
+
+    if (credential) {
+      const clientId = process.env.GOOGLE_CLIENT_ID;
+      if (!clientId || clientId === 'your_google_client_id_here.apps.googleusercontent.com') {
+        return res.json({
+          success: false,
+          message: 'Google Client ID is not configured on the server. Please set GOOGLE_CLIENT_ID in backend/.env'
+        });
+      }
+
+      const client = new OAuth2Client(clientId);
+      const ticket = await client.verifyIdToken({
+        idToken: credential,
+        audience: clientId,
+      });
+
+      const payload = ticket.getPayload();
+      if (!payload || !payload.email) {
+        return res.json({ success: false, message: 'Invalid Google token payload' });
+      }
+
+      googleId = payload.sub;
+      email = payload.email;
+      name = payload.name;
+      picture = payload.picture;
+    } else if (accessToken) {
+      const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      if (!response.ok) {
+        return res.json({ success: false, message: 'Failed to verify Google access token' });
+      }
+
+      const userInfo = await response.json();
+      googleId = userInfo.sub;
+      email = userInfo.email;
+      name = userInfo.name;
+      picture = userInfo.picture;
+    }
+
+    if (!email) {
+      return res.json({ success: false, message: 'Google account does not contain a valid email' });
+    }
+
+    // Search for existing user by googleId or email
+    let user = await userModel.findOne({
+      $or: [{ googleId }, { email: email.toLowerCase() }]
+    });
+
+    if (user) {
+      let updated = false;
+      if (!user.googleId) {
+        user.googleId = googleId;
+        user.authProvider = user.authProvider || 'google';
+        updated = true;
+      }
+      if (!user.isVerified) {
+        user.isVerified = true;
+        updated = true;
+      }
+      if (picture && (!user.profile || !user.profile.profileImage)) {
+        user.profile = user.profile || {};
+        user.profile.profileImage = picture;
+        updated = true;
+      }
+
+      if (updated) {
+        await user.save();
+      }
+    } else {
+      user = new userModel({
+        name: name || email.split('@')[0],
+        email: email.toLowerCase(),
+        googleId,
+        authProvider: 'google',
+        isVerified: true,
+        profile: {
+          profileImage: picture || ''
+        }
+      });
+      await user.save();
+
+      // Send welcome email asynchronously
+      sendWelcomeEmail(user.email, user.name).catch((err) => {
+        console.error('Welcome email error (Google Auth):', err);
+      });
+    }
+
+    const token = createToken(user._id);
+    return res.json({
+      success: true,
+      token,
+      message: 'Google authentication successful',
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        profileImage: user.profile?.profileImage
+      }
+    });
+
+  } catch (err) {
+    console.error('Google Auth Error:', err);
+    return res.status(500).json({ success: false, message: 'Google Authentication failed. Please try again.' });
+  }
+};
+
 export {
   requestRegisterOtp,
   verifyRegisterOtp,
   registerUser,
   loginUser,
+  googleAuth,
   requestResetOtp,
   verifyResetOtp,
   getProfile,
@@ -491,3 +613,4 @@ export {
   updateUserNote,
   getUserStats
 };
+
