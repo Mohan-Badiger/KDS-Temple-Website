@@ -6,6 +6,7 @@ import {
   verifyRegisterOtp,
   registerUser,
   loginUser,
+  googleAuth,
   requestResetOtp,
   verifyResetOtp,
   getProfile,
@@ -43,8 +44,9 @@ router.post('/request-register-otp', otpRequestLimiter, requestRegisterOtp);
 router.post('/verify-register-otp', authAttemptsLimiter, verifyRegisterOtp);
 router.post('/register', authAttemptsLimiter, registerUser);
 
-// ===== Login =====
+// ===== Login & Google OAuth =====
 router.post('/login', authAttemptsLimiter, loginUser);
+router.post('/google-auth', authAttemptsLimiter, googleAuth);
 
 // ===== Password Reset =====
 router.post('/request-reset-otp', otpRequestLimiter, requestResetOtp);
