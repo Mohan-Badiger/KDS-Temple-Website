@@ -252,6 +252,7 @@ import { TempleContext } from '../context/TempleContext.jsx';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useLocation } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
 import Hero_img from '../assets/Hero_img.jpg';
 import om from '../assets/om.png';
 
@@ -418,6 +419,32 @@ const Login = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      setLoading(true);
+      const res = await axios.post(`${backendUrl}/api/user/google-auth`, {
+        credential: credentialResponse.credential,
+      });
+
+      if (res.data.success) {
+        setToken(res.data.token);
+        localStorage.setItem('token', res.data.token);
+        toast.success(res.data.message || 'Authenticated with Google successfully!');
+      } else {
+        toast.error(res.data.message || 'Google Authentication failed');
+      }
+    } catch (err) {
+      console.error('Google Login Error:', err);
+      toast.error(err.response?.data?.message || 'Google Authentication failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleError = () => {
+    toast.error('Google Sign-In was cancelled or failed.');
   };
 
   useEffect(() => {
@@ -691,6 +718,31 @@ const Login = () => {
               >
                 {loading ? 'Creating Account...' : 'Create Account'}
               </button>
+            )}
+
+            {/* Divider & Google OAuth Section */}
+            {(currentState === 'Login' || currentState === 'Sign Up') && (
+              <div className="w-full mt-5 space-y-4">
+                <div className="relative flex items-center justify-center">
+                  <div className="border-t border-stone-300/40 w-full"></div>
+                  <span className="bg-transparent px-3 text-[10px] text-stone-400 font-bold uppercase tracking-widest shrink-0 select-none">
+                    OR
+                  </span>
+                  <div className="border-t border-stone-300/40 w-full"></div>
+                </div>
+
+                <div className="flex justify-center w-full min-h-[44px]">
+                  <GoogleLogin
+                    onSuccess={handleGoogleSuccess}
+                    onError={handleGoogleError}
+                    theme="outline"
+                    size="large"
+                    width="320"
+                    text={currentState === 'Login' ? 'signin_with' : 'signup_with'}
+                    shape="rectangular"
+                  />
+                </div>
+              </div>
             )}
           </form>
         </div>
