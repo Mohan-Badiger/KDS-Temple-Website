@@ -6,7 +6,7 @@ import { TempleContext } from '../../context/TempleContext';
 
 const SettingsForm = ({ initialData }) => {
   const navigate = useNavigate();
-  const { token, backendUrl } = useContext(TempleContext);
+  const { token, fetchUserData } = useContext(TempleContext);
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
@@ -28,13 +28,25 @@ const SettingsForm = ({ initialData }) => {
       });
       if (initialData.profile?.profileImage) {
         setImagePreview(initialData.profile.profileImage);
+      } else {
+        setImagePreview('');
       }
     }
   }, [initialData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    if (name === 'name') {
+      // Allow letters and spaces only
+      const cleanName = value.replace(/[^a-zA-Z\s]/g, '');
+      setFormData(prev => ({ ...prev, name: cleanName }));
+    } else if (name === 'phone') {
+      // Allow only numbers and leading +
+      const cleanPhone = value.replace(/[^\d+]/g, '');
+      setFormData(prev => ({ ...prev, phone: cleanPhone }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleImageChange = (e) => {
@@ -50,8 +62,37 @@ const SettingsForm = ({ initialData }) => {
     }
   };
 
+  const handleRemoveImage = async () => {
+    try {
+      setLoading(true);
+      const payload = new FormData();
+      payload.append('removeImage', 'true');
+      const response = await axiosInstance.put('/api/user/update-profile', payload);
+      if (response.data.success) {
+        toast.success("Profile image removed");
+        setImagePreview('');
+        setImageFile(null);
+        await fetchUserData();
+      } else {
+        toast.error(response.data.message || "Failed to remove image");
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to remove image");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (formData.phone && formData.phone.trim() !== '') {
+      const cleanPhone = formData.phone.trim();
+      if (!/^[6-9]\d{9}$/.test(cleanPhone) && !/^\+?[1-9]\d{1,14}$/.test(cleanPhone)) {
+        return toast.error("Please enter a valid 10-digit mobile number (e.g. 9876543210)");
+      }
+    }
+
     setLoading(true);
 
     try {
@@ -72,10 +113,8 @@ const SettingsForm = ({ initialData }) => {
 
       if (response.data.success) {
         toast.success("Profile updated successfully!");
+        await fetchUserData();
         navigate('/profile');
-        if (response.data.user?.profile?.profileImage) {
-          setImagePreview(response.data.user.profile.profileImage);
-        }
       } else {
         toast.error(response.data.message || "Failed to update profile.");
       }
@@ -92,7 +131,7 @@ const SettingsForm = ({ initialData }) => {
     <form onSubmit={handleSubmit} className="font-primary text-gray-800 pb-10">
       {/* Profile Image Section */}
       <div className="flex flex-col sm:flex-row items-center gap-6 mb-8 p-6 bg-white/30 backdrop-blur-md rounded-xl border border-white/45 shadow-sm">
-        <div className="relative group w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-white shadow-sm">
+        <div className="relative group w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-white shadow-sm shrink-0">
           <img
             src={displayImage}
             alt="Profile Preview"
@@ -115,18 +154,30 @@ const SettingsForm = ({ initialData }) => {
         </div>
         <div className="text-center sm:text-left">
           <h4 className="text-lg font-medium text-gray-800">Profile Picture</h4>
-          <p className="text-sm text-gray-500 mt-1 mb-2">JPG, GIF or PNG.</p>
-          <div className="relative inline-block">
-            <button type="button" className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-md text-sm font-medium transition pointer-events-none">
-              Change Picture
-            </button>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              disabled={loading}
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed z-10"
-            />
+          <p className="text-sm text-gray-500 mt-1 mb-3">JPG, GIF or PNG.</p>
+          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3">
+            <div className="relative inline-block">
+              <button type="button" className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-md text-sm font-medium transition pointer-events-none">
+                Change Picture
+              </button>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                disabled={loading}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed z-10"
+              />
+            </div>
+            {imagePreview && (
+              <button
+                type="button"
+                onClick={handleRemoveImage}
+                disabled={loading}
+                className="px-4 py-2 bg-red-50 border border-red-200 text-red-600 hover:bg-red-100 rounded-md text-sm font-medium transition cursor-pointer"
+              >
+                Remove Photo
+              </button>
+            )}
           </div>
         </div>
       </div>
