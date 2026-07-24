@@ -8,29 +8,11 @@ import axiosInstance from '../../utils/axiosInstance';
 
 const UserDropdown = ({ isMobile, closeSideBar }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [userName, setUserName] = useState("User");
-  const [userPic, setUserPic] = useState("");
   const dropdownRef = useRef(null);
-  const { token, setToken, navigate, backendUrl } = useContext(TempleContext);
+  const { token, setToken, navigate, userData } = useContext(TempleContext);
 
-  useEffect(() => {
-    // Attempt to fetch user profile, fallback to "User" if any error occurs
-    const fetchProfile = async () => {
-      if (!token) return;
-      try {
-        const response = await axiosInstance.get('/api/user/profile');
-        if (response.data.success && response.data.user) {
-          setUserName(getFirstName(response.data.user.name));
-          if (response.data.user.profile?.profileImage) {
-            setUserPic(response.data.user.profile.profileImage);
-          }
-        }
-      } catch (error) {
-        // Silently fail and keep "User" as fallback
-      }
-    };
-    fetchProfile();
-  }, [token, backendUrl]);
+  const userName = userData?.name ? getFirstName(userData.name) : "User";
+  const userPic = userData?.profile?.profileImage || "";
 
   // Click outside to close
   useEffect(() => {
