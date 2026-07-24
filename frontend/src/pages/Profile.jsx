@@ -6,27 +6,16 @@ import BookingTimeline from '../components/User/BookingTimeline';
 import axiosInstance from '../utils/axiosInstance';
 
 const Profile = () => {
-  const { token, backendUrl } = useContext(TempleContext);
-  const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { token, userData, fetchUserData } = useContext(TempleContext);
+  const [loading, setLoading] = useState(!userData);
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        if (!token) return;
-        const response = await axiosInstance.get('/api/user/profile');
-        if (response.data.success && response.data.user) {
-          setUserData(response.data.user);
-        }
-      } catch (error) {
-        console.error("Profile fetch error", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchProfile();
-  }, [token, backendUrl]);
+    if (token) {
+      fetchUserData().finally(() => setLoading(false));
+    } else {
+      setLoading(false);
+    }
+  }, [token]);
 
   return (
     <motion.div 
@@ -37,10 +26,29 @@ const Profile = () => {
       className="container mx-auto px-4 py-8 sm:py-12 min-h-[70vh]"
     >
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-center gap-4 mb-10 border-b border-stone-200 pb-6">
+        <div className="flex items-center gap-4 mb-8 border-b border-stone-200 pb-6">
           <div className="w-1.5 h-10 bg-orange-400 rounded-md shadow-sm"></div>
           <h1 className="text-3xl text-gray-900 tracking-tight uppercase">My Profile</h1>
         </div>
+
+        {/* Incomplete Profile Alert for missing phone number (e.g. Google Sign-In users) */}
+        {userData && !userData.phone && (
+          <div className="mb-8 p-4 bg-amber-500/10 border border-amber-500/30 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-amber-900 font-primary">
+            <div className="flex items-center gap-3">
+              <span className="text-xl">⚠️</span>
+              <div>
+                <p className="text-sm font-semibold">Your phone number is missing</p>
+                <p className="text-xs text-amber-800/80">Please add your 10-digit mobile number to receive SMS & WhatsApp booking updates.</p>
+              </div>
+            </div>
+            <a
+              href="/settings"
+              className="px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-500 text-white text-xs uppercase tracking-wider font-bold rounded-md shadow-sm hover:shadow transition shrink-0"
+            >
+              + Add Phone Number
+            </a>
+          </div>
+        )}
         
         {loading ? (
           <div className="text-center py-10 font-primary text-gray-600">
