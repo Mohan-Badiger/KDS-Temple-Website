@@ -7,6 +7,7 @@ import sendOtpEmail from '../services/sendOtpEmail.js';
 import sendWelcomeEmail from '../services/sendWelcomeEmail.js';
 import BookingModel from '../models/bookingModel.js';
 import DonationModel from '../models/donationModel.js';
+import cloudinary from '../config/cloudinary.js';
 
 const createToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '2h' });
 
@@ -298,7 +299,7 @@ const getProfile = async (req, res) => {
 // ===============================
 const updateProfile = async (req, res) => {
   try {
-    const { name, email, phone, address } = req.body;
+    const { name, email, phone, address, profileImage } = req.body;
     
     // Check if email is being updated and if it's already taken by someone else
     if (email) {
@@ -315,7 +316,7 @@ const updateProfile = async (req, res) => {
     const user = await userModel.findById(req.user.id);
     if (!user) return res.json({ success: false, message: 'User not found' });
 
-    let profileImageUrl = user.profile?.profileImage || '';
+    let profileImageUrl = profileImage || user.profile?.profileImage || '';
 
     // Handle new image upload via stream
     if (req.file) {
@@ -540,6 +541,8 @@ const googleAuth = async (req, res) => {
       $or: [{ googleId }, { email: email.toLowerCase() }]
     });
 
+    let isNewUser = false;
+
     if (user) {
       let updated = false;
       if (!user.googleId) {
@@ -551,9 +554,13 @@ const googleAuth = async (req, res) => {
         user.isVerified = true;
         updated = true;
       }
-      if (picture && (!user.profile || !user.profile.profileImage)) {
+      if (picture && (!user.profile || !user.profile.profileImage || user.authProvider === 'google')) {
         user.profile = user.profile || {};
         user.profile.profileImage = picture;
+        updated = true;
+      }
+      if (name && !user.name) {
+        user.name = name;
         updated = true;
       }
 
@@ -561,6 +568,7 @@ const googleAuth = async (req, res) => {
         await user.save();
       }
     } else {
+      isNewUser = true;
       user = new userModel({
         name: name || email.split('@')[0],
         email: email.toLowerCase(),
@@ -583,12 +591,17 @@ const googleAuth = async (req, res) => {
     return res.json({
       success: true,
       token,
+      isNewUser,
       message: 'Google authentication successful',
       user: {
         _id: user._id,
         name: user.name,
         email: user.email,
-        profileImage: user.profile?.profileImage
+        phone: user.phone || '',
+        profile: {
+          address: user.profile?.address || '',
+          profileImage: user.profile?.profileImage || ''
+        }
       }
     });
 
