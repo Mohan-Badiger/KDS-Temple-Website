@@ -299,7 +299,15 @@ const getProfile = async (req, res) => {
 // ===============================
 const updateProfile = async (req, res) => {
   try {
-    const { name, email, phone, address, profileImage } = req.body;
+    const { name, email, phone, address, profileImage, removeImage } = req.body;
+
+    // Validate phone format if provided
+    if (phone && phone.trim() !== '') {
+      const cleanPhone = phone.trim();
+      if (!/^[6-9]\d{9}$/.test(cleanPhone) && !/^\+?[1-9]\d{1,14}$/.test(cleanPhone)) {
+        return res.json({ success: false, message: 'Please enter a valid 10-digit mobile number' });
+      }
+    }
     
     // Check if email is being updated and if it's already taken by someone else
     if (email) {
@@ -309,14 +317,22 @@ const updateProfile = async (req, res) => {
       }
     }
 
-    const updatedData = { name, phone };
-    if (email) updatedData.email = email;
+    const updatedData = {};
+    if (name) updatedData.name = name.trim();
+    if (phone !== undefined) updatedData.phone = phone ? phone.trim() : '';
+    if (email) updatedData.email = email.trim();
     
     // Fetch user to preserve existing profile elements
     const user = await userModel.findById(req.user.id);
     if (!user) return res.json({ success: false, message: 'User not found' });
 
-    let profileImageUrl = profileImage || user.profile?.profileImage || '';
+    let profileImageUrl = user.profile?.profileImage || '';
+
+    if (removeImage === 'true' || removeImage === true) {
+      profileImageUrl = '';
+    } else if (profileImage !== undefined) {
+      profileImageUrl = profileImage;
+    }
 
     // Handle new image upload via stream
     if (req.file) {
@@ -337,7 +353,7 @@ const updateProfile = async (req, res) => {
     }
 
     updatedData.profile = {
-      address: address !== undefined ? address : (user.profile?.address || ''),
+      address: address !== undefined ? address.trim() : (user.profile?.address || ''),
       profileImage: profileImageUrl
     };
 
