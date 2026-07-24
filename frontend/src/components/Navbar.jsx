@@ -74,29 +74,9 @@ const Navbar = () => {
   // 🔊 Audio management
   useEffect(() => {
     const audio = audioRef.current;
-    if (!audio) return;
-
-    audio.volume = 0.4; // Devotional background volume
-
-    // Autoplay attempt (most browsers block this)
-    const playAttempt = () => {
-      audio.play()
-        .then(() => setIsPlaying(true))
-        .catch(() => setIsPlaying(false));
-    };
-
-    playAttempt();
-
-    // Interaction-based start for restricted browsers
-    const handleFirstInteraction = () => {
-      if (!isPlaying) {
-        audio.play().then(() => setIsPlaying(true));
-      }
-      window.removeEventListener('click', handleFirstInteraction);
-    };
-
-    window.addEventListener('click', handleFirstInteraction);
-    return () => window.removeEventListener('click', handleFirstInteraction);
+    if (audio) {
+      audio.volume = 0.4; // Devotional background volume
+    }
   }, []);
 
   // 🎵 Toggle music on/off
