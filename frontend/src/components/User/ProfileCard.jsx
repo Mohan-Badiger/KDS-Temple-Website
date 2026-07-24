@@ -31,7 +31,8 @@ const ProfileCard = ({ user }) => {
         >
           <img
             src={avatarUrl}
-            alt={user.name}
+            alt={user.name || 'User Profile'}
+            referrerPolicy="no-referrer"
             className="w-full h-full rounded-full object-cover border-2 border-orange-50 shadow-sm"
           />
         </motion.div>
@@ -43,11 +44,29 @@ const ProfileCard = ({ user }) => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-xs">
             <div className="bg-white/30 p-4 rounded-md border border-white/40 shadow-sm">
               <p className="text-[10px] text-stone-500 uppercase tracking-widest mb-1">Phone Number</p>
-              <p className="text-gray-800 tracking-wide">{user.phone || 'Not provided'}</p>
+              {user.phone ? (
+                <p className="text-gray-800 tracking-wide">{user.phone}</p>
+              ) : (
+                <div className="flex items-center justify-between">
+                  <span className="text-stone-400 italic text-xs">Not provided</span>
+                  <Link to="/settings" className="text-[10px] text-orange-600 font-bold uppercase tracking-wider hover:underline">
+                    + Add Phone
+                  </Link>
+                </div>
+              )}
             </div>
             <div className="bg-white/30 p-4 rounded-md border border-white/40 shadow-sm sm:col-span-2">
               <p className="text-[10px] text-stone-500 uppercase tracking-widest mb-1">Permanent Address</p>
-              <p className="text-gray-800 tracking-wide">{user.profile?.address || 'Not provided'}</p>
+              {user.profile?.address ? (
+                <p className="text-gray-800 tracking-wide">{user.profile.address}</p>
+              ) : (
+                <div className="flex items-center justify-between">
+                  <span className="text-stone-400 italic text-xs">Not provided</span>
+                  <Link to="/settings" className="text-[10px] text-orange-600 font-bold uppercase tracking-wider hover:underline">
+                    + Add Address
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>
