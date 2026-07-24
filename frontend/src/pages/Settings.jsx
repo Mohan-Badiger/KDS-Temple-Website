@@ -5,27 +5,16 @@ import SettingsForm from '../components/User/SettingsForm';
 import axiosInstance from '../utils/axiosInstance';
 
 const Settings = () => {
-  const { token, backendUrl } = useContext(TempleContext);
-  const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { token, userData, fetchUserData } = useContext(TempleContext);
+  const [loading, setLoading] = useState(!userData);
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        if (!token) return;
-        const response = await axiosInstance.get('/api/user/profile');
-        if (response.data.success && response.data.user) {
-          setUserData(response.data.user);
-        }
-      } catch (error) {
-        console.error("Profile fetch error", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProfile();
-  }, [token, backendUrl]);
+    if (token) {
+      fetchUserData().finally(() => setLoading(false));
+    } else {
+      setLoading(false);
+    }
+  }, [token]);
 
   return (
     <motion.div
