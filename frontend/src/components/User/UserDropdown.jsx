@@ -9,6 +9,7 @@ import axiosInstance from '../../utils/axiosInstance';
 const UserDropdown = ({ isMobile, closeSideBar }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [userName, setUserName] = useState("User");
+  const [userPic, setUserPic] = useState("");
   const dropdownRef = useRef(null);
   const { token, setToken, navigate, backendUrl } = useContext(TempleContext);
 
@@ -20,6 +21,9 @@ const UserDropdown = ({ isMobile, closeSideBar }) => {
         const response = await axiosInstance.get('/api/user/profile');
         if (response.data.success && response.data.user) {
           setUserName(getFirstName(response.data.user.name));
+          if (response.data.user.profile?.profileImage) {
+            setUserPic(response.data.user.profile.profileImage);
+          }
         }
       } catch (error) {
         // Silently fail and keep "User" as fallback
@@ -61,7 +65,21 @@ const UserDropdown = ({ isMobile, closeSideBar }) => {
         onClick={() => setIsOpen(!isOpen)}
         className={`flex items-center justify-between gap-2 ${isMobile ? 'w-full px-6 py-3 border-t bg-white/50 text-gray-700 font-medium cursor-pointer' : 'font-primary text-stone-700 hover:text-orange-600 transition-colors cursor-pointer'}`}
       >
-        <span className={isMobile ? '' : 'font-medium'}>Namaste, {userName}</span>
+        <div className="flex items-center gap-2">
+          {userPic ? (
+            <img
+              src={userPic}
+              alt={userName}
+              referrerPolicy="no-referrer"
+              className="w-7 h-7 rounded-full object-cover border border-orange-400/60 shadow-xs shrink-0"
+            />
+          ) : (
+            <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-orange-400 to-amber-500 text-white font-bold text-xs flex items-center justify-center shrink-0">
+              {userName.charAt(0).toUpperCase()}
+            </div>
+          )}
+          <span className={isMobile ? '' : 'font-medium'}>Namaste, {userName}</span>
+        </div>
         <svg className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
