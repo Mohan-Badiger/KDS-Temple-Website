@@ -97,8 +97,35 @@ const TempleContextProvider = (props) => {
         );
     };
 
+    // Global User Profile State
+    const [userData, setUserData] = useState(null);
+
+    const fetchUserData = async () => {
+        if (!token) {
+            setUserData(null);
+            return;
+        }
+        try {
+            const res = await axiosInstance.get('/api/user/profile');
+            if (res.data.success && res.data.user) {
+                setUserData(res.data.user);
+            }
+        } catch (error) {
+            console.error("Error fetching user profile:", error);
+        }
+    };
+
+    useEffect(() => {
+        if (token) {
+            fetchUserData();
+        } else {
+            setUserData(null);
+        }
+    }, [token]);
+
     const value = {
         backendUrl, navigate, setToken, token,
+        userData, setUserData, fetchUserData,
         temples, fetchTemples,
         selectedTemple, setSelectedTemple,
         selectedPoojas, setSelectedPoojas,
