@@ -4,19 +4,19 @@ import { Maximize2, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import ImageWithSkeleton from '../components/Loader/ImageWithSkeleton';
 
 // Image Imports
-import image1 from '../assets/Gallery-01.jpg'
-import image2 from '../assets/Gallery-02.jpg'
-import image3 from '../assets/Gallery-03.jpg'
-import image4 from '../assets/Gallery-04.jpg'
-import image5 from '../assets/Gallery-05.jpg'
-import image6 from '../assets/Gallery-06.jpg'
-import image7 from '../assets/Gallery-07.jpg'
-import image8 from '../assets/Gallery-08.jpg'
-import image9 from '../assets/Gallery-09.jpg'
-import image10 from '../assets/Gallery-10.jpg'
-import photo from '../assets/photo.jpg'
-import photo4 from '../assets/photo4.jpg'
-import annaprasad from '../assets/annaprasad.jpg'
+import image1 from '../assets/Gallery-01.webp'
+import image2 from '../assets/Gallery-02.webp'
+import image3 from '../assets/Gallery-03.webp'
+import image4 from '../assets/Gallery-04.webp'
+import image5 from '../assets/Gallery-05.webp'
+import image6 from '../assets/Gallery-06.webp'
+import image7 from '../assets/Gallery-07.webp'
+import image8 from '../assets/Gallery-08.webp'
+import image9 from '../assets/Gallery-09.webp'
+import image10 from '../assets/Gallery-10.webp'
+import photo from '../assets/photo.webp'
+import photo4 from '../assets/photo4.webp'
+import annaprasad from '../assets/annaprasad.webp'
 
 const groupedImages = [
     {

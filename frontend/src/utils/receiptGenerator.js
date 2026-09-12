@@ -1,5 +1,10 @@
-import jsPDF from 'jspdf';
 import { formatDateToDDMMYYYY } from './stringUtils';
+
+// Helper to dynamically load jsPDF only when a receipt is requested
+const getJsPDF = async () => {
+  const module = await import('jspdf');
+  return module.default || module.jsPDF || module;
+};
 
 // Helper to convert number to words for official receipts
 export const numberToWords = (num) => {
@@ -105,7 +110,8 @@ const drawReceiptBase = (doc, title, settings) => {
  * @param {Object} booking - The booking data object.
  * @param {Object} [settings] - The global settings object.
  */
-export const generateBookingReceipt = (booking, settings) => {
+export const generateBookingReceipt = async (booking, settings) => {
+  const jsPDF = await getJsPDF();
   const doc = new jsPDF({ orientation: 'l', unit: 'mm', format: 'a5' });
   
   const templeName = booking.temple?.name || "Kadasiddeshwar Temple";
@@ -243,8 +249,9 @@ export const generateBookingReceipt = (booking, settings) => {
  * @param {Object} donation - The donation details object.
  * @param {Object} [settings] - The global settings object.
  */
-export const generateDonationReceipt = (donation, settings) => {
+export const generateDonationReceipt = async (donation, settings) => {
   const { amount, purpose, paymentId, date, donorName, phone, email } = donation;
+  const jsPDF = await getJsPDF();
   const doc = new jsPDF({ orientation: 'l', unit: 'mm', format: 'a5' });
 
   const receiptNo = paymentId ? 'DN-' + paymentId.slice(-8).toUpperCase() : 'DN-' + Math.floor(Math.random() * 1000000);

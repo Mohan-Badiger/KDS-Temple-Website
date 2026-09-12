@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { TempleContext } from '../context/TempleContext.jsx';
 import { toast } from 'react-toastify';
 import axiosInstance from '../utils/axiosInstance.js';
-import Gallery1 from '../assets/Gallery-01.jpg';
+import Gallery1 from '../assets/Gallery-01.webp';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { generateDonationReceipt } from '../utils/receiptGenerator';

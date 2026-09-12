@@ -36,6 +36,7 @@ requiredEnvVars.forEach((key) => {
 
 //App config
 const app = express();
+app.set('trust proxy', 1);
 const port = process.env.PORT || 4000
 connectDB()
 
@@ -54,7 +55,8 @@ app.use(
     crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },
   })
 );
-app.use(express.json({ limit: '10kb' }))
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
 const allowedOrigins = [
   'http://localhost:5173',

@@ -12,6 +12,7 @@ axiosInstance.interceptors.request.use(
     const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      localStorage.setItem("lastActivity", Date.now().toString());
     }
     return config;
   },
@@ -21,18 +22,24 @@ axiosInstance.interceptors.request.use(
 );
 
 // Response Interceptor
+let isHandlingUnauthorized = false;
+
 axiosInstance.interceptors.response.use(
   (response) => {
     return response;
   },
   (error) => {
     if (error.response && error.response.status === 401) {
-      console.warn("Unauthorized access - clearing token and redirecting to login.");
+      console.warn("Unauthorized access (401) - broadcasting auth:unauthorized event.");
       localStorage.removeItem("token");
-      // Optional: you can redirect to login page directly or rely on App state. 
-      // Safe redirect without using hooks:
-      if (window.location.pathname !== '/login') {
-         window.location.href = '/login';
+      localStorage.removeItem("lastActivity");
+      
+      if (!isHandlingUnauthorized) {
+        isHandlingUnauthorized = true;
+        window.dispatchEvent(new CustomEvent('auth:unauthorized'));
+        setTimeout(() => {
+          isHandlingUnauthorized = false;
+        }, 1000);
       }
     }
     return Promise.reject(error);

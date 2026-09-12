@@ -67,6 +67,22 @@ const TempleContextProvider = (props) => {
         }
     };
 
+    // Seamless 401 Unauthorized handling via SPA navigation
+    useEffect(() => {
+        const handleUnauthorized = () => {
+            setToken('');
+            setUserData(null);
+            localStorage.removeItem('token');
+            localStorage.removeItem('lastActivity');
+            if (window.location.pathname !== '/login') {
+                navigate('/login', { state: { from: window.location.pathname } });
+            }
+        };
+
+        window.addEventListener('auth:unauthorized', handleUnauthorized);
+        return () => window.removeEventListener('auth:unauthorized', handleUnauthorized);
+    }, [navigate]);
+
     useEffect(() => {
         const storedLastActivity = localStorage.getItem('lastActivity');
         const now = Date.now();
