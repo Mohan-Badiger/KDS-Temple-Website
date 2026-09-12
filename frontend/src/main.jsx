@@ -5,6 +5,7 @@ import App from './App.jsx'
 import TempleContextProvider from './context/TempleContext.jsx'
 import { BrowserRouter } from 'react-router-dom'
 import { GoogleOAuthProvider } from '@react-oauth/google'
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary.jsx'
 
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || ''
 
@@ -17,12 +18,14 @@ window.addEventListener("error", (e) => {
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <GoogleOAuthProvider clientId={googleClientId}>
-      <BrowserRouter>
-        <TempleContextProvider>
-          <App />
-        </TempleContextProvider>
-      </BrowserRouter>
-    </GoogleOAuthProvider>
+    <ErrorBoundary>
+      <GoogleOAuthProvider clientId={googleClientId}>
+        <BrowserRouter>
+          <TempleContextProvider>
+            <App />
+          </TempleContextProvider>
+        </BrowserRouter>
+      </GoogleOAuthProvider>
+    </ErrorBoundary>
   </StrictMode>,
 )
