@@ -18,7 +18,7 @@ export default defineConfig({
         manualChunks: {
           'vendor-react': ['react', 'react-dom', 'react-router-dom'],
           'vendor-ui': ['lucide-react', 'framer-motion'],
-          'vendor-utils': ['axios', 'jspdf', 'sweetalert2']
+          'vendor-utils': ['axios', 'sweetalert2']
         }
       }
     },

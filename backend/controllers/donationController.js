@@ -72,21 +72,19 @@ export const donateController = async (req, res) => {
       timeStyle: 'short',
     });
 
-    // Send confirmation email
-    try {
-      await sendDonationEmail({
-        email,
-        firstName: escapedFirstName,
-        lastName: escapedLastName,
-        phone,
-        amount,
-        message: escapedMessage,
-        paymentId: razorpay_payment_id,
-        formattedDate
-      });
-    } catch (emailError) {
+    // Send confirmation email asynchronously without blocking HTTP response
+    sendDonationEmail({
+      email,
+      firstName: escapedFirstName,
+      lastName: escapedLastName,
+      phone,
+      amount,
+      message: escapedMessage,
+      paymentId: razorpay_payment_id,
+      formattedDate
+    }).catch((emailError) => {
       console.error('Failed to send donation confirmation email:', emailError);
-    }
+    });
   
     res.json({ success: true, message: 'Donation recorded successfully.' });
   } catch (err) {

@@ -97,30 +97,31 @@ export const createBooking = async (req, res) => {
 
     await booking.save();
 
-    // Populate for email
-    const populatedBooking = await BookingModel.findById(booking._id)
+    // Asynchronously populate and send confirmation email without blocking HTTP response
+    BookingModel.findById(booking._id)
       .populate("user", "name email")
       .populate("temple", "name location")
-      .populate("poojas", "name price");
-
-    // Send confirmation email
-    try {
-      await sendBookingEmail({
-        userEmail: populatedBooking.user.email,
-        userName: populatedBooking.user.name,
-        devoteeName: populatedBooking.poojaInNameOf,
-        poojaDate,
-        templeName: populatedBooking.temple.name,
-        templeLocation: populatedBooking.temple.location,
-        poojas: populatedBooking.poojas,
-        totalAmount,
-        paymentId: booking.paymentId,
-        receiptId: booking.receiptId,
-        bookingId: populatedBooking._id
+      .populate("poojas", "name price")
+      .then((populatedBooking) => {
+        if (populatedBooking && populatedBooking.user) {
+          return sendBookingEmail({
+            userEmail: populatedBooking.user.email,
+            userName: populatedBooking.user.name,
+            devoteeName: populatedBooking.poojaInNameOf,
+            poojaDate,
+            templeName: populatedBooking.temple?.name || "Temple",
+            templeLocation: populatedBooking.temple?.location || "Banahatti",
+            poojas: populatedBooking.poojas,
+            totalAmount,
+            paymentId: booking.paymentId,
+            receiptId: booking.receiptId,
+            bookingId: populatedBooking._id
+          });
+        }
+      })
+      .catch((emailError) => {
+        console.error("Failed to send booking confirmation email:", emailError);
       });
-    } catch (emailError) {
-      console.error("Failed to send booking confirmation email:", emailError);
-    }
 
     res.status(201).json({
       success: true,

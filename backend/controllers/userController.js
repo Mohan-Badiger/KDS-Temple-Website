@@ -8,6 +8,7 @@ import sendWelcomeEmail from '../services/sendWelcomeEmail.js';
 import BookingModel from '../models/bookingModel.js';
 import DonationModel from '../models/donationModel.js';
 import cloudinary from '../config/cloudinary.js';
+import { clearUserCache } from '../middleware/authMiddleware.js';
 
 const createToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '2h' });
 
@@ -362,6 +363,8 @@ const updateProfile = async (req, res) => {
       updatedData,
       { new: true, runValidators: true }
     ).select('-password -verifyOtp -verifyOtpExpiry -resetOtp -resetOtpExpiry -verifyOtpAttempts -resetOtpAttempts -otpLockoutUntil');
+
+    clearUserCache(req.user.id);
 
     res.json({ success: true, message: 'Profile updated successfully', user: updatedUser });
   } catch (error) {
