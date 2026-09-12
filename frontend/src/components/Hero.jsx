@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
-import Hero_img1 from '../assets/Hero_img1.jpg';
-import Hero_img2 from '../assets/Hero_img2.jpg';
-import Hero_img3 from '../assets/Hero_img3.jpg';
+import Hero_img1 from '../assets/Hero_img1.webp';
+import Hero_img2 from '../assets/Hero_img2.webp';
+import Hero_img3 from '../assets/Hero_img3.webp';
 import { Link } from 'react-router-dom';
 import { TempleContext } from '../context/TempleContext';
 

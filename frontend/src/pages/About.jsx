@@ -1,5 +1,5 @@
 import React from "react";
-import Hero_img from "../assets/Hero_img.jpg";
+import Hero_img from "../assets/Hero_img.webp";
 import Accordion from "../components/Accordion";
 import { accordionContent } from "../assets/accordionData.js";
 import { motion } from "framer-motion";
