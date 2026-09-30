@@ -1,4 +1,4 @@
-# 🛕 Temple Management & Pooja Booking System (BNT Temples)
+# Temple Management & Pooja Booking System (BNT Temples)
 
 [![Node.js](https://img.shields.io/badge/Node.js-v18%2B-green?logo=node.js)](https://nodejs.org/)
 [![Express.js](https://img.shields.io/badge/Express.js-v4-black?logo=express)](https://expressjs.com/)
