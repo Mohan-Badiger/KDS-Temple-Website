@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-oauth/google": "^0.13.5",
     "@tailwindcss/vite": "^4.0.9",
+    "@vercel/analytics": "^2.0.1",
     "axios": "^1.8.3",
     "dotenv": "^16.4.7",
     "framer-motion": "^12.38.0",
