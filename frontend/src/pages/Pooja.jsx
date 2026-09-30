@@ -4,6 +4,8 @@ import TotalBooking from "../components/TotalBooking";
 import axiosInstance from "../utils/axiosInstance";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
+import { Clock } from "lucide-react";
+import { IS_PAYMENT_ENABLED, PAYMENT_MAINTENANCE_CONFIG } from "../config/paymentConfig";
 
 const PoojaCard = () => {
   const { selectedTemple, setSelectedTemple, selectedPoojas, totalAmount, handleCheckboxChange, navigate } = useContext(TempleContext);
@@ -143,6 +145,12 @@ const PoojaCard = () => {
             >
               Confirm Selection & Proceed
             </button>
+            {!IS_PAYMENT_ENABLED && (
+              <p className="text-[11px] text-amber-800 bg-amber-500/10 border border-amber-500/25 rounded p-2.5 mt-3 text-center flex items-center justify-center gap-1.5 font-medium leading-tight">
+                <Clock className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                <span>{PAYMENT_MAINTENANCE_CONFIG.shortBanner}</span>
+              </p>
+            )}
           </div>
         </div>
       </div>
