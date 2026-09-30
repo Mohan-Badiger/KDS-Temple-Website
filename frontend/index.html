@@ -2,22 +2,26 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="./src/assets/om.png" />
+    <link rel="icon" type="image/png" href="/om.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Official website of Shri Kadasiddheshwar Temples Management Trust, Banahatti. Experience divine blessings, book poojas, and contribute to our 150-year-old spiritual heritage." />
     <meta name="theme-color" content="#fb923c" />
     <title>Banahatti Temple Management Trust Committe</title>
     
+    <!-- Preconnect to Google Fonts for lightning-fast font loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://checkout.razorpay.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Outfit:wght@300;400;500;600;700&family=Baloo+Tamma+2:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Preload Popup Announcement Banner for Instant Display on First Load and Reload -->
+    <link rel="preload" as="image" href="/images/jatra-desktop.webp" type="image/webp" media="(min-width: 641px)" fetchpriority="high" />
+    <link rel="preload" as="image" href="/images/jatra-mobile.webp" type="image/webp" media="(max-width: 640px)" fetchpriority="high" />
+
+    <!-- DNS prefetch for payment gateway when user books pooja/donation -->
     <link rel="dns-prefetch" href="https://checkout.razorpay.com">
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
-    <!-- Defer non-critical scripts -->
-    <script defer src="https://checkout.razorpay.com/v1/checkout.js"></script>
   </body>
 </html>
