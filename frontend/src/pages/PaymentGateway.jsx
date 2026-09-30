@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
 import { formatDateToDDMMYYYY } from "../utils/stringUtils";
+import { Clock, Lock } from "lucide-react";
+import { IS_PAYMENT_ENABLED, PAYMENT_MAINTENANCE_CONFIG } from "../config/paymentConfig";
 
 const decodeToken = (token) => {
   try {
@@ -191,6 +193,11 @@ const PaymentGateway = () => {
   };
 
   const handlePayment = async () => {
+    if (!IS_PAYMENT_ENABLED) {
+      toast.info(PAYMENT_MAINTENANCE_CONFIG.message);
+      return;
+    }
+
     if (!userToken || !userId) {
       toast.error("User not authenticated.");
       return;
@@ -549,21 +556,56 @@ const PaymentGateway = () => {
             </div>
 
             <div className="pt-4 space-y-6">
+              {/* Under Progress / Maintenance Notice Banner */}
+              {!IS_PAYMENT_ENABLED && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-4 sm:p-5 bg-amber-500/10 border border-amber-500/30 rounded-md flex gap-3.5 items-start text-stone-850"
+                >
+                  <Clock className="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
+                  <div className="space-y-1.5">
+                    <div className="flex items-center gap-2">
+                      <span className="px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider bg-amber-500/20 text-amber-800 rounded">
+                        {PAYMENT_MAINTENANCE_CONFIG.statusBadge}
+                      </span>
+                      <h4 className="text-xs font-semibold text-stone-900 tracking-wide">
+                        {PAYMENT_MAINTENANCE_CONFIG.title}
+                      </h4>
+                    </div>
+                    <p className="text-xs text-stone-600 leading-relaxed font-normal">
+                      {PAYMENT_MAINTENANCE_CONFIG.message}
+                    </p>
+                    <p className="text-[11px] text-amber-800/90 leading-relaxed font-medium pt-0.5">
+                      {PAYMENT_MAINTENANCE_CONFIG.offlineHelp}
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+
               <button
                 onClick={handlePayment}
-                disabled={loading || verifying || (selectedDate && (selectedTemple?.unavailableDates?.includes(selectedDate) || selectedPoojas.some(p => {
+                disabled={!IS_PAYMENT_ENABLED || loading || verifying || (selectedDate && (selectedTemple?.unavailableDates?.includes(selectedDate) || selectedPoojas.some(p => {
                   const config = p.temples.find(t => (t.templeId?._id || t.templeId) === selectedTemple._id);
                   return config?.unavailableDates?.includes(selectedDate);
                 })))}
-                className={`w-full py-4 text-white text-xs uppercase tracking-widest rounded-md shadow-sm transition-all flex items-center justify-center gap-3 ${loading || verifying || (selectedDate && (selectedTemple?.unavailableDates?.includes(selectedDate) || selectedPoojas.some(p => {
-                  const config = p.temples.find(t => (t.templeId?._id || t.templeId) === selectedTemple._id);
-                  return config?.unavailableDates?.includes(selectedDate);
-                })))
-                  ? "bg-stone-300 cursor-not-allowed shadow-none"
-                  : "bg-orange-500 hover:bg-orange-600 active:scale-[0.98]"
+                className={`w-full py-4 text-xs uppercase tracking-widest rounded-md shadow-sm transition-all flex items-center justify-center gap-3 ${
+                  !IS_PAYMENT_ENABLED
+                    ? "bg-stone-300 text-stone-600 cursor-not-allowed shadow-none border border-stone-300 font-semibold"
+                    : loading || verifying || (selectedDate && (selectedTemple?.unavailableDates?.includes(selectedDate) || selectedPoojas.some(p => {
+                        const config = p.temples.find(t => (t.templeId?._id || t.templeId) === selectedTemple._id);
+                        return config?.unavailableDates?.includes(selectedDate);
+                      })))
+                    ? "bg-stone-300 cursor-not-allowed shadow-none"
+                    : "bg-orange-500 hover:bg-orange-600 active:scale-[0.98] text-white"
                   }`}
               >
-                {loading ? (
+                {!IS_PAYMENT_ENABLED ? (
+                  <>
+                    <Lock className="w-4 h-4 text-stone-500" />
+                    <span>{PAYMENT_MAINTENANCE_CONFIG.buttonNotice}</span>
+                  </>
+                ) : loading ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                     Processing...
