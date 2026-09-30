@@ -14,6 +14,11 @@ const About = () => {
           <img
             src={Hero_img}
             alt="Divine temple heritage banner"
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
+            width="1920"
+            height="1080"
             className="absolute inset-0 h-full w-full object-cover opacity-40 scale-105 transition-transform duration-[2000ms]"
             style={{ objectPosition: 'center 35%' }}
           />

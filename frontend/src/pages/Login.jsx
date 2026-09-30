@@ -504,6 +504,10 @@ const Login = () => {
           <div className="absolute inset-0 z-0">
             <img
               src={Hero_img}
+              loading="lazy"
+              decoding="async"
+              width="800"
+              height="600"
               className="w-full h-full object-cover opacity-50 scale-105 transition-transform duration-[4000ms]"
               style={{ objectPosition: 'center 40%' }}
               alt="Temple Devotional Cover"
@@ -513,7 +517,7 @@ const Login = () => {
 
           {/* Top Info */}
           <div className="relative z-10 flex items-center gap-2">
-            <img src={om} className="w-8 h-8 object-contain filter brightness-0 invert" alt="Om Emblem" />
+            <img src={om} loading="lazy" decoding="async" width="32" height="32" className="w-8 h-8 object-contain filter brightness-0 invert" alt="Om Emblem" />
             <span className="font-cinzel tracking-widest text-xs font-semibold text-orange-200">SHIVOHAM</span>
           </div>
 

@@ -200,6 +200,8 @@ const Gallery = () => {
                             <img
                                 src={selectedImage.src}
                                 alt={selectedImage.title}
+                                loading="eager"
+                                decoding="async"
                                 className="max-w-full max-h-full object-contain shadow-2xl"
                             />
                             <div className="absolute bottom-0 left-0 right-0 py-8 text-center bg-gradient-to-t from-black/80 to-transparent">

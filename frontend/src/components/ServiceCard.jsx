@@ -52,7 +52,7 @@ const ServiceCard = () => {
                     {/* Pooja Card */}
                     <div className="flex flex-col items-center text-center md:items-start md:text-left space-y-4 p-6 bg-liquid-glass-card rounded-md hover:scale-[1.01] transition-all duration-300">
                         <div className="bg-indigo-100 rounded-full w-14 h-14 flex justify-center items-center text-indigo-500 shadow-md shrink-0">
-                            <img src={seva} alt="Seva Pooja" className="w-8 h-8 object-contain" />
+                            <img src={seva} alt="Seva Pooja" loading="lazy" decoding="async" width="32" height="32" className="w-8 h-8 object-contain" />
                         </div>
                         <h3 className="uppercase text-lg font-semibold font-cinzel text-stone-900 tracking-wider">
                             Pooja's
@@ -72,7 +72,7 @@ const ServiceCard = () => {
                     {/* Donation Card */}
                     <div className="flex flex-col items-center text-center md:items-start md:text-left space-y-4 p-6 bg-liquid-glass-card rounded-md hover:scale-[1.01] transition-all duration-300">
                         <div className="bg-red-100 rounded-full w-14 h-14 flex justify-center items-center text-red-500 shadow-md shrink-0">
-                            <img src={donate} alt="Donation" className="w-8 h-8 object-contain" />
+                            <img src={donate} alt="Donation" loading="lazy" decoding="async" width="32" height="32" className="w-8 h-8 object-contain" />
                         </div>
                         <h3 className="uppercase text-lg font-semibold font-cinzel text-stone-900 tracking-wider">
                             Donations
@@ -92,7 +92,7 @@ const ServiceCard = () => {
                     {/* My Seva Card */}
                     <div className="flex flex-col items-center text-center md:items-start md:text-left space-y-4 p-6 bg-liquid-glass-card rounded-md hover:scale-[1.01] transition-all duration-300">
                         <div className="bg-green-100 rounded-full w-14 h-14 flex justify-center items-center text-green-500 shadow-md shrink-0">
-                            <img src={myseva} alt="My Seva" className="w-8 h-8 object-contain" />
+                            <img src={myseva} alt="My Seva" loading="lazy" decoding="async" width="32" height="32" className="w-8 h-8 object-contain" />
                         </div>
                         <h3 className="uppercase text-lg font-semibold font-cinzel text-stone-900 tracking-wider">
                             My Seva

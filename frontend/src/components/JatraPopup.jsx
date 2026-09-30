@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import jatraDesktopImg from '../assets/Jatra-image.webp';
-import jatraMobileImg from '../assets/jatra-image-mobile.png';
+import jatraMobileImg from '../assets/jatra-image-mobile.webp';
 
 const JatraPopup = () => {
   // Always open when user opens or refreshes the website
   const [isOpen, setIsOpen] = useState(true);
+  const [imgLoaded, setImgLoaded] = useState(false);
 
   // Prevent bottom/background website from scrolling when popup is open
   useEffect(() => {
@@ -58,7 +59,7 @@ const JatraPopup = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.25 }}
+          transition={{ duration: 0.2 }}
           className="fixed inset-0 z-[1500] flex items-center justify-center p-3 sm:p-5 md:p-8 bg-black/85 backdrop-blur-md select-none touch-none overscroll-none"
           onClick={handleClose}
           role="dialog"
@@ -67,9 +68,9 @@ const JatraPopup = () => {
         >
           {/* Popup Poster Frame - Sharp rectangular edges, premium shadow and gold aura */}
           <motion.div
-            initial={{ scale: 0.94, opacity: 0, y: 8 }}
+            initial={{ scale: 0.95, opacity: 0, y: 6 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.94, opacity: 0, y: 8 }}
+            exit={{ scale: 0.95, opacity: 0, y: 6 }}
             transition={{ type: 'spring', damping: 28, stiffness: 350 }}
             className="relative w-fit max-w-[94vw] sm:max-w-[88vw] md:max-w-4xl lg:max-w-5xl rounded-none border border-amber-500/40 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95),0_0_35px_rgba(227,140,0,0.22)] bg-black"
             onClick={(e) => e.stopPropagation()}
@@ -86,19 +87,27 @@ const JatraPopup = () => {
             </button>
 
             {/* Poster Image - Sharp corners (rounded-none), high clarity, responsive picture */}
-            <div className="relative overflow-hidden rounded-none">
+            <div className="relative overflow-hidden rounded-none min-w-[280px] min-h-[200px] flex items-center justify-center">
+              {!imgLoaded && (
+                <div className="absolute inset-0 bg-stone-900 animate-shimmer" />
+              )}
               <picture className="block">
                 {/* Mobile portrait image for small screens (<= 640px) */}
-                <source media="(max-width: 640px)" srcSet={jatraMobileImg} />
+                <source media="(max-width: 640px)" srcSet={jatraMobileImg} type="image/webp" />
                 {/* Desktop landscape image for larger screens (> 640px) */}
-                <source media="(min-width: 641px)" srcSet={jatraDesktopImg} />
+                <source media="(min-width: 641px)" srcSet={jatraDesktopImg} type="image/webp" />
                 <img
                   src={jatraDesktopImg}
                   alt="Jatra Mahotsava Announcement"
-                  className="w-auto h-auto max-h-[82vh] sm:max-h-[85vh] max-w-[94vw] sm:max-w-[88vw] md:max-w-4xl lg:max-w-5xl object-contain block mx-auto rounded-none pointer-events-auto select-none"
+                  className={`w-auto h-auto max-h-[82vh] sm:max-h-[85vh] max-w-[94vw] sm:max-w-[88vw] md:max-w-4xl lg:max-w-5xl object-contain block mx-auto rounded-none pointer-events-auto select-none transition-opacity duration-300 ${
+                    imgLoaded ? 'opacity-100' : 'opacity-0'
+                  }`}
                   loading="eager"
-                  decoding="sync"
+                  decoding="async"
                   fetchPriority="high"
+                  width="1280"
+                  height="720"
+                  onLoad={() => setImgLoaded(true)}
                 />
               </picture>
             </div>
@@ -110,3 +119,4 @@ const JatraPopup = () => {
 };
 
 export default JatraPopup;
+

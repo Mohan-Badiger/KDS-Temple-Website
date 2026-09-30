@@ -1,8 +1,5 @@
 import React, { useContext, useEffect, useState, useRef } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import menu_bar from '../assets/menu_bar.png';
-import cancel_bar from '../assets/cancel_bar.png';
-import om_logo from '../assets/om.png';
 import { TempleContext } from '../context/TempleContext';
 import { toast } from 'react-toastify';
 import { Volume2, VolumeX, Menu, X, User, History, Settings, LogOut, Compass } from 'lucide-react';
@@ -172,8 +169,8 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Hidden Audio */}
-      <audio ref={audioRef} src="/music.mp3" loop preload="auto" />
+      {/* Hidden Audio - preload='none' prevents downloading 16.3MB on every page reload */}
+      <audio ref={audioRef} src="/music.mp3" loop preload="none" />
 
       {/* Mobile Sidebar */}
       <div className={`fixed top-0 right-0 h-[100dvh] overflow-y-auto bg-white/70 backdrop-blur-[36px] text-stone-900 transition-all duration-500 z-[999] ${visible ? 'w-full animate-fade-in' : 'w-0'}`}>

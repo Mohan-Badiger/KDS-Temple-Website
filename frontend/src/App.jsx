@@ -10,6 +10,7 @@ import DevotionalLoader from './components/Loader/DevotionalLoader';
 import OfflineScreen from './components/Offline/OfflineScreen';
 import Breadcrumb from './components/Breadcrumb';
 import JatraPopup from './components/JatraPopup';
+import WebDevPromo from './components/WebDevPromo';
 
 // Universal Lazy Loading for Performance
 import Home from './pages/Home';
@@ -92,6 +93,7 @@ const App = () => {
             </Routes>
           </Suspense>
         </main>
+        <WebDevPromo />
         <Footer />
       </div>
     </>
