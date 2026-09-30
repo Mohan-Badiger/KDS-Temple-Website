@@ -8,6 +8,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { generateDonationReceipt } from '../utils/receiptGenerator';
 import DevotionalLoader from '../components/Loader/DevotionalLoader';
 import ImageWithSkeleton from '../components/Loader/ImageWithSkeleton';
+import { Clock, Lock } from 'lucide-react';
+import { IS_PAYMENT_ENABLED, PAYMENT_MAINTENANCE_CONFIG } from '../config/paymentConfig';
 
 const Donation = () => {
   const { token, temples, settings } = useContext(TempleContext);
@@ -123,6 +125,11 @@ const Donation = () => {
   };
 
   const handlePayment = async () => {
+    if (!IS_PAYMENT_ENABLED) {
+      toast.info(PAYMENT_MAINTENANCE_CONFIG.message);
+      return;
+    }
+
     if (!amount || amount < 1) {
       toast.error('Please enter a valid donation amount');
       return;
@@ -248,6 +255,10 @@ const Donation = () => {
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
+    if (!IS_PAYMENT_ENABLED) {
+      toast.info(PAYMENT_MAINTENANCE_CONFIG.message);
+      return;
+    }
     if (!isAnonymous && (!firstName || !lastName)) {
       toast.error('Please provide a name or select Anonymous.');
       return;
@@ -559,13 +570,47 @@ const Donation = () => {
                 </div>
               </div>
 
+              {/* Payment Under Maintenance Banner */}
+              {!IS_PAYMENT_ENABLED && (
+                <div className="p-4 sm:p-5 bg-amber-500/10 border border-amber-500/30 rounded-md flex gap-3.5 items-start text-stone-850 mt-4 mb-2">
+                  <Clock className="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
+                  <div className="space-y-1.5">
+                    <div className="flex items-center gap-2">
+                      <span className="px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider bg-amber-500/20 text-amber-800 rounded">
+                        {PAYMENT_MAINTENANCE_CONFIG.statusBadge}
+                      </span>
+                      <h4 className="text-xs font-semibold text-stone-900 tracking-wide">
+                        {PAYMENT_MAINTENANCE_CONFIG.title}
+                      </h4>
+                    </div>
+                    <p className="text-xs text-stone-600 leading-relaxed font-normal">
+                      {PAYMENT_MAINTENANCE_CONFIG.message}
+                    </p>
+                    <p className="text-[11px] text-amber-800/90 leading-relaxed font-medium pt-0.5">
+                      {PAYMENT_MAINTENANCE_CONFIG.offlineHelp}
+                    </p>
+                  </div>
+                </div>
+              )}
+
               {/* 4. CTA */}
               <button
                 type="submit"
-                className="w-full bg-primary text-base text-white font-medium py-4 rounded-sm hover:opacity-90 transition-opacity mt-2"
-                disabled={loading}
+                className={`w-full text-base font-medium py-4 rounded-sm transition-all mt-2 flex items-center justify-center gap-2 ${
+                  !IS_PAYMENT_ENABLED
+                    ? "bg-stone-300 text-stone-600 cursor-not-allowed border border-stone-300 shadow-none font-semibold"
+                    : "bg-primary text-white hover:opacity-90 cursor-pointer"
+                }`}
+                disabled={!IS_PAYMENT_ENABLED || loading}
               >
-                Donate {amount ? `₹${Number(amount).toLocaleString('en-IN')}` : 'Now'}
+                {!IS_PAYMENT_ENABLED ? (
+                  <>
+                    <Lock className="w-4 h-4 text-stone-500" />
+                    <span>{PAYMENT_MAINTENANCE_CONFIG.donationButtonNotice}</span>
+                  </>
+                ) : (
+                  `Donate ${amount ? `₹${Number(amount).toLocaleString('en-IN')}` : 'Now'}`
+                )}
               </button>
 
             </form>
